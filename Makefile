@@ -12,12 +12,16 @@
 
 .PHONY: clean
 clean:
-	find -name '*.png' -delete -o -name '*.html' -delete
+	find \( -name '*.html' -o -name '*.png' -o -name '*.txt' \) -delete 
 
-.DEFAULT_GOAL:=index.html
+.DEFAULT_GOAL:=all
 
 wiki/documentation/AsciiDoc.html: wiki/Home.256.png
 
-index.html: wiki/documentation/AsciiDoc.html
-	mv $< $@
+all: wiki/Home.html \
+	wiki/documentation/AsciiDoc.html \
+	wiki/git/Git.html \
+	wiki/shell/Bash.html
+	mv $^ .
+	mv Home.html index.html
 
