@@ -5,8 +5,5 @@ It includes the GitHub home page footnote:[https://furrymcgee.github.io/] and th
 
 There is more information about organization footnote:[https://help.github.com/articles/user-organization-and-project-pages/] and supported languages footnote:[https://raw.githubusercontent.com/github/linguist/master/lib/linguist/languages.yml] on GitHub.
 
-== Wiki
-The Wiki is written in asciidoc footnote:[http://asciidoc.org/index.html] and markdown footnote:[https://github.github.com/gfm/]. This is the only project with a wiki. The other projects dont use the wiki feature.
-
-== GitHub Pages
-This project uses GitHub Pages as Webserver for the HTML output of the Wiki footnote:[https://furrymcgee.github.io/].
+.Webpages
+include::./wiki/_Sidebar.asciidoc[]

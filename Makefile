@@ -16,12 +16,13 @@ clean:
 
 .DEFAULT_GOAL:=all
 
-wiki/documentation/AsciiDoc.html: wiki/Home.256.png
+wiki/documentation/AsciiDoc.html: wiki/Wiki.256.png
 
-all: wiki/Home.html \
+all: README.html \
+	wiki/Wiki.html \
 	wiki/documentation/AsciiDoc.html \
 	wiki/git/Git.html \
 	wiki/shell/Bash.html
-	mv $^ .
-	mv Home.html index.html
+	mv $< index.html
+	mv $^ . 2>&- || true 
 
