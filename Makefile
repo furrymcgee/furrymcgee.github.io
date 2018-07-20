@@ -22,7 +22,8 @@ all: README.html \
 	wiki/Wiki.html \
 	wiki/documentation/AsciiDoc.html \
 	wiki/git/Git.html \
-	wiki/shell/Bash.html
+	wiki/shell/Bash.html \
+	wiki/debian/Debian.html
 	mv $< index.html
 	mv $^ . 2>&- || true 
 
