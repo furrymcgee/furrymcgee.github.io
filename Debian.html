@@ -865,7 +865,7 @@ deb-src <span style="color: #990000">[</span>signed-by<span style="color: #99000
 APT
 <span style="font-style: italic"><span style="color: #9A1900">## -----</span></span>
 
-<span style="font-style: italic"><span style="color: #9A1900">#Installation</span></span>
+<span style="color: #990000">=</span>Installation
 apt install -o Dpkg<span style="color: #990000">::</span>Options<span style="color: #990000">::=</span><span style="color: #FF0000">"--force-confnew"</span>
 
 <span style="font-style: italic"><span style="color: #9A1900"># Packages</span></span>
@@ -874,7 +874,7 @@ apt install packaging-dev debtags debmake dgit config-package-dev
 
 <span style="font-style: italic"><span style="color: #9A1900"># Packages</span></span>
 apt install packaging-dev debtags debmake dgit
-apt install dwww debian-policy debian-handbook debian-kernel-handbook debian-reference-en developers-reference doc-debian maint-guide newbiedoc debconf-doc apt-doc debian-faq debian-history debian-installer aptitude-doc-en harden-doc
+apt install dwww debian-policy debian-handbook debian-kernel-handbook debian-reference-en developers-reference doc-debian maint-guide newbiedoc debconf-doc apt-doc debian-faq debian-history debian-installer aptitude-doc-en harden-doc intallation-guide-amd<span style="color: #993399">64</span>
 apt install --install-suggests packaging-dev debtags dgit dwww surfraw aptitude
 
 <span style="font-style: italic"><span style="color: #9A1900"># Debug</span></span>
@@ -1068,16 +1068,16 @@ gpg --list-packets --verbose <span style="color: #990000">&lt;</span> <span styl
 gpg --receive EF0F382A1A7B6500
 gpg --edit-key EF0F382A1A7B6500 trust
 gpg --verify <span style="color: #990000">.</span>temp/dists/stretch/Release<span style="color: #990000">.</span>gpg <span style="color: #990000">.</span>temp/dists/stretch/Release
-ln -s pubring<span style="color: #990000">.</span>kbx trustedkeys<span style="color: #990000">.</span>kbx
 gpgv <span style="color: #990000">.</span>temp/dists/stretch/Release<span style="color: #990000">.</span>gpg <span style="color: #990000">.</span>temp/dists/stretch/Release
 
-debmirror --verbose --progress --debug --keyring pubring<span style="color: #990000">.</span>kbx <span style="color: #990000">.</span></tt></pre></div></div>
+debmirror --verbose --progress --debug --keyring pubring<span style="color: #990000">.</span>kbx <span style="color: #990000">.</span>
+</tt></pre></div></div>
 </div>
 <div id="footnotes"><hr /></div>
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2018-07-22 00:15:34 CEST
+ 2018-09-05 02:00:42 CEST
 </div>
 </div>
 </body>
