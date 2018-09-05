@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
 <meta name="generator" content="AsciiDoc 8.6.9" />
-<title></title>
+<title>A general purpose scripting language</title>
 <style type="text/css">
 /* Shared CSS for AsciiDoc xhtml11 and html5 backends */
 
@@ -733,22 +733,244 @@ asciidoc.install();
 </head>
 <body class="article">
 <div id="header">
+<h1>A general purpose scripting language</h1>
 </div>
 <div id="content">
-<div class="sect1">
-<h2 id="_furrymcgee_github_io">furrymcgee.github.io</h2>
+<div id="preamble">
 <div class="sectionbody">
-<div class="paragraph"><p>This repository describes all projects by furrymcgee <span class="footnote"><br />[<a href="http://github.com/furrymcgee/">http://github.com/furrymcgee/</a>]<br /></span> on GitHub.
-It includes the GitHub home page <span class="footnote"><br />[<a href="https://furrymcgee.github.io/">https://furrymcgee.github.io/</a>]<br /></span> and the Wiki <span class="footnote"><br />[<a href="https://github.com/furrymcgee/furrymcgee.github.io/wiki/">https://github.com/furrymcgee/furrymcgee.github.io/wiki/</a>]<br /></span>.</p></div>
-<div class="paragraph"><p>There is more information about organization <span class="footnote"><br />[<a href="https://help.github.com/articles/user-organization-and-project-pages/">https://help.github.com/articles/user-organization-and-project-pages/</a>]<br /></span> and supported languages <span class="footnote"><br />[<a href="https://raw.githubusercontent.com/github/linguist/master/lib/linguist/languages.yml">https://raw.githubusercontent.com/github/linguist/master/lib/linguist/languages.yml</a>]<br /></span> on GitHub.</p></div>
-<div class="paragraph"><div class="title">Webpages</div><p><a href="./index.html">Home</a>
-<a href="./AsciiDoc.html">AsciiDoc</a>
-<a href="./Bash.html">Bash</a>
-<a href="./Debian.html">Debian</a>
-<a href="./Git.html">Git</a>
-<a href="./Perl.html">Perl</a>
-<a href="./Wiki.html">Wiki</a>
-<a href="./QEMU.html">QEMU</a></p></div>
+<div class="paragraph"><p>This article discusses different aspects of Perl the Practical Extraction and Report Language. Perl is a very high level language for building, testing and automating software. It is a extension to GNU Coreutils and Bash with modular scripts in C like syntax. Common use cases are websites and test suites for example.
+Debian GNU/Linux uses it for package management.
+Embedded in C/C++ the size of Perl is bigger than Lua but smaller than Python.
+It has a regular expressions engine and supports UTF-8.
+A lot of additional modules are availbable in CPAN network.
+With Tk or Qt graphical user interfaces can be added.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+The Perl Programming Language, <a href="http://www.perl.org">http://www.perl.org</a>
+</p>
+</li>
+<li>
+<p>
+Are VHLLs Really High-Level? - O&#8217;Reilly Media, <a href="http://archive.oreilly.com/pub/a/oreilly//news/vhll_1299.html">http://archive.oreilly.com/pub/a/oreilly//news/vhll_1299.html</a>
+</p>
+</li>
+</ul></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_perl_oop_programming">Perl OOP programming</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Perl has a very simple type system. Objects are usually represented by associative arrays with additional type information. Types in Perl are represented by packages. Inheritance is possible with subroutines but not data. If a subroutine is invoked as a method the callers object is added as a first argument.
+This objects reference can be used as hash key with caution. Once the object reference is used as a key the object may no more blessed because bless changes the scalar representation of the reference.
+The parents data may be necessary in the method but objects inherit only functions but there are no member variables. Inherited data is only availbale if its the same objects.
+The Object reference including parent data can be used as argument to the constructor. Then the parent constructor can be called with SUPER before the object is blessed. This is similar to a inplace constructor in C++ where the constructor gets a pointer to the memory. C++ calls parents constructor/destructor automatically but Perl calls only the destructor of objects package. Neither constructors nor destructors of a parent package are called in Perl. The parent constructor need to be called manually with SUPER. Below is a sample program. This calls parents constructor first and parent destructor last unlike C++.</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-style: italic"><span style="color: #9A1900"># This programs calls constructor and destructor of parent and child</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># Output:</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># CHILD::new</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># PARENT::new</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># CHILD::DESTROY</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># PARENT::DESTROY</span></span>
+
+package PARENT<span style="color: #990000">;</span>
+sub new {
+    print __PACKAGE__<span style="color: #990000">.</span><span style="color: #FF0000">'::new'</span><span style="color: #990000">;</span>
+    my <span style="color: #009900">$base</span> <span style="color: #990000">=</span> pop<span style="color: #990000">;</span>
+    bless <span style="color: #009900">$base</span><span style="color: #990000">,</span> __PACKAGE__<span style="color: #990000">;</span>
+}
+sub DESTROY {
+    print __PACKAGE__<span style="color: #990000">.</span><span style="color: #FF0000">'::DESTROY'</span><span style="color: #990000">;</span>
+}
+
+package CHILD<span style="color: #990000">;</span>
+use parent -norequire<span style="color: #990000">,</span> PARENT<span style="color: #990000">;</span>
+sub new {
+    print __PACKAGE__<span style="color: #990000">.</span><span style="color: #FF0000">'::new'</span><span style="color: #990000">;</span>
+    my <span style="color: #009900">$base</span> <span style="color: #990000">=</span> pop<span style="color: #990000">;</span>
+    __PACKAGE__-<span style="color: #990000">&gt;</span>SUPER<span style="color: #990000">::</span>new<span style="color: #990000">(</span><span style="color: #009900">$base</span><span style="color: #990000">);</span>
+    bless <span style="color: #009900">$base</span><span style="color: #990000">,</span> __PACKAGE__<span style="color: #990000">;</span>
+}
+
+sub DESTROY {
+    print __PACKAGE__<span style="color: #990000">.</span><span style="color: #FF0000">'::DESTROY'</span><span style="color: #990000">;</span>
+    <span style="color: #990000">(</span>pop<span style="color: #990000">)</span>-<span style="color: #990000">&gt;</span>SUPER<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">DESTROY()</span></span><span style="color: #990000">;</span>
+}
+
+<span style="font-weight: bold"><span style="color: #0000FF">local</span></span> <span style="color: #009900">$_</span> <span style="color: #990000">=</span> {}<span style="color: #990000">;</span>
+CHILD-<span style="color: #990000">&gt;</span>new<span style="color: #990000">(</span><span style="color: #009900">$_</span><span style="color: #990000">);</span>
+die unless <span style="color: #009900">$_</span>-<span style="color: #990000">&gt;</span>isa<span style="color: #990000">(</span>CHILD<span style="color: #990000">);</span>
+die unless <span style="color: #009900">$_</span>-<span style="color: #990000">&gt;</span>isa<span style="color: #990000">(</span>PARENT<span style="color: #990000">);</span>
+</tt></pre></div></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_perl_data_types_and_default_variables">Perl data types and default variables</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Perl data types are scalar, array and hash. Perl has a default variable for each.
+The default variables are $_, @\_ and %_. In subroutines the default array @_ contains the function arguments.
+The default scalar can be used as a local temporary value.
+Many functions like print or match use the default scalar if there is no other argument.
+Global data is may be stored in the default hash %_.
+This hash object can be blessed for inheritence.
+If many packages use the default hash there can be problems with name conflicts.
+Thats why a convention of the structure is needed.
+One way is to use the package name as the first element in the hash.
+This adds some kind of encapsulation although data can be accessed globally.
+The syntax $_{(__PACKAGE__)} is more verbose but the local $\_ may be used as alias.
+This looks as a variant of Inside-out objects so Inside-out packages.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="http://perldoc.perl.org/perlobj.html#Inside-Out-objects">http://perldoc.perl.org/perlobj.html#Inside-Out-objects</a>
+</p>
+</li>
+</ul></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_modules_provide_more_data_types">Modules provide more data types</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Common data structures in a script language are scalar, arrays and dictionaries.
+However in practice data is not strict linear and hierachical.
+Thats why relational databases are necessary.
+Primary keys may consist of multiple scalars. Sometime there can be many to many relationships. Thats why relational databases are necessary. Perl has module for many database management systems. PostgreSQL or SQLIite for example.
+The DBD::SQLite::VirtualTable::PerlData module combines built in data types with SQL syntax.</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_perl_enables_functional_programming">Perl enables functional programming</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Perl has a functional elements when used with default variables only.
+In pure functional languages there are no variables.
+Reducing the number of variables reduces complexity.
+A loop over array is simpler without indexes.
+Errors can occur at a higher level.
+Empty lists for example returned in a SQL selection.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="https://hop.perl.plover.com/book/">https://hop.perl.plover.com/book/</a>
+</p>
+</li>
+<li>
+<p>
+<a href="https://softwareengineering.stackexchange.com/questions/300994/is-the-perl-default-variable-like-an-fp-monad">https://softwareengineering.stackexchange.com/questions/300994/is-the-perl-default-variable-like-an-fp-monad</a>
+</p>
+</li>
+</ul></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-style: italic"><span style="color: #9A1900"># Using the return value of a ternary operator looks like functional programming</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># it requires less braces and</span></span>
+
+<span style="font-weight: bold"><span style="color: #0000FF">local</span></span> <span style="color: #009900">$_</span> <span style="color: #990000">=</span> /PATTERN<span style="color: #990000">/</span>
+<span style="color: #990000">?</span> <span style="font-weight: bold"><span style="color: #0000FF">do</span></span> {<span style="color: #FF0000">"OK"</span>}
+<span style="color: #990000">:</span> <span style="font-weight: bold"><span style="color: #0000FF">do</span></span> {<span style="color: #FF0000">"FAIL"</span>}<span style="color: #990000">;</span>
+
+
+<span style="font-weight: bold"><span style="color: #0000FF">local</span></span> <span style="color: #009900">$_</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">do</span></span> {
+    <span style="font-weight: bold"><span style="color: #0000FF">if</span></span> <span style="color: #990000">(</span> /PATTERN<span style="color: #990000">/</span> <span style="color: #990000">)</span> { <span style="color: #FF0000">"OK"</span> }
+    <span style="font-weight: bold"><span style="color: #0000FF">else</span></span> { <span style="color: #FF0000">"FAIL"</span>}
+}<span style="color: #990000">;</span></tt></pre></div></div>
+<div class="paragraph"><p>In dlang pure functions can also use local variables.
+The concept of pipes connecting processes is suggested by Doug McIlroy at Bell Labs. In Perl the same concept is seen in the default variable $_.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="https://www.bell-labs.com/usr/dmr/www/mdmpipe.html">https://www.bell-labs.com/usr/dmr/www/mdmpipe.html</a>
+</p>
+</li>
+<li>
+<p>
+<a href="https://www.bell-labs.com/usr/dmr/www/hist.html#pipes">https://www.bell-labs.com/usr/dmr/www/hist.html#pipes</a>
+</p>
+</li>
+<li>
+<p>
+<a href="http://xahlee.info/comp/unix_pipes_and_functional_lang.html">http://xahlee.info/comp/unix_pipes_and_functional_lang.html</a>
+</p>
+</li>
+<li>
+<p>
+<a href="https://dlang.org/spec/function.html#pure-functions">https://dlang.org/spec/function.html#pure-functions</a>
+</p>
+</li>
+<li>
+<p>
+<a href="http://history.perl.org/PerlTimeline.html">http://history.perl.org/PerlTimeline.html</a>
+</p>
+</li>
+</ul></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_examples_for_perl_packages">Examples for Perl packages</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>apt install dh-make-perl
+cpan2deb --version <span style="color: #993399">2.2</span><span style="color: #990000">.</span><span style="color: #993399">13</span> --packagename libapache-eperl-perl --intrusive Apache<span style="color: #990000">::</span>ePerl
+
+<span style="font-style: italic"><span style="color: #9A1900"># build a perl module for debian</span></span>
+modulemaker -I -n MyMod
+mv MyMod libmymod-perl-<span style="color: #993399">0.01</span>
+cd libmymod-perl-<span style="color: #993399">0.01</span>
+perl Makefile<span style="color: #990000">.</span>PL
+make dist
+mv MyMod-<span style="color: #993399">0.01</span><span style="color: #990000">.</span>tar<span style="color: #990000">.</span>gz <span style="color: #990000">..</span>/libmymod-perl_0<span style="color: #990000">.</span><span style="color: #993399">01</span><span style="color: #990000">.</span>orig<span style="color: #990000">.</span>tar<span style="color: #990000">.</span>gz
+dh-make-perl dump-config <span style="color: #990000">&gt;</span> dh-make-perl<span style="color: #990000">.</span>conf
+dh-make-perl
+dpkg-source --auto-commit --build <span style="color: #990000">.</span>
+debuild -uc -us
+
+<span style="font-style: italic"><span style="color: #9A1900">#make test is executed during build</span></span>
+<span style="color: #009900">HARNESS_PERL_SWITCHES</span><span style="color: #990000">=</span><span style="color: #FF0000">"-I lib -I t"</span>
+
+<span style="font-style: italic"><span style="color: #9A1900">## Build and install libjq-perl with cpan2deb</span></span>
+apt install cpan2deb perl libwww-curl-perl libipc-run-perl libjson-perl liburi-find-perl gridsite-clients -y
+apt install dh-make-perl
+aptitude install libtest-most-perl libio-pipely-perl
+
+<span style="font-style: italic"><span style="color: #9A1900">## dpkg: error processing archive /root/Jq-0.01/libjq-perl_0.01-1_all.deb (--install)</span></span>
+ln -s Jq-<span style="color: #993399">0.01</span>/libjq-perl_0<span style="color: #990000">.</span><span style="color: #993399">01</span>-1_all<span style="color: #990000">.</span>deb
+<span style="color: #009900">PERL_MM_USE_DEFAULT</span><span style="color: #990000">=</span><span style="color: #993399">1</span> cpan2deb Jq --install
+<span style="color: #009900">EMAIL</span><span style="color: #990000">=</span>postmaster@localhost <span style="color: #009900">PERL_MM_USE_DEFAULT</span><span style="color: #990000">=</span><span style="color: #993399">1</span> cpan2deb AI<span style="color: #990000">::</span>FuzzyEngine --install
+
+
+apt build-dep eperl
+dh-make-perl make -n --build --cpan eperl <span style="color: #990000">\</span>
+--version <span style="color: #993399">2.2</span><span style="color: #990000">.</span><span style="color: #993399">13</span> --packagename libapache-eperl-perl --intrusive
+dh-make-perl --version <span style="color: #993399">2.2</span><span style="color: #990000">.</span><span style="color: #993399">13</span> --packagename libapache-eperl-perl --intrusive
+dch --newversion <span style="color: #993399">2.2</span><span style="color: #990000">.</span><span style="color: #993399">13</span>-<span style="color: #993399">1</span> <span style="color: #FF0000">""</span>
+dpkg-source --auto-commit --build <span style="color: #990000">.</span>
+
+<span style="font-style: italic"><span style="color: #9A1900"># Perl and Qt</span></span>
+apt install libqtgui4-perl
+libpar-packer-perl perl-tk
+libdbd-sqlite<span style="color: #993399">3</span>-perl
+libwww-dict-leo-org-perl
+libfrontier-rpc-perl
+
+<span style="font-style: italic"><span style="color: #9A1900"># Dancer is a dynamic webapp</span></span>
+apt install libdancer-perl -y
+dancer -a mywebapp
+systemctl daemon-reload
+systemctl <span style="font-weight: bold"><span style="color: #0000FF">enable</span></span> mywebapp<span style="color: #990000">.</span>service
+systemctl start mywebapp
+
+<span style="font-style: italic"><span style="color: #9A1900"># perl parser</span></span>
+apt install perl-byacc</tt></pre></div></div>
 </div>
 </div>
 </div>
@@ -756,7 +978,7 @@ It includes the GitHub home page <span class="footnote"><br />[<a href="https://
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2018-09-05 19:56:30 CEST
+ 2018-09-05 19:51:02 CEST
 </div>
 </div>
 </body>
