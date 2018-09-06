@@ -20,12 +20,13 @@ wiki/documentation/AsciiDoc.html: wiki/Wiki.256.png
 
 index.html: README.html \
 	wiki/Wiki.html \
+	wiki/database/SQLite.html \
+	wiki/debian/Debian.html \
 	wiki/documentation/AsciiDoc.html \
 	wiki/git/Git.html \
-	wiki/shell/Bash.html \
-	wiki/debian/Debian.html \
+	wiki/perl/Perl.html \
 	wiki/qemu/QEMU.html \
 	wiki/qemu/VirtualXPVHD.html \
-	wiki/perl/Perl.html
+	wiki/shell/Bash.html
 	cp $^ . 2>&- || cp $< index.html
 

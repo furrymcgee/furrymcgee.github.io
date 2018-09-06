@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
 <meta name="generator" content="AsciiDoc 8.6.9" />
-<title></title>
+<title>SQLite Database</title>
 <style type="text/css">
 /* Shared CSS for AsciiDoc xhtml11 and html5 backends */
 
@@ -733,23 +733,133 @@ asciidoc.install();
 </head>
 <body class="article">
 <div id="header">
+<h1>SQLite Database</h1>
 </div>
 <div id="content">
-<div class="sect1">
-<h2 id="_furrymcgee_github_io">furrymcgee.github.io</h2>
+<div id="preamble">
 <div class="sectionbody">
-<div class="paragraph"><p>This repository describes all projects by furrymcgee <span class="footnote"><br />[<a href="http://github.com/furrymcgee/">http://github.com/furrymcgee/</a>]<br /></span> on GitHub.
-It includes the GitHub home page <span class="footnote"><br />[<a href="https://furrymcgee.github.io/">https://furrymcgee.github.io/</a>]<br /></span> and the Wiki <span class="footnote"><br />[<a href="https://github.com/furrymcgee/furrymcgee.github.io/wiki/">https://github.com/furrymcgee/furrymcgee.github.io/wiki/</a>]<br /></span>.</p></div>
-<div class="paragraph"><p>There is more information about organization <span class="footnote"><br />[<a href="https://help.github.com/articles/user-organization-and-project-pages/">https://help.github.com/articles/user-organization-and-project-pages/</a>]<br /></span> and supported languages <span class="footnote"><br />[<a href="https://raw.githubusercontent.com/github/linguist/master/lib/linguist/languages.yml">https://raw.githubusercontent.com/github/linguist/master/lib/linguist/languages.yml</a>]<br /></span> on GitHub.</p></div>
-<div class="paragraph"><div class="title">Webpages</div><p><a href="./index.html">Home</a>
-<a href="./AsciiDoc.html">AsciiDoc</a>
-<a href="./Bash.html">Bash</a>
-<a href="./Debian.html">Debian</a>
-<a href="./Git.html">Git</a>
-<a href="./Perl.html">Perl</a>
-<a href="./SQLite.html">SQLite</a>
-<a href="./Wiki.html">Wiki</a>
-<a href="./QEMU.html">QEMU</a></p></div>
+<div class="paragraph"><p>Relational database use tables for any kind of data.
+They have a structured query language that work consistent and efficiently with atomic operations.
+It is possible to read data from different files but there is no consistency check of the files.
+With a cascade on delete relational databases delete multiple elements with a single atomic operation.
+The database engine maintains referential integrity of the data.</p></div>
+<div class="paragraph"><p>Example sorting rows</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>            a.1         a.2
+            a.2   -&gt;    a.1
+            b.1         b.2
+            b.2         b.1</tt></pre></div></div>
+<div class="paragraph"><p>This can be solved in a shell with GNU coreutils but its easier with a database and a join of two distinct tables.</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">select</span></span> <span style="color: #990000">*</span> <span style="font-weight: bold"><span style="color: #0000FF">from</span></span> <span style="color: #990000">(</span>
+        <span style="font-weight: bold"><span style="color: #0000FF">select</span></span> <span style="color: #FF0000">'a'</span> <span style="font-weight: bold"><span style="color: #0000FF">as</span></span> col1 <span style="font-weight: bold"><span style="color: #0000FF">union</span></span> <span style="font-weight: bold"><span style="color: #0000FF">select</span></span> <span style="color: #FF0000">'b'</span> <span style="font-weight: bold"><span style="color: #0000FF">as</span></span> col1
+<span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #0000FF">join</span></span> <span style="color: #990000">(</span>
+        <span style="font-weight: bold"><span style="color: #0000FF">select</span></span> <span style="color: #FF0000">'1'</span> <span style="font-weight: bold"><span style="color: #0000FF">as</span></span> col2 <span style="font-weight: bold"><span style="color: #0000FF">union</span></span> <span style="font-weight: bold"><span style="color: #0000FF">select</span></span> <span style="color: #FF0000">'2'</span> <span style="font-weight: bold"><span style="color: #0000FF">as</span></span> col2
+<span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #0000FF">order</span></span> <span style="font-weight: bold"><span style="color: #0000FF">by</span></span> col1<span style="color: #990000">,</span> col2 <span style="font-weight: bold"><span style="color: #0000FF">desc</span></span><span style="color: #990000">;</span></tt></pre></div></div>
+<div class="paragraph"><p>Even complex operations can be written in SQL.
+Sorting of data requires self join and a a comparison and a group by. This is similar to C\++ std::sort algorithm.</p></div>
+<div class="paragraph"><p>Example in SQLite</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">select</span></span> count<span style="color: #990000">(*),</span> x<span style="color: #990000">.*</span> from <span style="color: #990000">(</span>
+                <span style="font-weight: bold"><span style="color: #0000FF">select</span></span> <span style="color: #FF0000">'a'</span><span style="color: #990000">,</span> <span style="color: #993399">21</span>
+                union all
+                <span style="font-weight: bold"><span style="color: #0000FF">select</span></span> <span style="color: #FF0000">'b'</span><span style="color: #990000">,</span> <span style="color: #993399">2</span>
+                union all
+                <span style="font-weight: bold"><span style="color: #0000FF">select</span></span> <span style="color: #FF0000">'d'</span><span style="color: #990000">,</span> <span style="color: #993399">23</span>
+                union all
+                <span style="font-weight: bold"><span style="color: #0000FF">select</span></span> <span style="color: #FF0000">'c'</span> as w<span style="color: #990000">,</span> <span style="color: #993399">221</span> as x
+<span style="color: #990000">)</span> as x join <span style="color: #990000">(</span>
+                <span style="font-weight: bold"><span style="color: #0000FF">select</span></span> <span style="color: #FF0000">'a'</span><span style="color: #990000">,</span> <span style="color: #993399">21</span>
+                union all
+                <span style="font-weight: bold"><span style="color: #0000FF">select</span></span> <span style="color: #FF0000">'b'</span><span style="color: #990000">,</span> <span style="color: #993399">2</span>
+                union all
+                <span style="font-weight: bold"><span style="color: #0000FF">select</span></span> <span style="color: #FF0000">'d'</span><span style="color: #990000">,</span> <span style="color: #993399">23</span>
+                union all
+                <span style="font-weight: bold"><span style="color: #0000FF">select</span></span> <span style="color: #FF0000">'c'</span> as w<span style="color: #990000">,</span> <span style="color: #993399">221</span> as x
+<span style="color: #990000">)</span> as y
+where y<span style="color: #990000">.</span>x <span style="color: #990000">&lt;=</span> x<span style="color: #990000">.</span>x
+group by x<span style="color: #990000">.</span>x
+order by count<span style="color: #990000">(*)</span>
+<span style="color: #990000">;</span></tt></pre></div></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_common_table_expression">Common table expression</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Some problems require recursion.</p></div>
+<div class="paragraph"><p>Example recursive split of a string.</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">WITH</span></span> RECURSIVE
+example<span style="color: #990000">(</span>name<span style="color: #990000">,</span> list<span style="color: #990000">,</span> element<span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #0000FF">AS</span></span> <span style="color: #990000">(</span>
+                <span style="font-weight: bold"><span style="color: #0000FF">select</span></span> name<span style="color: #990000">,</span> substr<span style="color: #990000">(</span>list<span style="color: #990000">,</span> <span style="color: #993399">1</span><span style="color: #990000">+</span>instr<span style="color: #990000">(</span>list<span style="color: #990000">,</span> <span style="color: #FF0000">","</span><span style="color: #990000">)),</span> substr<span style="color: #990000">(</span>list<span style="color: #990000">,</span> <span style="color: #993399">0</span><span style="color: #990000">,</span> instr<span style="color: #990000">(</span>list<span style="color: #990000">,</span> <span style="color: #FF0000">","</span><span style="color: #990000">))</span> <span style="font-weight: bold"><span style="color: #0000FF">from</span></span> <span style="color: #990000">(</span>
+                        <span style="font-weight: bold"><span style="color: #0000FF">select</span></span> <span style="color: #FF0000">'letter'</span> <span style="font-weight: bold"><span style="color: #0000FF">as</span></span> name<span style="color: #990000">,</span> <span style="color: #FF0000">"A,B,C,"</span> <span style="font-weight: bold"><span style="color: #0000FF">as</span></span> list
+                        <span style="font-weight: bold"><span style="color: #0000FF">UNION</span></span> <span style="font-weight: bold"><span style="color: #0000FF">ALL</span></span>
+                        <span style="font-weight: bold"><span style="color: #0000FF">select</span></span> <span style="color: #FF0000">'number'</span><span style="color: #990000">,</span> <span style="color: #FF0000">"1,2,3,4,"</span>
+                <span style="color: #990000">)</span>
+                <span style="font-weight: bold"><span style="color: #0000FF">UNION</span></span> <span style="font-weight: bold"><span style="color: #0000FF">ALL</span></span>
+                <span style="font-weight: bold"><span style="color: #0000FF">SELECT</span></span> name<span style="color: #990000">,</span> substr<span style="color: #990000">(</span>list<span style="color: #990000">,</span> <span style="color: #993399">1</span><span style="color: #990000">+</span>instr<span style="color: #990000">(</span>list<span style="color: #990000">,</span> <span style="color: #FF0000">","</span><span style="color: #990000">)),</span> substr<span style="color: #990000">(</span>list<span style="color: #990000">,</span> <span style="color: #993399">0</span><span style="color: #990000">,</span> instr<span style="color: #990000">(</span>list<span style="color: #990000">,</span> <span style="color: #FF0000">","</span><span style="color: #990000">))</span>
+                <span style="font-weight: bold"><span style="color: #0000FF">FROM</span></span> example
+                <span style="font-weight: bold"><span style="color: #0000FF">WHERE</span></span> instr<span style="color: #990000">(</span>list<span style="color: #990000">,</span> <span style="color: #FF0000">","</span><span style="color: #990000">)</span>
+                <span style="color: #990000">)</span>
+<span style="font-weight: bold"><span style="color: #0000FF">SELECT</span></span> name<span style="color: #990000">,</span> element <span style="font-weight: bold"><span style="color: #0000FF">FROM</span></span> example<span style="color: #990000">;</span></tt></pre></div></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_links">Links</h2>
+<div class="sectionbody">
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="https://sqlite.org/queryplanner.html">https://sqlite.org/queryplanner.html</a>
+</p>
+</li>
+<li>
+<p>
+<a href="https://github.com/pawelsalawa/sqlitestudio.git">https://github.com/pawelsalawa/sqlitestudio.git</a>
+</p>
+</li>
+</ul></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_join_with_gnu_coreutils">Join with GNU coreutils</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The example can be split and joined with file streams in the shell.</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>yash <span style="color: #990000">&lt;(</span> cat <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'YASH'</span>
+    <span style="font-weight: bold"><span style="color: #0000FF">exec</span></span> <span style="color: #993399">3</span><span style="color: #990000">&gt;&gt;|</span><span style="color: #993399">4</span> <span style="color: #993399">5</span><span style="color: #990000">&gt;&gt;|</span><span style="color: #993399">6</span>
+    bash <span style="color: #990000">&lt;&lt;</span>-BASH
+        <span style="font-weight: bold"><span style="color: #0000FF">printf</span></span> <span style="color: #FF0000">"a.1</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">a.2</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">b.1</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">b.2</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">"</span> <span style="color: #990000">|</span> tr <span style="color: #990000">.</span> <span style="color: #FF0000">"</span><span style="color: #CC33CC">\t</span><span style="color: #FF0000">"</span> <span style="color: #990000">|</span> <span style="color: #990000">\</span>
+        tee  <span style="color: #990000">\</span>
+            <span style="color: #990000">&gt;(</span>cut -f<span style="color: #993399">1</span> <span style="color: #990000">|</span> sort <span style="color: #990000">|</span> uniq <span style="color: #990000">|</span> nl <span style="color: #990000">&gt;&amp;</span><span style="color: #993399">3</span> <span style="color: #990000">)</span> <span style="color: #990000">&gt;</span> <span style="color: #990000">\</span>
+            <span style="color: #990000">&gt;(</span>sort <span style="color: #990000">|</span> uniq <span style="color: #990000">|</span> tac <span style="color: #990000">|</span> nl <span style="color: #990000">&gt;&amp;</span><span style="color: #993399">5</span><span style="color: #990000">)</span>
+        <span style="font-weight: bold"><span style="color: #0000FF">exec</span></span> <span style="color: #993399">3</span><span style="color: #990000">&lt;&amp;</span>- <span style="color: #993399">5</span><span style="color: #990000">&lt;&amp;</span>- <span style="color: #993399">7</span><span style="color: #990000">&lt;&amp;</span>-
+        join -j <span style="color: #993399">2</span> <span style="color: #990000">\</span>
+            <span style="color: #990000">&lt;(</span>head -n<span style="color: #993399">2</span> <span style="color: #990000">&lt;&amp;</span><span style="color: #993399">4</span>  <span style="color: #990000">)</span> <span style="color: #990000">\</span>
+            <span style="color: #990000">&lt;(</span>head -n<span style="color: #993399">4</span> <span style="color: #990000">&lt;&amp;</span><span style="color: #993399">6</span> <span style="color: #990000">|</span> sort -k<span style="color: #993399">2</span><span style="color: #990000">)</span>
+BASH
+YASH
+<span style="color: #990000">)</span> <span style="color: #990000">|</span> sort <span style="color: #990000">|</span> tr <span style="color: #FF0000">' '</span> <span style="color: #990000">.</span> <span style="color: #990000">|</span> cut -d<span style="color: #990000">.</span> -f<span style="color: #993399">1</span><span style="color: #990000">,</span><span style="color: #993399">4</span></tt></pre></div></div>
 </div>
 </div>
 </div>
@@ -757,7 +867,7 @@ It includes the GitHub home page <span class="footnote"><br />[<a href="https://
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2018-09-06 23:06:28 CEST
+ 2018-09-06 23:15:12 CEST
 </div>
 </div>
 </body>
