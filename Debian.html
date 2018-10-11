@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
 <meta name="generator" content="AsciiDoc 8.6.9" />
-<title></title>
+<title>Debian</title>
 <style type="text/css">
 /* Shared CSS for AsciiDoc xhtml11 and html5 backends */
 
@@ -733,8 +733,12 @@ asciidoc.install();
 </head>
 <body class="article">
 <div id="header">
+<h1>Debian</h1>
 </div>
 <div id="content">
+<div class="sect1">
+<h2 id="_debian_installation">Debian installation</h2>
+<div class="sectionbody">
 <div class="listingblock">
 <div class="title">Debian</div>
 <div class="content"><!-- Generator: GNU source-highlight 3.1.8
@@ -746,7 +750,7 @@ http://www.gnu.org/software/src-highlite -->
 <span style="font-style: italic"><span style="color: #9A1900">## -------------------</span></span>
 <span style="font-style: italic"><span style="color: #9A1900">## Debian automated installation with dhcp and tftp.</span></span>
 <span style="font-style: italic"><span style="color: #9A1900">## Dhcp bootfile option can be used for ipxe or a debian preseed config.</span></span>
-<span style="font-style: italic"><span style="color: #9A1900">## There is a conflict when qemu and debian use dhcp filename option for</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">## There is a conflict when qemu and debian use dhcp filename option (bootfile?) for</span></span>
 <span style="font-style: italic"><span style="color: #9A1900">## pxelinux.0 and preseed.cfg!</span></span>
 <span style="font-style: italic"><span style="color: #9A1900">## The ipxe boot file may be loaded from tftp.</span></span>
 <span style="font-style: italic"><span style="color: #9A1900">## It may require additional configuration in dnsmasq.conf.</span></span>
@@ -803,6 +807,11 @@ initrd debian-installer/i<span style="color: #993399">386</span>/initrd<span sty
 boot
 IPXE
 <span style="font-style: italic"><span style="color: #9A1900">## -----------</span></span>
+
+Bug<span style="font-style: italic"><span style="color: #9A1900">#749991</span></span>
+Besides installing <span style="color: #009900">dist</span><span style="color: #990000">=</span>stable by default<span style="color: #990000">,</span> also testing and sid are supported<span style="color: #990000">.</span>
+
+Just adding <span style="color: #FF0000">'mirror/suite=testing'</span> as additional param to the kernel <span style="font-weight: bold"><span style="color: #0000FF">command</span></span> line is enough<span style="color: #990000">.</span>
 
 <span style="font-style: italic"><span style="color: #9A1900">## Custom repository</span></span>
 <span style="font-style: italic"><span style="color: #9A1900">## -----------------</span></span>
@@ -969,6 +978,8 @@ script -c <span style="color: #FF0000">"$( cat &lt;&lt;-'SCRIPT'</span>
 <span style="color: #FF0000">        debuild -uc -us</span>
 <span style="color: #FF0000">        SCRIPT</span>
 <span style="color: #FF0000">)"</span>
+<span style="font-style: italic"><span style="color: #9A1900"># Remove escape sequences from typescript then add it to debpaste</span></span>
+<span style="color: #990000">&lt;</span> typescript bbe -b <span style="color: #FF0000">"/</span><span style="color: #CC33CC">\x</span><span style="color: #FF0000">1b</span><span style="color: #CC33CC">\x</span><span style="color: #FF0000">5b/:/</span><span style="color: #CC33CC">\x</span><span style="color: #FF0000">6d/"</span> -e D <span style="color: #990000">|</span> iconv --from<span style="color: #990000">=</span>latin1 --to<span style="color: #990000">=</span>utf-<span style="color: #993399">8</span> <span style="color: #990000">|</span> debpaste add
 <span style="font-style: italic"><span style="color: #9A1900">## -----</span></span>
 
 <span style="font-style: italic"><span style="color: #9A1900">## Bugtracking</span></span>
@@ -977,7 +988,7 @@ script -c <span style="color: #FF0000">"$( cat &lt;&lt;-'SCRIPT'</span>
 <span style="color: #009900">BROWSER</span><span style="color: #990000">=</span>w3m bts show debbugs
 <span style="font-style: italic"><span style="color: #9A1900">## -----</span></span>
 
-<span style="font-style: italic"><span style="color: #9A1900">## Pathes</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">## Patches</span></span>
 <span style="font-style: italic"><span style="color: #9A1900">## -------</span></span>
 <span style="font-style: italic"><span style="color: #9A1900">## Patching a source package</span></span>
 
@@ -993,25 +1004,8 @@ PATCH
 <span style="font-style: italic"><span style="color: #9A1900">## -----</span></span>
 
 
-<span style="font-style: italic"><span style="color: #9A1900"># Creating a Debian repositoru</span></span>
-
-aptitude install fuseiso debootstrap schroot
-cd /tmp <span style="color: #990000">&amp;&amp;</span> mkdir sid
-wget https<span style="color: #990000">:</span>//cdimage<span style="color: #990000">.</span>debian<span style="color: #990000">.</span>org/cdimage/daily-builds/sid_d-i/current/multi-arch/iso-cd/debian-testing-amd<span style="color: #993399">64</span>-i<span style="color: #993399">386</span>-netinst<span style="color: #990000">.</span>iso
-
-cd <span style="color: #009900">$(</span>mktemp -d<span style="color: #990000">)</span> <span style="color: #990000">&amp;&amp;</span> cd -
-fuseiso debian-testing-amd<span style="color: #993399">64</span>-i<span style="color: #993399">386</span>-netinst<span style="color: #990000">.</span>iso <span style="color: #009900">$OLDPWD</span>
-debootstrap --verbose --no-check-gpg testing sid file<span style="color: #990000">://</span><span style="color: #009900">$OLDPWD</span>
-schroot -c sid
-
+<span style="font-style: italic"><span style="color: #9A1900"># Creating a Debian repository</span></span>
 rsync -a /mnt/loop/pool <span style="color: #990000">.</span>
-debootstrap --verbose --keyring<span style="color: #990000">=</span>/usr/share/keyrings/archive-keyring<span style="color: #990000">.</span>gpg sid /mnt/tmp/sid-chroot file<span style="color: #990000">:</span>///apt/debian<span style="color: #990000">/</span>
-debootstrap --verbose --no-check-gpg sid /mnt/tmp/sid file<span style="color: #990000">:</span>///var/cache/apt<span style="color: #990000">/</span>
-
-<span style="color: #993399">2</span><span style="color: #990000">&gt;</span> out strace -f debootstrap --keyring<span style="color: #990000">=</span>/usr/share/keyrings/archive-keyring<span style="color: #990000">.</span>gpg sid /mnt/tmp/sid-chroot file<span style="color: #990000">:</span>///var/cache/apt/debian<span style="color: #990000">/</span>
-
-sudo debootstrap --no-check-gpg stable /mnt/tmp/test<span style="color: #990000">/</span> file<span style="color: #990000">:</span>///mnt/tmp/debian<span style="color: #990000">/</span>
-sudo debootstrap --no-check-gpg stable /mnt/tmp/testing file<span style="color: #990000">:</span>///mnt/tmp/debian<span style="color: #990000">/</span>
 
 <span style="color: #990000">&gt;</span> Release cat <span style="color: #990000">&lt;&lt;</span>EOF
 Archive<span style="color: #990000">:</span> unstable
@@ -1048,9 +1042,11 @@ gpg --armor --export 0123456789ABCDEF <span style="color: #990000">|</span> sudo
 <span style="font-style: italic"><span style="color: #9A1900">#wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -</span></span>
 
 gpg --output revoke<span style="color: #990000">.</span>asc --gen-revoke <span style="color: #993399">01234567</span>
+
 https<span style="color: #990000">:</span>//wiki<span style="color: #990000">.</span>debian<span style="color: #990000">.</span>org/Subkeys
 https<span style="color: #990000">:</span>//njh<span style="color: #990000">.</span>eu/keyserver
 https<span style="color: #990000">:</span>//debian-administration<span style="color: #990000">.</span>org/article<span style="color: #990000">/</span><span style="color: #993399">451</span>/Submitting_your_GPG_key_to_a_keyserver
+https<span style="color: #990000">:</span>//keyring<span style="color: #990000">.</span>debian<span style="color: #990000">.</span>org/creating-key<span style="color: #990000">.</span>html
 
 
 <span style="color: #990000">&gt;</span> /etc/apt/sources<span style="color: #990000">.</span>list cat <span style="color: #990000">&lt;&lt;</span>EOF
@@ -1068,16 +1064,124 @@ gpg --list-packets --verbose <span style="color: #990000">&lt;</span> <span styl
 gpg --receive EF0F382A1A7B6500
 gpg --edit-key EF0F382A1A7B6500 trust
 gpg --verify <span style="color: #990000">.</span>temp/dists/stretch/Release<span style="color: #990000">.</span>gpg <span style="color: #990000">.</span>temp/dists/stretch/Release
+
+ln -s pubring<span style="color: #990000">.</span>kbx trustedkeys<span style="color: #990000">.</span>kbx
 gpgv <span style="color: #990000">.</span>temp/dists/stretch/Release<span style="color: #990000">.</span>gpg <span style="color: #990000">.</span>temp/dists/stretch/Release
 
 debmirror --verbose --progress --debug --keyring pubring<span style="color: #990000">.</span>kbx <span style="color: #990000">.</span>
+
+aptitude search <span style="color: #990000">~</span>sutils
+
+view /usr/share/tasksel/descs/debian-tasks<span style="color: #990000">.</span>desc
+<span style="color: #990000">&lt;</span> <span style="color: #990000">*</span>dists_stable_main<span style="color: #990000">*</span>Packages grep-dctrl --field<span style="color: #990000">=</span>Depends tasksel --show-field<span style="color: #990000">=</span>Package<span style="color: #990000">,</span>Section<span style="color: #990000">,</span>Tag<span style="color: #990000">,</span>Maintainer
+
+
+<span style="font-style: italic"><span style="color: #9A1900">## Ultimate debian database</span></span>
+wget https<span style="color: #990000">:</span>//udd<span style="color: #990000">.</span>debian<span style="color: #990000">.</span>org/dumps/udd<span style="color: #990000">.</span>dump
+time sudo -u postgres bash <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'BASH'</span>
+        psql <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'EOF'</span>
+                DROP DATABASE IF EXISTS udd<span style="color: #990000">;</span>
+                DROP ROLE IF EXISTS udd<span style="color: #990000">;</span>
+                CREATE ROLE udd<span style="color: #990000">;</span>
+                CREATE DATABASE udd TEMPLATE template0 ENCODING SQL_ASCII<span style="color: #990000">;</span>
+        EOF
+        pg_restore --exit-on-error --no-owner --dbname udd udd<span style="color: #990000">.</span>dump
+        psql --dbname udd <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'EOF'</span>
+                DROP ROLE IF EXISTS <span style="color: #FF0000">"user"</span><span style="color: #990000">;</span>
+                CREATE ROLE <span style="color: #FF0000">"user"</span><span style="color: #990000">;</span>
+                REASSIGN OWNED BY udd TO <span style="color: #FF0000">"user"</span><span style="color: #990000">;</span>
+                DROP OWNED BY udd<span style="color: #990000">;</span>
+                DROP ROLE udd<span style="color: #990000">;</span>
+                ALTER DATABASE udd SET default_transaction_read_only <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+                ALTER ROLE <span style="color: #FF0000">"user"</span> WITH LOGIN<span style="color: #990000">;</span>
+        EOF
+BASH
+
+
+quilt push -a <span style="color: #990000">&amp;&amp;</span> <span style="color: #990000">\</span>
+quilt snapshot <span style="color: #990000">&amp;&amp;</span> <span style="color: #990000">\</span>
+quilt series <span style="color: #990000">|</span> <span style="color: #990000">\</span>
+<span style="font-weight: bold"><span style="color: #0000FF">while</span></span> <span style="font-weight: bold"><span style="color: #0000FF">read</span></span><span style="color: #990000">;</span> <span style="font-weight: bold"><span style="color: #0000FF">do</span></span> <span style="color: #990000">\</span>
+        quilt files <span style="color: #990000">|</span> <span style="color: #990000">\</span>
+        grep <span style="color: #990000">^</span>debian <span style="color: #990000">|</span> <span style="color: #990000">\</span>
+        xargs -r quilt remove <span style="color: #990000">&amp;&amp;</span> <span style="color: #990000">\</span>
+                quilt refresh <span style="color: #990000">&amp;&amp;</span> <span style="color: #990000">\</span>
+                quilt pop
+<span style="font-weight: bold"><span style="color: #0000FF">done</span></span></tt></pre></div></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_devuan_debootstrap">Devuan debootstrap</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="title">Devuan</div>
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-style: italic"><span style="color: #9A1900">#!/bin/bash</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># Debian debootstrap and schroot</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># Some virtual guests are missing a kernel module for mounting iso images as loop device.</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># This requires fuseiso package.</span></span>
+cd /tmp
+apt-get install debootstrap schroot fuseiso supermin kvmtool
+
+wget --continue --no-check-certificate https<span style="color: #990000">:</span>//cdimage<span style="color: #990000">.</span>debian<span style="color: #990000">.</span>org/cdimage/weekly-builds/amd<span style="color: #993399">64</span>/iso-cd/debian-testing-amd<span style="color: #993399">64</span>-netinst<span style="color: #990000">.</span>iso
+
+cd <span style="color: #009900">$(</span>mktemp -d<span style="color: #990000">)</span>
+fuseiso <span style="color: #009900">$OLDPWD</span>/debian-testing-amd<span style="color: #993399">64</span>-netinst<span style="color: #990000">.</span>iso <span style="color: #990000">.</span>
+
+cd <span style="color: #009900">$(</span>mktemp -d<span style="color: #990000">)</span>
+debootstrap --verbose --include<span style="color: #990000">=</span>perl<span style="color: #990000">,</span>vim<span style="color: #990000">,</span>sudo --verbose --no-check-gpg testing <span style="color: #990000">.</span> file<span style="color: #990000">://</span><span style="color: #009900">$OLDPWD</span>
+chmod <span style="color: #993399">755</span> <span style="color: #990000">.</span>
+<span style="font-style: italic"><span style="color: #9A1900"># debootstrap --verbose --keyring=/usr/share/keyrings/archive-keyring.gpg --no-check-gpg sid . file:///var/cache/apt/debian</span></span>
+
+
+cat <span style="color: #990000">&gt;</span> /etc/schroot/chroot<span style="color: #990000">.</span>d/schroot<span style="color: #990000">.</span>conf <span style="color: #990000">&lt;&lt;</span>-EOF
+        <span style="font-style: italic"><span style="color: #9A1900"># schroot chroot definitions.</span></span>
+        <span style="font-style: italic"><span style="color: #9A1900"># See schroot.conf(5) for complete documentation of the file format.</span></span>
+        <span style="color: #990000">[</span>default<span style="color: #990000">]</span>
+        <span style="color: #009900">description</span><span style="color: #990000">=</span>Debian
+        <span style="font-weight: bold"><span style="color: #0000FF">type</span></span><span style="color: #990000">=</span>directory
+        <span style="color: #009900">directory</span><span style="color: #990000">=</span><span style="color: #009900">$PWD</span>
+        preserve-environment<span style="color: #990000">=</span><span style="font-weight: bold"><span style="color: #0000FF">false</span></span>
+        <span style="color: #009900">groups</span><span style="color: #990000">=</span>sudo
+EOF
+
+<span style="font-weight: bold"><span style="color: #0000FF">exit</span></span>
+cp -av /lib/modules lib<span style="color: #990000">/</span>
+cp -av /boot/vmlinuz-<span style="color: #993399">4.18</span><span style="color: #990000">.</span><span style="color: #993399">0</span>-<span style="color: #993399">2</span>-amd<span style="color: #993399">64</span> boot<span style="color: #990000">/</span>
+
+schroot
+
+cd <span style="color: #009900">$(</span>mktemp -d<span style="color: #990000">)</span>
+bash -x <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'BASH'</span>
+        supermin --verbose --prepare -o supermin<span style="color: #990000">.</span>d bash dash eudev coreutils procps mount findutils grep net-tools
+
+        cat <span style="color: #990000">&gt;</span> init <span style="color: #990000">&lt;&lt;</span>EOF
+        <span style="font-style: italic"><span style="color: #9A1900">#!/bin/sh</span></span>
+        mount -t proc /proc /proc
+        mount -t sysfs /sys /sys
+        echo Welcome to supermin
+        <span style="font-weight: bold"><span style="color: #0000FF">exec</span></span> sh -l -i
+        EOF
+
+        chmod <span style="color: #990000">+</span>x init
+        tar zcf supermin<span style="color: #990000">.</span>d/init<span style="color: #990000">.</span>tar<span style="color: #990000">.</span>gz <span style="color: #990000">.</span>/init
+
+        supermin --verbose --build supermin<span style="color: #990000">.</span>d -f ext2 -o appliance<span style="color: #990000">.</span>d
+BASH
+lkvm run -n -k appliance<span style="color: #990000">.</span>d/kernel -i appliance<span style="color: #990000">.</span>d/initrd  -d appliance<span style="color: #990000">.</span>d/root -p <span style="color: #FF0000">'root=/dev/vda'</span>
+
 </tt></pre></div></div>
+</div>
+</div>
 </div>
 <div id="footnotes"><hr /></div>
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2018-09-05 18:38:04 CEST
+ 2018-10-11 19:26:18 CEST
 </div>
 </div>
 </body>

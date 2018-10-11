@@ -20,6 +20,7 @@ wiki/documentation/AsciiDoc.html: wiki/Wiki.256.png
 
 index.html: README.html \
 	wiki/Wiki.html \
+	wiki/cpp/Cpp.html \
 	wiki/database/SQLite.html \
 	wiki/debian/Debian.html \
 	wiki/documentation/AsciiDoc.html \
