@@ -737,145 +737,27 @@ asciidoc.install();
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="_debian_installation">Debian installation</h2>
+<h2 id="_installation">Installation</h2>
 <div class="sectionbody">
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="https://debian-administration.org/">https://debian-administration.org/</a>
+</p>
+</li>
+<li>
+<p>
+<a href="https://www.debian.org/doc/manuals/debian-handbook/sect.debian-internals.en.html#dsa-team">https://www.debian.org/doc/manuals/debian-handbook/sect.debian-internals.en.html#dsa-team</a>
+</p>
+</li>
+</ul></div>
 <div class="listingblock">
-<div class="title">Debian</div>
+<div class="title">apt</div>
 <div class="content"><!-- Generator: GNU source-highlight 3.1.8
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
-<pre><tt>
-<span style="font-style: italic"><span style="color: #9A1900">## Netboot and preseed</span></span>
-<span style="font-style: italic"><span style="color: #9A1900">## -------------------</span></span>
-<span style="font-style: italic"><span style="color: #9A1900">## Debian automated installation with dhcp and tftp.</span></span>
-<span style="font-style: italic"><span style="color: #9A1900">## Dhcp bootfile option can be used for ipxe or a debian preseed config.</span></span>
-<span style="font-style: italic"><span style="color: #9A1900">## There is a conflict when qemu and debian use dhcp filename option (bootfile?) for</span></span>
-<span style="font-style: italic"><span style="color: #9A1900">## pxelinux.0 and preseed.cfg!</span></span>
-<span style="font-style: italic"><span style="color: #9A1900">## The ipxe boot file may be loaded from tftp.</span></span>
-<span style="font-style: italic"><span style="color: #9A1900">## It may require additional configuration in dnsmasq.conf.</span></span>
-
-<span style="font-style: italic"><span style="color: #9A1900">## - https://www.debian.org/releases/stable/i386/ch04s05</span></span>
-<span style="font-style: italic"><span style="color: #9A1900">## - https://www.iana.org/assignments/bootp-dhcp-parameters/bootp-dhcp-parameters.txt</span></span>
-<span style="font-style: italic"><span style="color: #9A1900">## - http://ipxe.org/howto/chainloading#breaking_the_loop_with_an_embedded_script</span></span>
-<span style="font-style: italic"><span style="color: #9A1900">## - https://jpmens.net/2011/07/18/network-booting-machines-over-http/</span></span>
-<span style="font-style: italic"><span style="color: #9A1900">## - http://www.briancarpio.com/2012/04/04/system-automation-part-1/</span></span>
-
-<span style="font-style: italic"><span style="color: #9A1900">## [source,sh]</span></span>
-<span style="font-style: italic"><span style="color: #9A1900">## -----------</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># Download netboot files</span></span>
-apt-get install debian-installer-<span style="color: #993399">9</span>-netboot-i<span style="color: #993399">386</span> -y
-<span style="font-style: italic"><span style="color: #9A1900">#wget -r --no-parent --no-host-directories --cut-dirs 7 http://ftp.debian.org/debian/dists/stable/main/installer-i386/current/images/netboot/</span></span>
-<span style="font-style: italic"><span style="color: #9A1900">#curl -o- http://ftp.debian.org/debian/dists/stable/main/installer-i386/current/images/netboot/netboot.tar.gz | tar xzf -</span></span>
-
-<span style="font-style: italic"><span style="color: #9A1900"># Boot with debian mini.iso and dhcp bootfile preseed.cfg</span></span>
-wget http<span style="color: #990000">:</span>//ftp<span style="color: #990000">.</span>debian<span style="color: #990000">.</span>org/debian/dists/stable<span style="color: #990000">/\</span>
-        main/installer-i<span style="color: #993399">386</span>/current/images/netboot/mini<span style="color: #990000">.</span>iso
-
-<span style="font-style: italic"><span style="color: #9A1900"># Boot with pxelinux.0 as dhcp bootfile</span></span>
-qemu-system-i<span style="color: #993399">386</span> -net nic <span style="color: #990000">\</span>
-        -net user<span style="color: #990000">,</span><span style="color: #009900">tftp</span><span style="color: #990000">=</span>/usr/lib/debian-installer/images<span style="color: #990000">/</span><span style="color: #993399">9</span>/i<span style="color: #993399">386</span>/text<span style="color: #990000">,</span><span style="color: #009900">bootfile</span><span style="color: #990000">=</span>/pxelinux<span style="color: #990000">.</span><span style="color: #993399">0</span> <span style="color: #990000">\</span>
-        -m <span style="color: #993399">512</span> -boot c -drive <span style="color: #009900">format</span><span style="color: #990000">=</span>raw<span style="color: #990000">,</span><span style="color: #009900">file</span><span style="color: #990000">=</span>disk<span style="color: #990000">.</span>img --enable-kvm
-
-<span style="font-style: italic"><span style="color: #9A1900"># Examples with preseed config as dhcp bootfile and mini.iso</span></span>
-qemu-system-i<span style="color: #993399">386</span> -net nic <span style="color: #990000">\</span>
-        -net user<span style="color: #990000">,</span><span style="color: #009900">tftp</span><span style="color: #990000">=</span><span style="color: #009900">$PWD</span><span style="color: #990000">,</span><span style="color: #009900">bootfile</span><span style="color: #990000">=</span>tftp<span style="color: #990000">://</span><span style="color: #993399">10.0</span><span style="color: #990000">.</span><span style="color: #993399">2.2</span>/d-i/stretch<span style="color: #990000">/.</span>/preseed<span style="color: #990000">.</span>cfg <span style="color: #990000">\</span>
-        -m <span style="color: #993399">512</span> -cdrom mini<span style="color: #990000">.</span>iso -boot d -drive <span style="color: #009900">format</span><span style="color: #990000">=</span>raw<span style="color: #990000">,</span><span style="color: #009900">file</span><span style="color: #990000">=</span>disk<span style="color: #990000">.</span>img --enable-kvm
-
-<span style="font-style: italic"><span style="color: #9A1900"># Load kernel from qemu</span></span>
-qemu-system-i<span style="color: #993399">386</span> -net nic <span style="color: #990000">\</span>
-        -net user<span style="color: #990000">,</span><span style="color: #009900">tftp</span><span style="color: #990000">=</span><span style="color: #009900">$PWD</span><span style="color: #990000">,</span><span style="color: #009900">bootfile</span><span style="color: #990000">=</span>tftp<span style="color: #990000">://</span><span style="color: #993399">10.0</span><span style="color: #990000">.</span><span style="color: #993399">2.2</span>/d-i/stretch<span style="color: #990000">/.</span>/preseed<span style="color: #990000">.</span>cfg <span style="color: #990000">\</span>
-        -kernel /usr/lib/debian-installer/images<span style="color: #990000">/</span><span style="color: #993399">9</span>/i<span style="color: #993399">386</span>/text/debian-installer/i<span style="color: #993399">386</span>/linux <span style="color: #990000">\</span>
-        -initrd /usr/lib/debian-installer/images<span style="color: #990000">/</span><span style="color: #993399">9</span>/i<span style="color: #993399">386</span>/text/debian-installer/i<span style="color: #993399">386</span>/initrd<span style="color: #990000">.</span>gz <span style="color: #990000">\</span>
-        -append <span style="color: #009900">auto</span><span style="color: #990000">=</span><span style="font-weight: bold"><span style="color: #0000FF">true</span></span> <span style="color: #990000">\</span>
-        -m <span style="color: #993399">512</span> -boot c -drive <span style="color: #009900">format</span><span style="color: #990000">=</span>raw<span style="color: #990000">,</span><span style="color: #009900">file</span><span style="color: #990000">=</span>disk<span style="color: #990000">.</span>img --enable-kvm
-
-<span style="font-style: italic"><span style="color: #9A1900"># Configuration files for ipxe over tftp</span></span>
-cat <span style="color: #990000">&gt;&gt;</span> tftpboot/pxelinux<span style="color: #990000">.</span>cfg/default <span style="color: #990000">&lt;&lt;</span>IPXE
-timeout <span style="color: #993399">10</span>
-default pxe
-label pxe
-        menu label <span style="color: #990000">^</span>pxe
-        kernel ipxe<span style="color: #990000">.</span>lkrn
-                append <span style="color: #009900">initrd</span><span style="color: #990000">=</span>pxe<span style="color: #990000">.</span>cfg
-IPXE
-
-cat <span style="color: #990000">&gt;</span> tftpboot/pxe<span style="color: #990000">.</span>cfg <span style="color: #990000">&lt;&lt;</span>IPXE
-dhcp
-kernel debian-installer/i<span style="color: #993399">386</span>/linux <span style="color: #009900">auto</span><span style="color: #990000">=</span><span style="font-weight: bold"><span style="color: #0000FF">true</span></span> <span style="color: #009900">priority</span><span style="color: #990000">=</span>critical <span style="color: #009900">vga</span><span style="color: #990000">=</span><span style="color: #993399">788</span> <span style="color: #009900">initrd</span><span style="color: #990000">=</span>debian-installer/i<span style="color: #993399">386</span>/initrd<span style="color: #990000">.</span>gz netcfg/disable<span style="color: #009900">_dhcp</span><span style="color: #990000">=</span><span style="font-weight: bold"><span style="color: #0000FF">true</span></span> <span style="color: #009900">url</span><span style="color: #990000">=</span>tftp<span style="color: #990000">://</span><span style="color: #993399">10.0</span><span style="color: #990000">.</span><span style="color: #993399">2.2</span>/preseed<span style="color: #990000">.</span>cfg <span style="color: #009900">ip</span><span style="color: #990000">=</span><span style="color: #993399">10.0</span><span style="color: #990000">.</span><span style="color: #993399">2.100</span><span style="color: #990000">:::</span><span style="color: #993399">255.255</span><span style="color: #990000">.</span><span style="color: #993399">255.0</span><span style="color: #990000">:</span>linux<span style="color: #990000">:</span>eth0<span style="color: #990000">:</span>on
-initrd debian-installer/i<span style="color: #993399">386</span>/initrd<span style="color: #990000">.</span>gz
-boot
-IPXE
-<span style="font-style: italic"><span style="color: #9A1900">## -----------</span></span>
-
-Bug<span style="font-style: italic"><span style="color: #9A1900">#749991</span></span>
-Besides installing <span style="color: #009900">dist</span><span style="color: #990000">=</span>stable by default<span style="color: #990000">,</span> also testing and sid are supported<span style="color: #990000">.</span>
-
-Just adding <span style="color: #FF0000">'mirror/suite=testing'</span> as additional param to the kernel <span style="font-weight: bold"><span style="color: #0000FF">command</span></span> line is enough<span style="color: #990000">.</span>
-
-<span style="font-style: italic"><span style="color: #9A1900">## Custom repository</span></span>
-<span style="font-style: italic"><span style="color: #9A1900">## -----------------</span></span>
-
-<span style="font-style: italic"><span style="color: #9A1900">## - https://wiki.debian.org/DebianRepository</span></span>
-<span style="font-style: italic"><span style="color: #9A1900">## - https://debian-handbook.info/browse/stable/sect.setup-apt-package-repository.html</span></span>
-<span style="font-style: italic"><span style="color: #9A1900">## - https://lists.debian.org/debian-mentors/2006/04/msg00294.html</span></span>
-
-<span style="font-style: italic"><span style="color: #9A1900">## -----</span></span>
-mkdir -p dists/experimental/main/binary-amd<span style="color: #993399">64</span>
-mkdir -p dists/experimental/main/source
-find <span style="color: #009900">$OLDPWD</span> -maxdepth <span style="color: #993399">1</span> -name <span style="color: #FF0000">"*gradle*deb"</span> -type f -exec cp -a {} dists/experimental/main/binary-amd<span style="color: #993399">64</span> <span style="color: #990000">\;</span>
-find <span style="color: #009900">$OLDPWD</span> -maxdepth <span style="color: #993399">1</span> -name <span style="color: #FF0000">"*gradle*xy"</span> -type f -exec cp -a {} dists/experimental/main/source <span style="color: #990000">\;</span>
-
-<span style="font-weight: bold"><span style="color: #0000FF">while</span></span> <span style="font-weight: bold"><span style="color: #0000FF">read</span></span><span style="color: #990000">;</span> <span style="font-weight: bold"><span style="color: #0000FF">do</span></span>
-    cat <span style="color: #990000">&gt;</span> dists/experimental/main<span style="color: #990000">/</span><span style="color: #009900">$REPLY</span>/Release <span style="color: #990000">&lt;&lt;</span>-EOF
-    Origin<span style="color: #990000">:</span> Debian
-    Label<span style="color: #990000">:</span> Debian
-    Suite<span style="color: #990000">:</span> experimental
-    Codename<span style="color: #990000">:</span> experimental
-    Valid-Until<span style="color: #990000">:</span> <span style="color: #009900">$(</span>date --rfc-<span style="color: #993399">2822</span> --utc --date<span style="color: #990000">=</span>@<span style="color: #993399">1600000000</span><span style="color: #990000">)</span>
-    Architectures<span style="color: #990000">:</span> amd64
-    Components<span style="color: #990000">:</span> main
-    Description<span style="color: #990000">:</span> Debian x<span style="color: #990000">.</span>y Unstable - Not Released
-EOF
-<span style="font-weight: bold"><span style="color: #0000FF">done</span></span> <span style="color: #990000">&lt;&lt;</span>ARCH
-binary-amd<span style="color: #993399">64</span>
-<span style="font-weight: bold"><span style="color: #0000FF">source</span></span>
-ARCH
-
-dpkg-scanpackages dists/experimental/main/binary-amd<span style="color: #993399">64</span><span style="color: #990000">/</span> <span style="color: #990000">&gt;</span> <span style="color: #990000">\</span>
-    dists/experimental/main/binary-amd<span style="color: #993399">64</span>/Packages
-dpkg-scansources dists/experimental/main/source<span style="color: #990000">/</span> <span style="color: #990000">&gt;</span> <span style="color: #990000">\</span>
-    dists/experimental/main/source/Sources
-
-<span style="color: #990000">&gt;</span> dists/experimental/Release apt-ftparchive release dists/experimental <span style="color: #990000">\</span>
-    -o APT<span style="color: #990000">::</span>FTPArchive<span style="color: #990000">::</span>Release<span style="color: #990000">::</span><span style="color: #009900">Architectures</span><span style="color: #990000">=</span><span style="color: #FF0000">"amd64 source"</span> <span style="color: #990000">\</span>
-    -o APT<span style="color: #990000">::</span>FTPArchive<span style="color: #990000">::</span>Release<span style="color: #990000">::</span><span style="color: #009900">Codename</span><span style="color: #990000">=</span><span style="color: #FF0000">"experimental"</span> <span style="color: #990000">\</span>
-    -o APT<span style="color: #990000">::</span>FTPArchive<span style="color: #990000">::</span>Release<span style="color: #990000">::</span><span style="color: #009900">Components</span><span style="color: #990000">=</span><span style="color: #FF0000">"main"</span> <span style="color: #990000">\</span>
-    -o APT<span style="color: #990000">::</span>FTPArchive<span style="color: #990000">::</span>Release<span style="color: #990000">::</span><span style="color: #009900">Description</span><span style="color: #990000">=</span><span style="color: #FF0000">"Description: Experimental packages - not released use at your own risk."</span> <span style="color: #990000">\</span>
-    -o APT<span style="color: #990000">::</span>FTPArchive<span style="color: #990000">::</span>Release<span style="color: #990000">::</span><span style="color: #009900">Label</span><span style="color: #990000">=</span><span style="color: #FF0000">"Debian"</span> <span style="color: #990000">\</span>
-    -o APT<span style="color: #990000">::</span>FTPArchive<span style="color: #990000">::</span>Release<span style="color: #990000">::</span><span style="color: #009900">Origin</span><span style="color: #990000">=</span><span style="color: #FF0000">"Debian"</span> <span style="color: #990000">\</span>
-    -o APT<span style="color: #990000">::</span>FTPArchive<span style="color: #990000">::</span>Release<span style="color: #990000">::</span><span style="color: #009900">Suite</span><span style="color: #990000">=</span><span style="color: #FF0000">"experimental"</span> <span style="color: #990000">\</span>
-
-<span style="font-weight: bold"><span style="color: #0000FF">exit</span></span>
-
-<span style="font-style: italic"><span style="color: #9A1900"># sign files</span></span>
-gpg --yes -abs -o dists/experimental/Release<span style="color: #990000">.</span>gpg dists/experimental/Release
-gpg --clearsign -o dists/experimental/InRelease dists/experimental/Release
-
-
-<span style="font-style: italic"><span style="color: #9A1900"># import signatures on client</span></span>
-gpg --recv-key --keyserver localhost 0123456789ABCDEF
-gpg --list-sigs
-gpg --export 0123456789ABCDEF <span style="color: #990000">&gt;</span> /usr/share/keyrings/archive-keyring<span style="color: #990000">.</span>gpg
-
-cat <span style="color: #990000">&gt;&gt;</span> /etc/apt/sources<span style="color: #990000">.</span>list <span style="color: #990000">&lt;&lt;</span>APT
-deb <span style="color: #990000">[</span>signed-by<span style="color: #990000">=</span>/usr/share/keyrings/archive-keyring<span style="color: #990000">.</span>gpg<span style="color: #990000">]</span> ftp<span style="color: #990000">:</span>//localhost/debian experimental main
-deb-src <span style="color: #990000">[</span>signed-by<span style="color: #990000">=</span>/usr/share/keyrings/archive-keyring<span style="color: #990000">.</span>gpg<span style="color: #990000">]</span> ftp<span style="color: #990000">:</span>//localhost/debian experimental main
-APT
-<span style="font-style: italic"><span style="color: #9A1900">## -----</span></span>
-
-<span style="color: #990000">=</span>Installation
-apt install -o Dpkg<span style="color: #990000">::</span>Options<span style="color: #990000">::=</span><span style="color: #FF0000">"--force-confnew"</span>
+<pre><tt>apt install -o Dpkg<span style="color: #990000">::</span>Options<span style="color: #990000">::=</span><span style="color: #FF0000">"--force-confnew"</span>
 
 <span style="font-style: italic"><span style="color: #9A1900"># Packages</span></span>
 apt install etckeeper
@@ -936,178 +818,26 @@ debtags cat <span style="color: #990000">|</span> grep automake <span style="col
 
 man apt_preferences
 sudo gem install asccidoc-include-ext mail-room
-https<span style="color: #990000">:</span>//debian-administration<span style="color: #990000">.</span>org<span style="color: #990000">/</span>
-https<span style="color: #990000">:</span>//www<span style="color: #990000">.</span>debian<span style="color: #990000">.</span>org/doc/manuals/debian-handbook/sect<span style="color: #990000">.</span>debian-internals<span style="color: #990000">.</span>en<span style="color: #990000">.</span>html<span style="font-style: italic"><span style="color: #9A1900">#dsa-team</span></span>
 
 apt-config dump
-apt install libpod-index-perl
 bash /etc/cron<span style="color: #990000">.</span>weekly/dwww
+apt install libpod-index-perl
 dhelp
 dlocate
 dpkg-statoverride
 debtags
 grep-available
-dpkg-divert
-
-<span style="font-style: italic"><span style="color: #9A1900">## -----</span></span>
-dgit cloned dgit
-cd dgit
-git checkout -b master
-dgit gbp-build
-<span style="font-style: italic"><span style="color: #9A1900">## -----</span></span>
-
-<span style="font-style: italic"><span style="color: #9A1900">## Debuild</span></span>
-<span style="font-style: italic"><span style="color: #9A1900">## -------</span></span>
-
-<span style="font-style: italic"><span style="color: #9A1900">## Building a Debian package from source is simple.</span></span>
-<span style="font-style: italic"><span style="color: #9A1900">## The script records build steps from the terminal and paste it online</span></span>
-
-<span style="font-style: italic"><span style="color: #9A1900">## [source,sh]</span></span>
-<span style="font-style: italic"><span style="color: #9A1900">## -----</span></span>
-<span style="font-style: italic"><span style="color: #9A1900">#!/bin/bash</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># Install required packages</span></span>
-apt install devscripts bsdutils
-apt build-dep debbugs/experimental
-
-<span style="font-style: italic"><span style="color: #9A1900"># Record typescript with script</span></span>
-script -c <span style="color: #FF0000">"$( cat &lt;&lt;-'SCRIPT'</span>
-<span style="color: #FF0000">        set -e -x</span>
-<span style="color: #FF0000">        cd $(mktemp -d)</span>
-<span style="color: #FF0000">        apt source debbugs/experimental</span>
-<span style="color: #FF0000">        cd debbugs-*</span>
-<span style="color: #FF0000">        debuild -uc -us</span>
-<span style="color: #FF0000">        SCRIPT</span>
-<span style="color: #FF0000">)"</span>
-<span style="font-style: italic"><span style="color: #9A1900"># Remove escape sequences from typescript then add it to debpaste</span></span>
-<span style="color: #990000">&lt;</span> typescript bbe -b <span style="color: #FF0000">"/</span><span style="color: #CC33CC">\x</span><span style="color: #FF0000">1b</span><span style="color: #CC33CC">\x</span><span style="color: #FF0000">5b/:/</span><span style="color: #CC33CC">\x</span><span style="color: #FF0000">6d/"</span> -e D <span style="color: #990000">|</span> iconv --from<span style="color: #990000">=</span>latin1 --to<span style="color: #990000">=</span>utf-<span style="color: #993399">8</span> <span style="color: #990000">|</span> debpaste add
-<span style="font-style: italic"><span style="color: #9A1900">## -----</span></span>
-
-<span style="font-style: italic"><span style="color: #9A1900">## Bugtracking</span></span>
-<span style="font-style: italic"><span style="color: #9A1900">## -----------</span></span>
-<span style="font-style: italic"><span style="color: #9A1900">## -----</span></span>
-<span style="color: #009900">BROWSER</span><span style="color: #990000">=</span>w3m bts show debbugs
-<span style="font-style: italic"><span style="color: #9A1900">## -----</span></span>
-
-<span style="font-style: italic"><span style="color: #9A1900">## Patches</span></span>
-<span style="font-style: italic"><span style="color: #9A1900">## -------</span></span>
-<span style="font-style: italic"><span style="color: #9A1900">## Patching a source package</span></span>
-
-<span style="font-style: italic"><span style="color: #9A1900">## [source,sh]</span></span>
-<span style="font-style: italic"><span style="color: #9A1900">## -----</span></span>
-apt install quilt
-cd <span style="color: #009900">$(</span>mktemp -d<span style="color: #990000">)</span>
-apt <span style="font-weight: bold"><span style="color: #0000FF">source</span></span> debbugs
-cd debbugs-<span style="color: #990000">*</span>
-quilt <span style="font-weight: bold"><span style="color: #000080">import</span></span> -f <span style="color: #990000">&lt;(</span> cat <span style="color: #990000">&lt;&lt;</span>-PATCH
-PATCH
-<span style="color: #990000">)</span>
-<span style="font-style: italic"><span style="color: #9A1900">## -----</span></span>
-
-
-<span style="font-style: italic"><span style="color: #9A1900"># Creating a Debian repository</span></span>
-rsync -a /mnt/loop/pool <span style="color: #990000">.</span>
-
-<span style="color: #990000">&gt;</span> Release cat <span style="color: #990000">&lt;&lt;</span>EOF
-Archive<span style="color: #990000">:</span> unstable
-Origin<span style="color: #990000">:</span> Debian
-Label<span style="color: #990000">:</span> Debian
-Component<span style="color: #990000">:</span> main
-Components<span style="color: #990000">:</span> main
-Architecture<span style="color: #990000">:</span> amd64
-<span style="color: #990000">&gt;</span> EOF
-aptitude update
-<span style="color: #990000">~~~</span>
-
-
-aptitude install gpg dirmngr
-<span style="color: #990000">&gt;&gt;</span> /etc/apt/sources<span style="color: #990000">.</span>list <span style="color: #990000">&lt;&lt;</span>EOF
-<span style="font-style: italic"><span style="color: #9A1900"># https://wiki.debian.org/DebianRepository/UseThirdParty</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># gpg --export 0123456789ABCDEF &gt; /usr/share/keyrings/archive-keyring.gpg</span></span>
-deb <span style="color: #990000">[</span>signed-by<span style="color: #990000">=</span>/usr/share/keyrings/archive-keyring<span style="color: #990000">.</span>gpg<span style="color: #990000">]</span> file<span style="color: #990000">:</span>/srv/reprepro/debian <span style="color: #990000">/</span>
-deb-src <span style="color: #990000">[</span>signed-by<span style="color: #990000">=</span>/usr/share/keyrings/archive-keyring<span style="color: #990000">.</span>gpg<span style="color: #990000">]</span> file<span style="color: #990000">:</span>/srv/reprepro/debian <span style="color: #990000">/</span>
-EOF
-
-<span style="font-style: italic"><span style="color: #9A1900"># Generate gpg signatures to sign Debian packages</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># Debian packages use gpg signatures</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># gpg --export 0123456789ABCDEF &gt; /usr/share/keyrings/archive-keyring.gpg</span></span>
-gpg --quick-gen-key --yes <span style="color: #009900">$(whoami)</span>
-gpg --list-sigs --with-keygrip
-gpg --keyid-format long --fingerprint 0123456789ABCDEF
-gpg --send-key --keyserver example<span style="color: #990000">.</span>com 0123456789ABCDEF
-gpg --recv-key --keyserver example<span style="color: #990000">.</span>com 0123456789ABCDEF
-gpg --export --armor <span style="color: #990000">|</span> gpg --import --armor
-gpg --armor --export 0123456789ABCDEF <span style="color: #990000">|</span> sudo apt-key add -
-<span style="font-style: italic"><span style="color: #9A1900">#gpg --export 0123456789ABCDEF | sudo apt-key add -</span></span>
-<span style="font-style: italic"><span style="color: #9A1900">#apt-key list</span></span>
-<span style="font-style: italic"><span style="color: #9A1900">#wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -</span></span>
-
-gpg --output revoke<span style="color: #990000">.</span>asc --gen-revoke <span style="color: #993399">01234567</span>
-
-https<span style="color: #990000">:</span>//wiki<span style="color: #990000">.</span>debian<span style="color: #990000">.</span>org/Subkeys
-https<span style="color: #990000">:</span>//njh<span style="color: #990000">.</span>eu/keyserver
-https<span style="color: #990000">:</span>//debian-administration<span style="color: #990000">.</span>org/article<span style="color: #990000">/</span><span style="color: #993399">451</span>/Submitting_your_GPG_key_to_a_keyserver
-https<span style="color: #990000">:</span>//keyring<span style="color: #990000">.</span>debian<span style="color: #990000">.</span>org/creating-key<span style="color: #990000">.</span>html
-
-
-<span style="color: #990000">&gt;</span> /etc/apt/sources<span style="color: #990000">.</span>list cat <span style="color: #990000">&lt;&lt;</span>EOF
-deb file<span style="color: #990000">:</span>/var/www/html/packages/amd<span style="color: #993399">64</span><span style="color: #990000">/</span> <span style="color: #990000">/</span>
-deb-src file<span style="color: #990000">:</span>/var/www/html/packages/amd<span style="color: #993399">64</span><span style="color: #990000">/</span> <span style="color: #990000">/</span>
-EOF
-
-<span style="font-style: italic"><span style="color: #9A1900"># Create a debian mirror</span></span>
-<span style="color: #990000">&gt;</span> gpg<span style="color: #990000">.</span>conf cat <span style="color: #990000">&lt;&lt;</span><span style="color: #FF0000">'EOF'</span>
-trusted-key sdasdsa
-EOF
-<span style="font-weight: bold"><span style="color: #0000FF">export</span></span> <span style="color: #009900">GNUPGHOME</span><span style="color: #990000">=</span><span style="color: #009900">$PWD</span>
-debmirror --verbose --debug <span style="color: #990000">.</span>
-gpg --list-packets --verbose <span style="color: #990000">&lt;</span> <span style="color: #990000">.</span>temp/dists/stretch/Release<span style="color: #990000">.</span>gpg
-gpg --receive EF0F382A1A7B6500
-gpg --edit-key EF0F382A1A7B6500 trust
-gpg --verify <span style="color: #990000">.</span>temp/dists/stretch/Release<span style="color: #990000">.</span>gpg <span style="color: #990000">.</span>temp/dists/stretch/Release
-
-ln -s pubring<span style="color: #990000">.</span>kbx trustedkeys<span style="color: #990000">.</span>kbx
-gpgv <span style="color: #990000">.</span>temp/dists/stretch/Release<span style="color: #990000">.</span>gpg <span style="color: #990000">.</span>temp/dists/stretch/Release
-
-debmirror --verbose --progress --debug --keyring pubring<span style="color: #990000">.</span>kbx <span style="color: #990000">.</span>
-
-aptitude search <span style="color: #990000">~</span>sutils
+dpkg-divert</tt></pre></div></div>
+<div class="listingblock">
+<div class="title">debtags</div>
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>aptitude search <span style="color: #990000">~</span>sutils
 
 view /usr/share/tasksel/descs/debian-tasks<span style="color: #990000">.</span>desc
-<span style="color: #990000">&lt;</span> <span style="color: #990000">*</span>dists_stable_main<span style="color: #990000">*</span>Packages grep-dctrl --field<span style="color: #990000">=</span>Depends tasksel --show-field<span style="color: #990000">=</span>Package<span style="color: #990000">,</span>Section<span style="color: #990000">,</span>Tag<span style="color: #990000">,</span>Maintainer
-
-
-<span style="font-style: italic"><span style="color: #9A1900">## Ultimate debian database</span></span>
-wget https<span style="color: #990000">:</span>//udd<span style="color: #990000">.</span>debian<span style="color: #990000">.</span>org/dumps/udd<span style="color: #990000">.</span>dump
-time sudo -u postgres bash <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'BASH'</span>
-        psql <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'EOF'</span>
-                DROP DATABASE IF EXISTS udd<span style="color: #990000">;</span>
-                DROP ROLE IF EXISTS udd<span style="color: #990000">;</span>
-                CREATE ROLE udd<span style="color: #990000">;</span>
-                CREATE DATABASE udd TEMPLATE template0 ENCODING SQL_ASCII<span style="color: #990000">;</span>
-        EOF
-        pg_restore --exit-on-error --no-owner --dbname udd udd<span style="color: #990000">.</span>dump
-        psql --dbname udd <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'EOF'</span>
-                DROP ROLE IF EXISTS <span style="color: #FF0000">"user"</span><span style="color: #990000">;</span>
-                CREATE ROLE <span style="color: #FF0000">"user"</span><span style="color: #990000">;</span>
-                REASSIGN OWNED BY udd TO <span style="color: #FF0000">"user"</span><span style="color: #990000">;</span>
-                DROP OWNED BY udd<span style="color: #990000">;</span>
-                DROP ROLE udd<span style="color: #990000">;</span>
-                ALTER DATABASE udd SET default_transaction_read_only <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
-                ALTER ROLE <span style="color: #FF0000">"user"</span> WITH LOGIN<span style="color: #990000">;</span>
-        EOF
-BASH
-
-
-quilt push -a <span style="color: #990000">&amp;&amp;</span> <span style="color: #990000">\</span>
-quilt snapshot <span style="color: #990000">&amp;&amp;</span> <span style="color: #990000">\</span>
-quilt series <span style="color: #990000">|</span> <span style="color: #990000">\</span>
-<span style="font-weight: bold"><span style="color: #0000FF">while</span></span> <span style="font-weight: bold"><span style="color: #0000FF">read</span></span><span style="color: #990000">;</span> <span style="font-weight: bold"><span style="color: #0000FF">do</span></span> <span style="color: #990000">\</span>
-        quilt files <span style="color: #990000">|</span> <span style="color: #990000">\</span>
-        grep <span style="color: #990000">^</span>debian <span style="color: #990000">|</span> <span style="color: #990000">\</span>
-        xargs -r quilt remove <span style="color: #990000">&amp;&amp;</span> <span style="color: #990000">\</span>
-                quilt refresh <span style="color: #990000">&amp;&amp;</span> <span style="color: #990000">\</span>
-                quilt pop
-<span style="font-weight: bold"><span style="color: #0000FF">done</span></span></tt></pre></div></div>
+<span style="color: #990000">&lt;</span> <span style="color: #990000">*</span>dists_stable_main<span style="color: #990000">*</span>Packages grep-dctrl --field<span style="color: #990000">=</span>Depends tasksel --show-field<span style="color: #990000">=</span>Package<span style="color: #990000">,</span>Section<span style="color: #990000">,</span>Tag<span style="color: #990000">,</span>Maintainer</tt></pre></div></div>
 </div>
 </div>
 <div class="sect1">
@@ -1184,12 +914,391 @@ schroot -- sudo lkvm run -n -k /tmp/tmp<span style="color: #990000">.</span>4Sna
 </tt></pre></div></div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_netboot_and_preseed">Netboot and preseed</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Debian automated installation with dhcp and tftp.
+Dhcp bootfile option can be used for ipxe or a debian preseed config.
+There is a conflict when qemu and debian use dhcp filename option (bootfile?) for
+pxelinux.0 and preseed.cfg!
+The ipxe boot file may be loaded from tftp.
+It may require additional configuration in dnsmasq.conf.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="https://www.debian.org/releases/stable/i386/ch04s05">https://www.debian.org/releases/stable/i386/ch04s05</a>
+</p>
+</li>
+<li>
+<p>
+<a href="https://www.iana.org/assignments/bootp-dhcp-parameters/bootp-dhcp-parameters.txt">https://www.iana.org/assignments/bootp-dhcp-parameters/bootp-dhcp-parameters.txt</a>
+</p>
+</li>
+<li>
+<p>
+<a href="http://ipxe.org/howto/chainloading#breaking_the_loop_with_an_embedded_script">http://ipxe.org/howto/chainloading#breaking_the_loop_with_an_embedded_script</a>
+</p>
+</li>
+<li>
+<p>
+<a href="https://jpmens.net/2011/07/18/network-booting-machines-over-http/">https://jpmens.net/2011/07/18/network-booting-machines-over-http/</a>
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.briancarpio.com/2012/04/04/system-automation-part-1/">http://www.briancarpio.com/2012/04/04/system-automation-part-1/</a>
+</p>
+</li>
+</ul></div>
+<div class="listingblock">
+<div class="title">Debian</div>
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-style: italic"><span style="color: #9A1900"># Download netboot files</span></span>
+apt-get install debian-installer-<span style="color: #993399">9</span>-netboot-i<span style="color: #993399">386</span> -y
+<span style="font-style: italic"><span style="color: #9A1900">#wget -r --no-parent --no-host-directories --cut-dirs 7 http://ftp.debian.org/debian/dists/stable/main/installer-i386/current/images/netboot/</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">#curl -o- http://ftp.debian.org/debian/dists/stable/main/installer-i386/current/images/netboot/netboot.tar.gz | tar xzf -</span></span>
+
+<span style="font-style: italic"><span style="color: #9A1900"># Boot with debian mini.iso and dhcp bootfile preseed.cfg</span></span>
+wget http<span style="color: #990000">:</span>//ftp<span style="color: #990000">.</span>debian<span style="color: #990000">.</span>org/debian/dists/stable<span style="color: #990000">/\</span>
+        main/installer-i<span style="color: #993399">386</span>/current/images/netboot/mini<span style="color: #990000">.</span>iso
+
+<span style="font-style: italic"><span style="color: #9A1900"># Boot with pxelinux.0 as dhcp bootfile</span></span>
+qemu-system-i<span style="color: #993399">386</span> -net nic <span style="color: #990000">\</span>
+        -net user<span style="color: #990000">,</span><span style="color: #009900">tftp</span><span style="color: #990000">=</span>/usr/lib/debian-installer/images<span style="color: #990000">/</span><span style="color: #993399">9</span>/i<span style="color: #993399">386</span>/text<span style="color: #990000">,</span><span style="color: #009900">bootfile</span><span style="color: #990000">=</span>/pxelinux<span style="color: #990000">.</span><span style="color: #993399">0</span> <span style="color: #990000">\</span>
+        -m <span style="color: #993399">512</span> -boot c -drive <span style="color: #009900">format</span><span style="color: #990000">=</span>raw<span style="color: #990000">,</span><span style="color: #009900">file</span><span style="color: #990000">=</span>disk<span style="color: #990000">.</span>img --enable-kvm
+
+<span style="font-style: italic"><span style="color: #9A1900"># Examples with preseed config as dhcp bootfile and mini.iso</span></span>
+qemu-system-i<span style="color: #993399">386</span> -net nic <span style="color: #990000">\</span>
+        -net user<span style="color: #990000">,</span><span style="color: #009900">tftp</span><span style="color: #990000">=</span><span style="color: #009900">$PWD</span><span style="color: #990000">,</span><span style="color: #009900">bootfile</span><span style="color: #990000">=</span>tftp<span style="color: #990000">://</span><span style="color: #993399">10.0</span><span style="color: #990000">.</span><span style="color: #993399">2.2</span>/d-i/stretch<span style="color: #990000">/.</span>/preseed<span style="color: #990000">.</span>cfg <span style="color: #990000">\</span>
+        -m <span style="color: #993399">512</span> -cdrom mini<span style="color: #990000">.</span>iso -boot d -drive <span style="color: #009900">format</span><span style="color: #990000">=</span>raw<span style="color: #990000">,</span><span style="color: #009900">file</span><span style="color: #990000">=</span>disk<span style="color: #990000">.</span>img --enable-kvm
+
+<span style="font-style: italic"><span style="color: #9A1900"># Load kernel from qemu</span></span>
+qemu-system-i<span style="color: #993399">386</span> -net nic <span style="color: #990000">\</span>
+        -net user<span style="color: #990000">,</span><span style="color: #009900">tftp</span><span style="color: #990000">=</span><span style="color: #009900">$PWD</span><span style="color: #990000">,</span><span style="color: #009900">bootfile</span><span style="color: #990000">=</span>tftp<span style="color: #990000">://</span><span style="color: #993399">10.0</span><span style="color: #990000">.</span><span style="color: #993399">2.2</span>/d-i/stretch<span style="color: #990000">/.</span>/preseed<span style="color: #990000">.</span>cfg <span style="color: #990000">\</span>
+        -kernel /usr/lib/debian-installer/images<span style="color: #990000">/</span><span style="color: #993399">9</span>/i<span style="color: #993399">386</span>/text/debian-installer/i<span style="color: #993399">386</span>/linux <span style="color: #990000">\</span>
+        -initrd /usr/lib/debian-installer/images<span style="color: #990000">/</span><span style="color: #993399">9</span>/i<span style="color: #993399">386</span>/text/debian-installer/i<span style="color: #993399">386</span>/initrd<span style="color: #990000">.</span>gz <span style="color: #990000">\</span>
+        -append <span style="color: #009900">auto</span><span style="color: #990000">=</span><span style="font-weight: bold"><span style="color: #0000FF">true</span></span> <span style="color: #990000">\</span>
+        -m <span style="color: #993399">512</span> -boot c -drive <span style="color: #009900">format</span><span style="color: #990000">=</span>raw<span style="color: #990000">,</span><span style="color: #009900">file</span><span style="color: #990000">=</span>disk<span style="color: #990000">.</span>img --enable-kvm
+
+<span style="font-style: italic"><span style="color: #9A1900"># Configuration files for ipxe over tftp</span></span>
+cat <span style="color: #990000">&gt;&gt;</span> tftpboot/pxelinux<span style="color: #990000">.</span>cfg/default <span style="color: #990000">&lt;&lt;</span>IPXE
+timeout <span style="color: #993399">10</span>
+default pxe
+label pxe
+        menu label <span style="color: #990000">^</span>pxe
+        kernel ipxe<span style="color: #990000">.</span>lkrn
+                append <span style="color: #009900">initrd</span><span style="color: #990000">=</span>pxe<span style="color: #990000">.</span>cfg
+IPXE
+
+cat <span style="color: #990000">&gt;</span> tftpboot/pxe<span style="color: #990000">.</span>cfg <span style="color: #990000">&lt;&lt;</span>IPXE
+dhcp
+kernel debian-installer/i<span style="color: #993399">386</span>/linux <span style="color: #009900">auto</span><span style="color: #990000">=</span><span style="font-weight: bold"><span style="color: #0000FF">true</span></span> <span style="color: #009900">priority</span><span style="color: #990000">=</span>critical <span style="color: #009900">vga</span><span style="color: #990000">=</span><span style="color: #993399">788</span> <span style="color: #009900">initrd</span><span style="color: #990000">=</span>debian-installer/i<span style="color: #993399">386</span>/initrd<span style="color: #990000">.</span>gz netcfg/disable<span style="color: #009900">_dhcp</span><span style="color: #990000">=</span><span style="font-weight: bold"><span style="color: #0000FF">true</span></span> <span style="color: #009900">url</span><span style="color: #990000">=</span>tftp<span style="color: #990000">://</span><span style="color: #993399">10.0</span><span style="color: #990000">.</span><span style="color: #993399">2.2</span>/preseed<span style="color: #990000">.</span>cfg <span style="color: #009900">ip</span><span style="color: #990000">=</span><span style="color: #993399">10.0</span><span style="color: #990000">.</span><span style="color: #993399">2.100</span><span style="color: #990000">:::</span><span style="color: #993399">255.255</span><span style="color: #990000">.</span><span style="color: #993399">255.0</span><span style="color: #990000">:</span>linux<span style="color: #990000">:</span>eth0<span style="color: #990000">:</span>on
+initrd debian-installer/i<span style="color: #993399">386</span>/initrd<span style="color: #990000">.</span>gz
+boot
+IPXE</tt></pre></div></div>
+<div class="paragraph"><p>Bug#749991
+Besides installing dist=stable by default, also testing and sid are supported.</p></div>
+<div class="paragraph"><p>Just adding <em>mirror/suite=testing</em> as additional param to the kernel command line is enough.</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_build_from_source_package">Build from source package</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Building a Debian package from source is simple.
+The script records build steps from the terminal and paste it online</p></div>
+<div class="sect2">
+<h3 id="_debug_build">Debug build</h3>
+<div class="paragraph"><p>DEB_BUILD_OPTIONS=nostrip,noopt</p></div>
+<div class="listingblock">
+<div class="title">dgit</div>
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-style: italic"><span style="color: #9A1900">#dgit</span></span>
+dgit cloned dgit
+cd dgit
+git checkout -b master
+dgit gbp-build</tt></pre></div></div>
+<div class="listingblock">
+<div class="title">debuild</div>
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-style: italic"><span style="color: #9A1900">#!/bin/bash</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># Install required packages</span></span>
+apt install devscripts bsdutils
+apt build-dep debbugs/experimental
+
+<span style="font-style: italic"><span style="color: #9A1900"># Record typescript with script</span></span>
+script -c <span style="color: #FF0000">"$( cat &lt;&lt;-'SCRIPT'</span>
+<span style="color: #FF0000">        set -e -x</span>
+<span style="color: #FF0000">        cd $(mktemp -d)</span>
+<span style="color: #FF0000">        apt source debbugs/experimental</span>
+<span style="color: #FF0000">        cd debbugs-*</span>
+<span style="color: #FF0000">        debuild -uc -us</span>
+<span style="color: #FF0000">        SCRIPT</span>
+<span style="color: #FF0000">)"</span>
+<span style="font-style: italic"><span style="color: #9A1900"># Remove escape sequences from typescript then add it to debpaste</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># &lt; typescript bbe -b "/\x1b\x5b/:/\x6d/" -e D | iconv --from=latin1 --to=utf-8 | debpaste add</span></span></tt></pre></div></div>
+<div class="listingblock">
+<div class="title">gradle</div>
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-style: italic"><span style="color: #9A1900">#!/bin/bash</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># create gradle-3.3.0-1 package for debian</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># https://www.debian.org/doc/manuals/maint-guide/index.en.html</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">set</span></span> -e
+<span style="font-weight: bold"><span style="color: #0000FF">set</span></span> -x
+
+<span style="font-style: italic"><span style="color: #9A1900">## Install dependencies</span></span>
+apt install packaging-dev -y
+apt build-dep gradle -y
+
+<span style="font-style: italic"><span style="color: #9A1900"># Build with debug symbols (objcopy --only-keep-debug)</span></span>
+
+git init gradle-<span style="color: #993399">3.3</span><span style="color: #990000">.</span><span style="color: #993399">0</span>
+cd gradle-<span style="color: #993399">3.3</span><span style="color: #990000">.</span><span style="color: #993399">0</span>
+git remote add origin https<span style="color: #990000">:</span>//anonscm<span style="color: #990000">.</span>debian<span style="color: #990000">.</span>org/git/pkg-java/gradle<span style="color: #990000">.</span>git
+git remote add upstream https<span style="color: #990000">:</span>//github<span style="color: #990000">.</span>com/gradle/gradle<span style="color: #990000">.</span>git
+git fetch --all
+git checkout debian<span style="color: #990000">/</span><span style="color: #993399">3.2</span><span style="color: #990000">.</span><span style="color: #993399">1</span>-<span style="color: #993399">1</span>
+git rebase v3<span style="color: #990000">.</span><span style="color: #993399">2.1</span> v3<span style="color: #990000">.</span><span style="color: #993399">3.0</span> --onto debian<span style="color: #990000">/</span><span style="color: #993399">3.2</span><span style="color: #990000">.</span><span style="color: #993399">1</span>-<span style="color: #993399">1</span> --strategy<span style="color: #990000">=</span>recursive --strategy-option<span style="color: #990000">=</span>ours <span style="color: #990000">||</span> <span style="color: #990000">\</span>
+    <span style="font-weight: bold"><span style="color: #0000FF">while</span></span> <span style="color: #990000">!</span> git rebase --continue<span style="color: #990000">;</span> <span style="font-weight: bold"><span style="color: #0000FF">do</span></span>
+        git rm <span style="color: #009900">$(</span>git ls-files -u <span style="color: #990000">|</span> cut -f<span style="color: #993399">2</span> <span style="color: #990000">)</span>
+    <span style="font-weight: bold"><span style="color: #0000FF">done</span></span>
+
+wget -O- http<span style="color: #990000">:</span>//paste<span style="color: #990000">.</span>debian<span style="color: #990000">.</span>net/downloadh<span style="color: #990000">/</span>2d45d7c3 <span style="color: #990000">|</span> <span style="color: #990000">\</span>
+    patch -p<span style="color: #993399">1</span>
+
+dch --newversion <span style="color: #993399">3.3</span><span style="color: #990000">.</span><span style="color: #993399">0</span>-<span style="color: #993399">1</span> <span style="color: #FF0000">"Merge upstream v3.3.0"</span>
+dh_make --indep --yes --createorig <span style="color: #990000">||</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span>
+
+debuild</tt></pre></div></div>
+<div class="listingblock">
+<div class="title">quilt</div>
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>apt install quilt
+cd <span style="color: #009900">$(</span>mktemp -d<span style="color: #990000">)</span>
+apt <span style="font-weight: bold"><span style="color: #0000FF">source</span></span> debbugs
+cd debbugs-<span style="color: #990000">*</span>
+quilt <span style="font-weight: bold"><span style="color: #000080">import</span></span> -f <span style="color: #990000">&lt;(</span> cat <span style="color: #990000">\</span>
+<span style="color: #990000">&lt;&lt;</span>-PATCH
+PATCH
+<span style="color: #990000">)</span>
+
+<span style="font-style: italic"><span style="color: #9A1900"># Split patches</span></span>
+quilt push -a <span style="color: #990000">&amp;&amp;</span> <span style="color: #990000">\</span>
+quilt snapshot <span style="color: #990000">&amp;&amp;</span> <span style="color: #990000">\</span>
+quilt series <span style="color: #990000">|</span> <span style="color: #990000">\</span>
+<span style="font-weight: bold"><span style="color: #0000FF">while</span></span> <span style="font-weight: bold"><span style="color: #0000FF">read</span></span><span style="color: #990000">;</span> <span style="font-weight: bold"><span style="color: #0000FF">do</span></span> <span style="color: #990000">\</span>
+        quilt files <span style="color: #990000">|</span> <span style="color: #990000">\</span>
+        grep <span style="color: #990000">^</span>debian <span style="color: #990000">|</span> <span style="color: #990000">\</span>
+        xargs -r quilt remove <span style="color: #990000">&amp;&amp;</span> <span style="color: #990000">\</span>
+                quilt refresh <span style="color: #990000">&amp;&amp;</span> <span style="color: #990000">\</span>
+                quilt pop
+<span style="font-weight: bold"><span style="color: #0000FF">done</span></span></tt></pre></div></div>
+<div class="listingblock">
+<div class="title">bts</div>
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-style: italic"><span style="color: #9A1900"># Bugtracking</span></span>
+<span style="color: #009900">BROWSER</span><span style="color: #990000">=</span>w3m bts show debbugs</tt></pre></div></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_gpg">GPG</h2>
+<div class="sectionbody">
+<div class="paragraph"><p><a href="https://wiki.debian.org/Subkeys">https://wiki.debian.org/Subkeys</a>
+<a href="https://njh.eu/keyserver">https://njh.eu/keyserver</a>
+<a href="https://debian-administration.org/article/451/Submitting_your_GPG_key_to_a_keyserver">https://debian-administration.org/article/451/Submitting_your_GPG_key_to_a_keyserver</a>
+<a href="https://keyring.debian.org/creating-key.html">https://keyring.debian.org/creating-key.html</a></p></div>
+<div class="listingblock">
+<div class="title">gpg</div>
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>aptitude install gpg dirmngr
+<span style="font-style: italic"><span style="color: #9A1900"># Generate gpg signatures to sign Debian packages</span></span>
+gpg --quick-gen-key --yes <span style="color: #009900">$(whoami)</span>
+gpg --list-sigs --with-keygrip
+gpg --keyid-format long --fingerprint 0123456789ABCDEF
+gpg --send-key --keyserver example<span style="color: #990000">.</span>com 0123456789ABCDEF
+gpg --recv-key --keyserver example<span style="color: #990000">.</span>com 0123456789ABCDEF
+gpg --export --armor <span style="color: #990000">|</span> gpg --import --armor
+gpg --armor --export 0123456789ABCDEF <span style="color: #990000">|</span> sudo apt-key add -
+<span style="font-style: italic"><span style="color: #9A1900">#gpg --export 0123456789ABCDEF | sudo apt-key add -</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">#apt-key list</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">#wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -</span></span>
+
+gpg --output revoke<span style="color: #990000">.</span>asc --gen-revoke <span style="color: #993399">01234567</span>
+</tt></pre></div></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_repositories">Repositories</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="title">debmirror</div>
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="color: #990000">&gt;</span> gpg<span style="color: #990000">.</span>conf cat <span style="color: #990000">&lt;&lt;</span><span style="color: #FF0000">'EOF'</span>
+trusted-key sdasdsa
+EOF
+<span style="font-weight: bold"><span style="color: #0000FF">export</span></span> <span style="color: #009900">GNUPGHOME</span><span style="color: #990000">=</span><span style="color: #009900">$PWD</span>
+debmirror --verbose --debug <span style="color: #990000">.</span>
+gpg --list-packets --verbose <span style="color: #990000">&lt;</span> <span style="color: #990000">.</span>temp/dists/stretch/Release<span style="color: #990000">.</span>gpg
+gpg --receive EF0F382A1A7B6500
+gpg --edit-key EF0F382A1A7B6500 trust
+gpg --verify <span style="color: #990000">.</span>temp/dists/stretch/Release<span style="color: #990000">.</span>gpg <span style="color: #990000">.</span>temp/dists/stretch/Release
+
+ln -s pubring<span style="color: #990000">.</span>kbx trustedkeys<span style="color: #990000">.</span>kbx
+gpgv <span style="color: #990000">.</span>temp/dists/stretch/Release<span style="color: #990000">.</span>gpg <span style="color: #990000">.</span>temp/dists/stretch/Release
+
+debmirror --verbose --progress --debug --keyring pubring<span style="color: #990000">.</span>kbx <span style="color: #990000">.</span></tt></pre></div></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_custom_repository">Custom repository</h2>
+<div class="sectionbody">
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="https://wiki.debian.org/DebianRepository">https://wiki.debian.org/DebianRepository</a>
+</p>
+</li>
+<li>
+<p>
+<a href="https://wiki.debian.org/DebianRepository/UseThirdParty">https://wiki.debian.org/DebianRepository/UseThirdParty</a>
+</p>
+</li>
+<li>
+<p>
+<a href="https://debian-handbook.info/browse/stable/sect.setup-apt-package-repository.html">https://debian-handbook.info/browse/stable/sect.setup-apt-package-repository.html</a>
+</p>
+</li>
+<li>
+<p>
+<a href="https://lists.debian.org/debian-mentors/2006/04/msg00294.html">https://lists.debian.org/debian-mentors/2006/04/msg00294.html</a>
+</p>
+</li>
+</ul></div>
+<div class="listingblock">
+<div class="title">Repository</div>
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>mkdir -p dists/experimental/main/binary-amd<span style="color: #993399">64</span>
+mkdir -p dists/experimental/main/source
+find <span style="color: #009900">$OLDPWD</span> -maxdepth <span style="color: #993399">1</span> -name <span style="color: #FF0000">"*gradle*deb"</span> -type f -exec cp -a {} dists/experimental/main/binary-amd<span style="color: #993399">64</span> <span style="color: #990000">\;</span>
+find <span style="color: #009900">$OLDPWD</span> -maxdepth <span style="color: #993399">1</span> -name <span style="color: #FF0000">"*gradle*xy"</span> -type f -exec cp -a {} dists/experimental/main/source <span style="color: #990000">\;</span>
+
+<span style="font-weight: bold"><span style="color: #0000FF">while</span></span> <span style="font-weight: bold"><span style="color: #0000FF">read</span></span><span style="color: #990000">;</span> <span style="font-weight: bold"><span style="color: #0000FF">do</span></span>
+    cat <span style="color: #990000">&gt;</span> dists/experimental/main<span style="color: #990000">/</span><span style="color: #009900">$REPLY</span>/Release <span style="color: #990000">&lt;&lt;</span>-EOF
+    Archive<span style="color: #990000">:</span> unstable
+    Origin<span style="color: #990000">:</span> Debian
+    Label<span style="color: #990000">:</span> Debian
+    Suite<span style="color: #990000">:</span> experimental
+    Codename<span style="color: #990000">:</span> experimental
+    Valid-Until<span style="color: #990000">:</span> <span style="color: #009900">$(</span>date --rfc-<span style="color: #993399">2822</span> --utc --date<span style="color: #990000">=</span>@<span style="color: #993399">1600000000</span><span style="color: #990000">)</span>
+    Architectures<span style="color: #990000">:</span> amd64
+    Components<span style="color: #990000">:</span> main
+    Description<span style="color: #990000">:</span> Debian x<span style="color: #990000">.</span>y Unstable - Not Released
+EOF
+<span style="font-weight: bold"><span style="color: #0000FF">done</span></span> <span style="color: #990000">&lt;&lt;</span>ARCH
+binary-amd<span style="color: #993399">64</span>
+<span style="font-weight: bold"><span style="color: #0000FF">source</span></span>
+ARCH
+
+dpkg-scanpackages dists/experimental/main/binary-amd<span style="color: #993399">64</span><span style="color: #990000">/</span> <span style="color: #990000">&gt;</span> <span style="color: #990000">\</span>
+    dists/experimental/main/binary-amd<span style="color: #993399">64</span>/Packages
+dpkg-scansources dists/experimental/main/source<span style="color: #990000">/</span> <span style="color: #990000">&gt;</span> <span style="color: #990000">\</span>
+    dists/experimental/main/source/Sources
+
+<span style="color: #990000">&gt;</span> dists/experimental/Release apt-ftparchive release dists/experimental <span style="color: #990000">\</span>
+    -o APT<span style="color: #990000">::</span>FTPArchive<span style="color: #990000">::</span>Release<span style="color: #990000">::</span><span style="color: #009900">Architectures</span><span style="color: #990000">=</span><span style="color: #FF0000">"amd64 source"</span> <span style="color: #990000">\</span>
+    -o APT<span style="color: #990000">::</span>FTPArchive<span style="color: #990000">::</span>Release<span style="color: #990000">::</span><span style="color: #009900">Codename</span><span style="color: #990000">=</span><span style="color: #FF0000">"experimental"</span> <span style="color: #990000">\</span>
+    -o APT<span style="color: #990000">::</span>FTPArchive<span style="color: #990000">::</span>Release<span style="color: #990000">::</span><span style="color: #009900">Components</span><span style="color: #990000">=</span><span style="color: #FF0000">"main"</span> <span style="color: #990000">\</span>
+    -o APT<span style="color: #990000">::</span>FTPArchive<span style="color: #990000">::</span>Release<span style="color: #990000">::</span><span style="color: #009900">Description</span><span style="color: #990000">=</span><span style="color: #FF0000">"Description: Experimental packages - not released use at your own risk."</span> <span style="color: #990000">\</span>
+    -o APT<span style="color: #990000">::</span>FTPArchive<span style="color: #990000">::</span>Release<span style="color: #990000">::</span><span style="color: #009900">Label</span><span style="color: #990000">=</span><span style="color: #FF0000">"Debian"</span> <span style="color: #990000">\</span>
+    -o APT<span style="color: #990000">::</span>FTPArchive<span style="color: #990000">::</span>Release<span style="color: #990000">::</span><span style="color: #009900">Origin</span><span style="color: #990000">=</span><span style="color: #FF0000">"Debian"</span> <span style="color: #990000">\</span>
+    -o APT<span style="color: #990000">::</span>FTPArchive<span style="color: #990000">::</span>Release<span style="color: #990000">::</span><span style="color: #009900">Suite</span><span style="color: #990000">=</span><span style="color: #FF0000">"experimental"</span> <span style="color: #990000">\</span>
+
+<span style="font-weight: bold"><span style="color: #0000FF">exit</span></span>
+
+<span style="font-style: italic"><span style="color: #9A1900"># Sign files</span></span>
+gpg --yes -abs -o dists/experimental/Release<span style="color: #990000">.</span>gpg dists/experimental/Release
+gpg --clearsign -o dists/experimental/InRelease dists/experimental/Release
+
+<span style="font-style: italic"><span style="color: #9A1900"># import signatures on client</span></span>
+gpg --recv-key --keyserver localhost 0123456789ABCDEF
+gpg --list-sigs
+gpg --export 0123456789ABCDEF <span style="color: #990000">&gt;</span> /usr/share/keyrings/archive-keyring<span style="color: #990000">.</span>gpg
+
+cat <span style="color: #990000">&gt;&gt;</span> /etc/apt/sources<span style="color: #990000">.</span>list <span style="color: #990000">&lt;&lt;</span>APT
+deb <span style="color: #990000">[</span>signed-by<span style="color: #990000">=</span>/usr/share/keyrings/archive-keyring<span style="color: #990000">.</span>gpg<span style="color: #990000">]</span> ftp<span style="color: #990000">:</span>//localhost/debian experimental main
+deb-src <span style="color: #990000">[</span>signed-by<span style="color: #990000">=</span>/usr/share/keyrings/archive-keyring<span style="color: #990000">.</span>gpg<span style="color: #990000">]</span> ftp<span style="color: #990000">:</span>//localhost/debian experimental main
+
+<span style="font-style: italic"><span style="color: #9A1900">#deb file:/var/www/html/packages/amd64/ /</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">#deb-src file:/var/www/html/packages/amd64/ /</span></span>
+
+<span style="font-style: italic"><span style="color: #9A1900">#deb [signed-by=/usr/share/keyrings/archive-keyring.gpg] file:/srv/reprepro/debian /</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">#deb-src [signed-by=/usr/share/keyrings/archive-keyring.gpg] file:/srv/reprepro/debian /</span></span>
+APT
+</tt></pre></div></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ultimate_debian_database">Ultimate debian database</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>wget https<span style="color: #990000">:</span>//udd<span style="color: #990000">.</span>debian<span style="color: #990000">.</span>org/dumps/udd<span style="color: #990000">.</span>dump
+time sudo -u postgres bash <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'BASH'</span>
+        psql <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'EOF'</span>
+                DROP DATABASE IF EXISTS udd<span style="color: #990000">;</span>
+                DROP ROLE IF EXISTS udd<span style="color: #990000">;</span>
+                CREATE ROLE udd<span style="color: #990000">;</span>
+                CREATE DATABASE udd TEMPLATE template0 ENCODING SQL_ASCII<span style="color: #990000">;</span>
+        EOF
+        pg_restore --exit-on-error --no-owner --dbname udd udd<span style="color: #990000">.</span>dump
+        psql --dbname udd <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'EOF'</span>
+                DROP ROLE IF EXISTS <span style="color: #FF0000">"user"</span><span style="color: #990000">;</span>
+                CREATE ROLE <span style="color: #FF0000">"user"</span><span style="color: #990000">;</span>
+                REASSIGN OWNED BY udd TO <span style="color: #FF0000">"user"</span><span style="color: #990000">;</span>
+                DROP OWNED BY udd<span style="color: #990000">;</span>
+                DROP ROLE udd<span style="color: #990000">;</span>
+                ALTER DATABASE udd SET default_transaction_read_only <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+                ALTER ROLE <span style="color: #FF0000">"user"</span> WITH LOGIN<span style="color: #990000">;</span>
+        EOF
+BASH</tt></pre></div></div>
+</div>
+</div>
 </div>
 <div id="footnotes"><hr /></div>
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2018-10-12 15:05:08 CEST
+ 2018-10-13 23:08:40 CEST
 </div>
 </div>
 </body>

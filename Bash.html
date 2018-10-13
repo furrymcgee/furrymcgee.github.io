@@ -758,12 +758,15 @@ http://www.gnu.org/software/src-highlite -->
 <span style="font-style: italic"><span style="color: #9A1900">#</span></span>
 <span style="font-style: italic"><span style="color: #9A1900"># Pipes are pair of file descriptors for unidirectional data channels.</span></span>
 <span style="font-style: italic"><span style="color: #9A1900"># They connect the output of a process to the input of another process.</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># Example: Process foo sends data to bar over the pipe |</span></span>
-<span style="font-style: italic"><span style="color: #9A1900">#          foo stdout fd1&gt; is  connected with bar stdin &gt;fd0</span></span>
-<span style="font-style: italic"><span style="color: #9A1900">#</span></span>
-<span style="font-style: italic"><span style="color: #9A1900">#      foo fd1&gt; | &gt;fd0 bar</span></span>
-<span style="font-style: italic"><span style="color: #9A1900">#             ^^^^^</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># The pipe connects the file descriptor fd1 of foo and fd0 of bar.</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># A pipe can only connect a output file discriptor to a input file descriptor.</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># Example: The pipe connects stdout of date process with stdin of dd process.</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">## ----</span></span>
+        date <span style="color: #993399">1</span><span style="color: #990000">&gt;&amp;</span><span style="color: #993399">1</span> <span style="color: #990000">|</span> <span style="color: #993399">0</span><span style="color: #990000">&lt;&amp;</span><span style="color: #993399">0</span> dd
+<span style="font-style: italic"><span style="color: #9A1900">## ----</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># The same example can be written as</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">## ----</span></span>
+        date <span style="color: #990000">|</span> dd
+<span style="font-style: italic"><span style="color: #9A1900">## ----</span></span>
 <span style="font-style: italic"><span style="color: #9A1900"># Child processes copy file descriptors of their parent process.</span></span>
 <span style="font-style: italic"><span style="color: #9A1900"># The POSIX commands are pipe(2) and dup(2).</span></span>
 
@@ -781,38 +784,16 @@ http://www.gnu.org/software/src-highlite -->
 <span style="font-style: italic"><span style="color: #9A1900"># Child processes copy file descriptors of their parent process.</span></span>
 <span style="font-style: italic"><span style="color: #9A1900"># The POSIX commands are pipe(2) and dup(2).</span></span>
 <span style="font-style: italic"><span style="color: #9A1900">#</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># Pipes are pair of file descriptors for unidirectional data channels.</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># They connect the output of a process to the input of another process.</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># A pipe connects a pair of file descriptors with each other.</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># The pipe connects the stdout of date and stdin of dd.</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># A pipe connects a pair of file descriptors with each other.</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># The stream over the pipe is unidirectional.</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># A output file discriptor can only be connected to a input file descriptor.</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># The POSIX commands are pipe and dup.</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># Example: The pipe connects stdout of date process with stdin of dd process.</span></span>
-<span style="font-style: italic"><span style="color: #9A1900">## ----</span></span>
-        date <span style="color: #990000">&gt;&amp;</span><span style="color: #993399">1</span> <span style="color: #990000">|</span> <span style="color: #990000">&lt;&amp;</span><span style="color: #993399">0</span> dd
-<span style="font-style: italic"><span style="color: #9A1900">## ----</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># The same example can be written as</span></span>
-<span style="font-style: italic"><span style="color: #9A1900">## ----</span></span>
-        date <span style="color: #990000">|</span> dd
-<span style="font-style: italic"><span style="color: #9A1900">## ----</span></span>
 
 <span style="font-style: italic"><span style="color: #9A1900"># Named pipe or fifo</span></span>
 <span style="font-style: italic"><span style="color: #9A1900"># ------------------</span></span>
 <span style="font-style: italic"><span style="color: #9A1900"># A pipe connects two process stdin and stdout.</span></span>
 <span style="font-style: italic"><span style="color: #9A1900"># The POSIX commands are pipe and dup.</span></span>
 <span style="font-style: italic"><span style="color: #9A1900"># A unnamed pipe connects two process stdin and stdout.</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># This is unidirectional one process sends data and</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># The pipe is unidirectional one process sends data and</span></span>
 <span style="font-style: italic"><span style="color: #9A1900"># another process receices data.</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># Fifos are named pipes which are bidirectional like network sockets.</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># The example from http://en.wikipedia.org/wiki/Netcat redirects data</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># from a webserver to localhost.</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># The first process listens on localhost and sends data to webserver.</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># This process is unidirectional thats why another process receices data.</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># The first process listens on localhost:12345 and sends data to webserver:80.</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># The netcat stdin and stdour are unidirectional.</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># This process is unidirectional thats why another process receices data</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># Fifos are named pipes which are unidirectional.</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># A pipe with a fifo works like a network sockets.</span></span>
 <span style="font-style: italic"><span style="color: #9A1900"># Two dd processes can be connected with a pipe and fifo.</span></span>
 <span style="font-style: italic"><span style="color: #9A1900">#       -----&lt; fifo &lt;-----</span></span>
 <span style="font-style: italic"><span style="color: #9A1900">#      v                 ^</span></span>
@@ -828,47 +809,37 @@ bash <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'
         <span style="color: #990000">&lt;</span>fifo dd <span style="color: #990000">|</span> dd <span style="color: #990000">&gt;</span>fifo
 EOF
 <span style="font-style: italic"><span style="color: #9A1900">## ----</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">#</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># Another example is on http://en.wikipedia.org/wiki/Netcat.</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># Two netcat processes redirect data from a webserver to localhost.</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># One process listens on localhost:12345 and sends data to webserver:80.</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># The other process receives data from the webserver.</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">#</span></span>
 
-<span style="font-style: italic"><span style="color: #9A1900"># A file output file discriptor cant be connected to a input.</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># In the yash shell there is operator &gt;&gt;| for pipeline redirection.</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># Besides pipe and fifo there are other ways to connect output with input filedescriptors.</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># Bash coproc can replace fifo and</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># in yash shell there is operator &gt;&gt;| for pipeline redirection.</span></span>
 <span style="font-style: italic"><span style="color: #9A1900"># Another shell can be invoked from bash with input from a here document.</span></span>
-<span style="font-style: italic"><span style="color: #9A1900">## ----</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">## --------</span></span>
 yash <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'EOF'</span>
         <span style="font-weight: bold"><span style="color: #0000FF">exec</span></span> <span style="color: #993399">3</span><span style="color: #990000">&gt;&gt;|</span><span style="color: #993399">4</span>
         <span style="color: #990000">&lt;&amp;</span><span style="color: #993399">4</span> dd <span style="color: #990000">|</span> dd <span style="color: #990000">&gt;&amp;</span><span style="color: #993399">3</span>
 EOF
-<span style="font-style: italic"><span style="color: #9A1900">## ----</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">## --------</span></span>
+
+
 
 <span style="font-style: italic"><span style="color: #9A1900"># Process substitution</span></span>
 <span style="font-style: italic"><span style="color: #9A1900"># --------------------</span></span>
 <span style="font-style: italic"><span style="color: #9A1900"># In Bash redirection can be used together with process substitution.</span></span>
 <span style="font-style: italic"><span style="color: #9A1900"># Some examples that uses file descriptor and process substitution.</span></span>
 <span style="font-style: italic"><span style="color: #9A1900"># Example: File descriptor and process substitution</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># Some examples uses file descriptor and process substitution.</span></span>
 <span style="color: #990000">(</span> { <span style="font-weight: bold"><span style="color: #0000FF">exec</span></span> <span style="color: #993399">0</span><span style="color: #990000">&gt;&amp;</span>-  <span style="color: #993399">3</span><span style="color: #990000">&lt;</span> <span style="color: #990000">&lt;(</span>seq <span style="color: #993399">6</span><span style="color: #990000">)</span> <span style="color: #993399">4</span><span style="color: #990000">&gt;&amp;</span><span style="color: #993399">1</span>- <span style="color: #990000">;</span> } <span style="color: #990000">;</span> {  <span style="color: #993399">0</span><span style="color: #990000">&gt;&amp;</span><span style="color: #993399">3</span>- pv -qL <span style="color: #993399">2</span> <span style="color: #990000">&gt;&amp;</span><span style="color: #993399">4</span>- <span style="color: #990000">;</span> } <span style="color: #990000">;</span> <span style="font-weight: bold"><span style="color: #0000FF">exec</span></span> <span style="color: #990000">&gt;&amp;</span><span style="color: #993399">3</span>-  <span style="color: #990000">;</span> ls /proc<span style="color: #990000">/</span><span style="color: #009900">$BASHPID</span>/fd <span style="color: #990000">&gt;&amp;</span><span style="color: #993399">4</span>-  <span style="color: #990000">)</span>
 
 <span style="font-style: italic"><span style="color: #9A1900"># Another example</span></span>
 <span style="font-style: italic"><span style="color: #9A1900"># Some examples uses file descriptor and process substitution.</span></span>
 <span style="font-style: italic"><span style="color: #9A1900"># Educational example of file descriptor and process substitution</span></span>
 <span style="font-style: italic"><span style="color: #9A1900"># The example uses a subshell with input from a here document.</span></span>
-
-<span style="font-style: italic"><span style="color: #9A1900"># Two dd process connected with each other</span></span>
-<span style="font-style: italic"><span style="color: #9A1900">## ----</span></span>
-bash <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'EOF'</span>
-        mkfifo
-        <span style="color: #990000">&lt;</span>fifo dd <span style="color: #990000">|</span> dd <span style="color: #990000">&gt;</span>fifo
-EOF
-<span style="font-style: italic"><span style="color: #9A1900">## ----</span></span>
-
-<span style="font-style: italic"><span style="color: #9A1900"># A file output file discriptor cant be connected to a input in bash.</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># The yash shell has a operator for pipeline redirection</span></span>
-<span style="font-style: italic"><span style="color: #9A1900">## ----</span></span>
-yash <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'EOF'</span>
-        <span style="font-weight: bold"><span style="color: #0000FF">exec</span></span> <span style="color: #993399">3</span><span style="color: #990000">&gt;&gt;|</span><span style="color: #993399">4</span>
-        <span style="color: #990000">&lt;&amp;</span><span style="color: #993399">4</span> dd <span style="color: #990000">|</span> dd <span style="color: #990000">&gt;&amp;</span><span style="color: #993399">3</span>
-EOF
-<span style="font-style: italic"><span style="color: #9A1900">## ----</span></span>
-
 <span style="font-style: italic"><span style="color: #9A1900"># Educational example of file descriptor and process substitution</span></span>
 <span style="font-style: italic"><span style="color: #9A1900">## ----</span></span>
 <span style="color: #990000">(</span>
@@ -923,6 +894,7 @@ EOF
 
 <span style="font-style: italic"><span style="color: #9A1900"># A second coproc is necessary to join two streams.</span></span>
 <span style="font-style: italic"><span style="color: #9A1900"># At some point the input must be closed before reading the output.</span></span>
+
 <span style="font-style: italic"><span style="color: #9A1900"># But there is a warning about multiple coproc in Bash version 4.4.</span></span>
 <span style="font-style: italic"><span style="color: #9A1900"># https://unix.stackexchange.com/questions/86270/how-do-you-use-the-command-coproc-in-various-shells</span></span>
 <span style="font-style: italic"><span style="color: #9A1900"># This example uses file descriptors of coproc</span></span>
@@ -1003,7 +975,17 @@ bash -exc <span style="color: #FF0000">"$( cat &lt;&lt;-EOF</span>
 <span style="font-style: italic"><span style="color: #9A1900"># There are GNU specific commands like evaluate.</span></span>
 <span style="font-style: italic"><span style="color: #9A1900"># It is not documented in the man page.</span></span>
 info sed --index-search<span style="color: #990000">=</span><span style="color: #FF0000">'evaluate'</span>
-<span style="font-style: italic"><span style="color: #9A1900"># A process pipeline that greps upgrades from debian package log file.</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># Examples: Pattern space and hold space, branches and evaluate.</span></span>
+seq <span style="color: #993399">8</span> <span style="color: #990000">|</span> sed <span style="color: #FF0000">'1~2{h;d};0~2{G}'</span>
+seq <span style="color: #993399">6</span>  <span style="color: #990000">|</span> sed -e<span style="color: #FF0000">'s/^/seq /'</span> -e <span style="color: #FF0000">'s/$/ | paste -s/e'</span>
+<span style="font-weight: bold"><span style="color: #0000FF">printf</span></span> <span style="color: #FF0000">' 1</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000"> 2</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000"> 3</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">4</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">5</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000"> 6</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000"> 7</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">'</span> <span style="color: #990000">|</span> sed <span style="color: #FF0000">'1s/^ //;:a;$!N;s/</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000"> / /;ta;P;D;'</span>
+
+<span style="font-style: italic"><span style="color: #9A1900"># With sed monitor file and execute commands with sed</span></span>
+stdbuf -o<span style="color: #993399">0</span> bash <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'EOF'</span>
+        tail -F fifo <span style="color: #990000">|</span> xxd -p -c<span style="color: #993399">1</span> <span style="color: #990000">|</span> sed s<span style="color: #990000">/.*</span>/date/e <span style="color: #990000">|</span> xargs -I@ <span style="font-weight: bold"><span style="color: #0000FF">printf</span></span> <span style="color: #990000">%</span>q<span style="color: #990000">\\</span>n @
+EOF
+
+<span style="font-style: italic"><span style="color: #9A1900"># A process pipeline that greps upgrades from debian package log file:</span></span>
 bash <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'EOF'</span>
         cat /var/log/dpkg<span style="color: #990000">.</span>log{<span style="color: #990000">.</span><span style="color: #993399">1</span><span style="color: #990000">,</span>} <span style="color: #990000">|</span> <span style="color: #990000">\</span>
         grep -P <span style="color: #FF0000">'.{20}upgrade'</span> <span style="color: #990000">|</span> <span style="color: #990000">\</span>
@@ -1028,13 +1010,15 @@ seq <span style="color: #993399">8</span> <span style="color: #990000">|</span> 
 
 <span style="font-style: italic"><span style="color: #9A1900"># sed P;D commands</span></span>
 seq <span style="color: #993399">6</span>  <span style="color: #990000">|</span> sed <span style="color: #FF0000">'l;N;P;D'</span>
-<span style="font-weight: bold"><span style="color: #0000FF">printf</span></span> <span style="color: #FF0000">' 1</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000"> 2</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000"> 3</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">4</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">5</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000"> 6</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000"> 7</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">'</span> <span style="color: #990000">|</span> sed <span style="color: #FF0000">'1s/^ //;:a;$!N;s/</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000"> / /;ta;P;D;'</span> --posix</tt></pre></div></div>
+<span style="font-weight: bold"><span style="color: #0000FF">printf</span></span> <span style="color: #FF0000">' 1</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000"> 2</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000"> 3</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">4</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">5</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000"> 6</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000"> 7</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">'</span> <span style="color: #990000">|</span> sed <span style="color: #FF0000">'1s/^ //;:a;$!N;s/</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000"> / /;ta;P;D;'</span> --posix
+
+seq <span style="color: #993399">3</span> <span style="color: #990000">|</span> xargs -<span style="color: #993399">0</span> --arg-file <span style="color: #990000">&lt;(</span>yes <span style="color: #FF0000">"wc -l"</span> <span style="color: #990000">|</span> head<span style="color: #990000">)</span> bash -c</tt></pre></div></div>
 </div>
 <div id="footnotes"><hr /></div>
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2018-10-11 19:06:03 CEST
+ 2018-10-13 23:08:40 CEST
 </div>
 </div>
 </body>
