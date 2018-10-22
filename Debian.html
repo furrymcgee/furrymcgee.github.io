@@ -841,80 +841,6 @@ view /usr/share/tasksel/descs/debian-tasks<span style="color: #990000">.</span>d
 </div>
 </div>
 <div class="sect1">
-<h2 id="_devuan_debootstrap">Devuan debootstrap</h2>
-<div class="sectionbody">
-<div class="listingblock">
-<div class="title">Devuan</div>
-<div class="content"><!-- Generator: GNU source-highlight 3.1.8
-by Lorenzo Bettini
-http://www.lorenzobettini.it
-http://www.gnu.org/software/src-highlite -->
-<pre><tt><span style="font-style: italic"><span style="color: #9A1900">#!/bin/bash</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># Debian debootstrap and schroot</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># Some virtual guests are missing a kernel module for mounting iso images as loop device.</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># This requires fuseiso package.</span></span>
-cd /tmp
-apt install debootstrap schroot fuseiso -y
-
-wget --continue --no-check-certificate https<span style="color: #990000">:</span>//cdimage<span style="color: #990000">.</span>debian<span style="color: #990000">.</span>org/cdimage/weekly-builds/amd<span style="color: #993399">64</span>/iso-cd/debian-testing-amd<span style="color: #993399">64</span>-netinst<span style="color: #990000">.</span>iso
-
-cat <span style="color: #990000">&gt;</span> /etc/schroot/chroot<span style="color: #990000">.</span>d/schroot<span style="color: #990000">.</span>conf <span style="color: #990000">&lt;&lt;</span>-EOF
-        <span style="font-style: italic"><span style="color: #9A1900"># schroot chroot definitions.</span></span>
-        <span style="font-style: italic"><span style="color: #9A1900"># See schroot.conf(5) for complete documentation of the file format.</span></span>
-        <span style="color: #990000">[</span>default<span style="color: #990000">]</span>
-        <span style="color: #009900">description</span><span style="color: #990000">=</span>Debian
-        <span style="font-weight: bold"><span style="color: #0000FF">type</span></span><span style="color: #990000">=</span>directory
-        <span style="color: #009900">directory</span><span style="color: #990000">=</span><span style="color: #009900">$PWD</span>
-        preserve-environment<span style="color: #990000">=</span><span style="font-weight: bold"><span style="color: #0000FF">false</span></span>
-        <span style="color: #009900">groups</span><span style="color: #990000">=</span>sudo
-EOF
-
-cd <span style="color: #009900">$(</span>mktemp -d<span style="color: #990000">)</span>
-fuseiso <span style="color: #009900">$OLDPWD</span>/debian-testing-amd<span style="color: #993399">64</span>-netinst<span style="color: #990000">.</span>iso <span style="color: #990000">.</span>
-
-cd <span style="color: #009900">$(</span>mktemp -d<span style="color: #990000">)</span>
-chmod <span style="color: #993399">755</span> <span style="color: #990000">.</span>
-debootstrap --verbose --include<span style="color: #990000">=</span>perl<span style="color: #990000">,</span>sudo --verbose --no-check-gpg testing <span style="color: #990000">.</span> file<span style="color: #990000">://</span><span style="color: #009900">$OLDPWD</span>
-cp -av /lib/modules lib<span style="color: #990000">/</span>
-cp -av /boot/vmlinuz-<span style="color: #990000">*</span>-amd<span style="color: #993399">64</span> boot<span style="color: #990000">/</span>
-<span style="font-style: italic"><span style="color: #9A1900"># debootstrap --verbose --keyring=/usr/share/keyrings/archive-keyring.gpg --no-check-gpg sid . file:///var/cache/apt/debian</span></span>
-
-<span style="font-weight: bold"><span style="color: #0000FF">exit</span></span>
-
-<span style="color: #009900">TERM</span><span style="color: #990000">=</span>linux <span style="color: #009900">EDITOR</span><span style="color: #990000">=</span>vi schroot -- sudo bash -e -l -i -x -o vi <span style="color: #990000">&lt;&lt;</span>-APT
-cat <span style="color: #990000">&gt;</span> /etc/apt/sources<span style="color: #990000">.</span>list <span style="color: #990000">&lt;&lt;</span>-EOF
-        deb http<span style="color: #990000">:</span>//deb<span style="color: #990000">.</span>devuan<span style="color: #990000">.</span>org/merged ascii main
-EOF
-wget -c http<span style="color: #990000">:</span>//deb<span style="color: #990000">.</span>devuan<span style="color: #990000">.</span>org/devuan/pool/main/d/devuan-keyring/devuan-keyring_2017<span style="color: #990000">.</span><span style="color: #993399">10</span><span style="color: #990000">.</span>03_all<span style="color: #990000">.</span>deb
-dpkg -i devuan-keyring<span style="color: #990000">*</span>
-apt update
-apt install --assume-yes supermin kvmtool
-APT
-
-cd <span style="color: #009900">$(</span>mktemp -d<span style="color: #990000">)</span>
-bash <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'BASH'</span>
-        supermin --verbose --prepare --use-installed -o supermin<span style="color: #990000">.</span>d busybox bash
-        cat <span style="color: #990000">&gt;</span> init <span style="color: #990000">&lt;&lt;</span>EOF
-        <span style="font-style: italic"><span style="color: #9A1900">#!/bin/sh</span></span>
-        /bin/busybox --install -s
-        mount -t proc /proc /proc
-        mount -t sysfs /sys /sys
-        echo Welcome to supermin<span style="color: #990000">!</span>
-        <span style="color: #009900">TERM</span><span style="color: #990000">=</span>ansi <span style="font-weight: bold"><span style="color: #0000FF">exec</span></span> bash -i -l
-        EOF
-
-        chmod <span style="color: #990000">+</span>x init
-        tar zcf supermin<span style="color: #990000">.</span>d/init<span style="color: #990000">.</span>tar<span style="color: #990000">.</span>gz <span style="color: #990000">.</span>/init
-
-        supermin --verbose --build supermin<span style="color: #990000">.</span>d -f ext2 -o appliance<span style="color: #990000">.</span>d
-BASH
-
-schroot -- sudo lkvm run -n -k /tmp/tmp<span style="color: #990000">.</span>4SnaPwtJMv/appliance<span style="color: #990000">.</span>d/kernel -i /tmp/tmp<span style="color: #990000">.</span>4SnaPwtJMv/appliance<span style="color: #990000">.</span>d/initrd  -d /tmp/tmp<span style="color: #990000">.</span>4SnaPwtJMv/appliance<span style="color: #990000">.</span>d/root -p <span style="color: #FF0000">'root=/dev/vda'</span>
-
-</tt></pre></div></div>
-</div>
-</div>
-<div class="sect1">
 <h2 id="_netboot_and_preseed">Netboot and preseed</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>Debian automated installation with dhcp and tftp.
@@ -1011,7 +937,8 @@ Besides installing dist=stable by default, also testing and sid are supported.</
 The script records build steps from the terminal and paste it online</p></div>
 <div class="sect2">
 <h3 id="_debug_build">Debug build</h3>
-<div class="paragraph"><p>DEB_BUILD_OPTIONS=nostrip,noopt</p></div>
+<div class="paragraph"><p>DEB_BUILD_OPTIONS=nostrip,noopt
+gdb --directory /usr/lib/debug/ -p 1234</p></div>
 <div class="listingblock">
 <div class="title">dgit</div>
 <div class="content"><!-- Generator: GNU source-highlight 3.1.8
@@ -1293,12 +1220,133 @@ time sudo -u postgres bash <span style="color: #990000">&lt;&lt;</span>-<span st
 BASH</tt></pre></div></div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_devuan">Devuan</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_debootstrap_samba_server_with_debootstrap_and_kvm">Debootstrap SAMBA server with debootstrap and KVM</h3>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_devuan_2">Devuan</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Devuan is a GNU/Linux operating system mirroring the Debian distribution without systemd and dbus requirements.</p></div>
+<div class="sect2">
+<h3 id="_debootstrap">debootstrap</h3>
+<div class="listingblock">
+<div class="title">Devuan</div>
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-style: italic"><span style="color: #9A1900">#!/bin/bash</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># Debian debootstrap and schroot</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># Some virtual guests are missing a kernel module for mounting iso images as loop device.</span></span>
+
+<span style="font-style: italic"><span style="color: #9A1900"># This requires fuseiso package.</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">#cd /tmp</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">#apt install debootstrap schroot fuseiso -y</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">#</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">#wget --continue --no-check-certificate https://cdimage.debian.org/cdimage/weekly-builds/amd64/iso-cd/debian-testing-amd64-netinst.iso</span></span>
+
+cd <span style="color: #009900">$(</span>mktemp -d<span style="color: #990000">)</span>
+mount <span style="color: #009900">$OLDPWD</span>/devuan<span style="color: #990000">*</span>iso <span style="color: #990000">.</span>
+
+cd <span style="color: #009900">$(</span>mktemp -d<span style="color: #990000">)</span>
+cat <span style="color: #990000">&gt;</span> /etc/schroot/chroot<span style="color: #990000">.</span>d/schroot<span style="color: #990000">.</span>conf <span style="color: #990000">&lt;&lt;</span>-EOF
+        <span style="font-style: italic"><span style="color: #9A1900"># schroot chroot definitions.</span></span>
+        <span style="font-style: italic"><span style="color: #9A1900"># See schroot.conf(5) for complete documentation of the file format.</span></span>
+        <span style="color: #990000">[</span>default<span style="color: #990000">]</span>
+        <span style="color: #009900">description</span><span style="color: #990000">=</span>Debian
+        <span style="font-weight: bold"><span style="color: #0000FF">type</span></span><span style="color: #990000">=</span>directory
+        <span style="color: #009900">directory</span><span style="color: #990000">=</span><span style="color: #009900">$PWD</span>
+        preserve-environment<span style="color: #990000">=</span><span style="font-weight: bold"><span style="color: #0000FF">false</span></span>
+        <span style="color: #009900">groups</span><span style="color: #990000">=</span>sudo
+EOF
+
+bash -ex <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'BASH'</span>
+        chmod <span style="color: #993399">755</span> <span style="color: #990000">.</span>
+        debootstrap --verbose --include<span style="color: #990000">=</span>sudo --verbose --no-check-gpg testing <span style="color: #990000">.</span> file<span style="color: #990000">://</span><span style="color: #009900">$OLDPWD</span>
+        cp -av /lib/modules lib<span style="color: #990000">/</span>
+        cp -av /boot/vmlinuz-<span style="color: #990000">*</span>-amd<span style="color: #993399">64</span> boot<span style="color: #990000">/</span>
+        <span style="font-style: italic"><span style="color: #9A1900"># debootstrap --verbose --keyring=/usr/share/keyrings/archive-keyring.gpg --no-check-gpg sid . file:///var/cache/apt/debian</span></span>
+BASH
+
+<span style="color: #009900">TERM</span><span style="color: #990000">=</span>linux <span style="color: #009900">EDITOR</span><span style="color: #990000">=</span>vi schroot -- bash -e -l -i -x -o vi <span style="color: #990000">&lt;&lt;</span>-APT
+cat <span style="color: #990000">&gt;</span> /etc/apt/sources<span style="color: #990000">.</span>list <span style="color: #990000">&lt;&lt;</span>-EOF
+        deb http<span style="color: #990000">:</span>//deb<span style="color: #990000">.</span>devuan<span style="color: #990000">.</span>org/merged ascii main
+EOF
+wget -c http<span style="color: #990000">:</span>//deb<span style="color: #990000">.</span>devuan<span style="color: #990000">.</span>org/devuan/pool/main/d/devuan-keyring/devuan-keyring_2017<span style="color: #990000">.</span><span style="color: #993399">10</span><span style="color: #990000">.</span>03_all<span style="color: #990000">.</span>deb
+dpkg -i devuan-keyring<span style="color: #990000">*</span>
+apt update
+apt install --assume-yes supermin kvmtool bash man busybox samba udhcpc strace ncurses-term ncurses-bin samba smbclient cifs-utils
+APT
+
+<span style="font-weight: bold"><span style="color: #0000FF">exit</span></span>
+
+schroot -- bash -i -l -o vi
+
+cd <span style="color: #009900">$(</span>mktemp -d<span style="color: #990000">)</span>
+bash <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'BASH'</span>
+        supermin --verbose --prepare --use-installed -o supermin<span style="color: #990000">.</span>d busybox mount bash udhcpc strace samba file bsdutils mailutils coreutils tzdata ncurses-bin ncurses-term eudev net-tools hostname
+        cat <span style="color: #990000">&gt;</span> init <span style="color: #990000">&lt;&lt;</span>EOF
+        <span style="font-style: italic"><span style="color: #9A1900">#!/bin/bash</span></span>
+        <span style="font-style: italic"><span style="color: #9A1900"># users and groups</span></span>
+        groupadd -g <span style="color: #993399">0</span>  root
+        useradd -u <span style="color: #993399">0</span> -g <span style="color: #993399">0</span> -d /root root
+        useradd nobody
+        hostname samba
+        <span style="font-style: italic"><span style="color: #9A1900"># devices</span></span>
+        mknod -m <span style="color: #993399">666</span> /dev/null c <span style="color: #993399">1</span> <span style="color: #993399">3</span>
+        mknod -m <span style="color: #993399">666</span> /dev/zero c <span style="color: #993399">1</span> <span style="color: #993399">5</span>
+        chown root<span style="color: #990000">:</span>root /dev/null /dev/zero
+        mknod -m <span style="color: #993399">666</span> /dev/random c <span style="color: #993399">1</span> <span style="color: #993399">8</span>
+        mknod -m <span style="color: #993399">666</span> /dev/urandom c <span style="color: #993399">1</span> <span style="color: #993399">9</span>
+        chown root<span style="color: #990000">:</span>root /dev/random /dev/urandom
+
+        mount -t proc /proc /proc
+        mount -t sysfs /sys /sys
+        busybox --install -s
+        <span style="font-style: italic"><span style="color: #9A1900"># lo</span></span>
+        ifconfig lo <span style="color: #993399">127.0</span><span style="color: #990000">.</span><span style="color: #993399">0.1</span>
+        ifconfig eth0 up
+        udhcpc eth0
+        ln -s /usr/share/zoneinfo/UTC /etc/localtime
+        cp /usr/share/samba/smb<span style="color: #990000">.</span>conf /etc/samba/smb<span style="color: #990000">.</span>conf
+        cat <span style="color: #990000">&gt;&gt;</span> /etc/samba/smb<span style="color: #990000">.</span>conf <span style="color: #990000">&lt;&lt;</span><span style="color: #FF0000">'SMB'</span>
+        <span style="color: #990000">[</span>pub<span style="color: #990000">]</span>
+                comment <span style="color: #990000">=</span> Some useful files
+                <span style="font-weight: bold"><span style="color: #0000FF">read</span></span> only <span style="color: #990000">=</span> yes
+                path <span style="color: #990000">=</span> /tmp
+                guest ok <span style="color: #990000">=</span> yes
+                browsable <span style="color: #990000">=</span> yes
+                guest account <span style="color: #990000">=</span> nobody
+                guest only <span style="color: #990000">=</span> yes
+        SMB
+        /etc/init<span style="color: #990000">.</span>d/samba start
+        echo Welcome to supermin<span style="color: #990000">!</span>
+        <span style="font-weight: bold"><span style="color: #0000FF">exec</span></span> bash -i -l -o vi
+        EOF
+
+        chmod <span style="color: #990000">+</span>x init
+        tar zcf supermin<span style="color: #990000">.</span>d/init<span style="color: #990000">.</span>tar<span style="color: #990000">.</span>gz <span style="color: #990000">.</span>/init
+
+        supermin --verbose --build supermin<span style="color: #990000">.</span>d -f ext2 -o appliance<span style="color: #990000">.</span>d
+BASH
+
+schroot -- <span style="color: #990000">\</span>
+        sudo lkvm run -n -k appliance<span style="color: #990000">.</span>d/kernel -i appliance<span style="color: #990000">.</span>d/initrd  -d appliance<span style="color: #990000">.</span>d/root -p <span style="color: #FF0000">'root=/dev/vda'</span>
+</tt></pre></div></div>
+</div>
+</div>
+</div>
 </div>
 <div id="footnotes"><hr /></div>
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2018-10-13 23:08:40 CEST
+ 2018-10-22 14:53:15 CEST
 </div>
 </div>
 </body>

@@ -23,6 +23,7 @@ index.html: README.html \
 	wiki/cpp/Cpp.html \
 	wiki/database/SQLite.html \
 	wiki/debian/Debian.html \
+	wiki/debian/Devuan.html \
 	wiki/documentation/AsciiDoc.html \
 	wiki/git/Git.html \
 	wiki/perl/Perl.html \
