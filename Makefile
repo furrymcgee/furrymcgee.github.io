@@ -24,8 +24,10 @@ index.html: README.html \
 	wiki/database/SQLite.html \
 	wiki/debian/Debian.html \
 	wiki/debian/Devuan.html \
+	wiki/debian/Samba.html \
 	wiki/documentation/AsciiDoc.html \
 	wiki/git/Git.html \
+	wiki/java/Java.html \
 	wiki/perl/Perl.html \
 	wiki/qemu/QEMU.html \
 	wiki/qemu/VirtualXPVHD.html \
