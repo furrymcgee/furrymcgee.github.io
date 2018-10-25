@@ -31,6 +31,7 @@ index.html: README.html \
 	wiki/perl/Perl.html \
 	wiki/qemu/QEMU.html \
 	wiki/qemu/VirtualXPVHD.html \
-	wiki/shell/Bash.html
+	wiki/shell/Bash.html \
+	wiki/xml/XML.html
 	cp $^ . 2>&- || cp $< index.html
 
