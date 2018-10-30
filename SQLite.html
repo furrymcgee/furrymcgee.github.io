@@ -860,6 +860,21 @@ http://www.gnu.org/software/src-highlite -->
 BASH
 YASH
 <span style="color: #990000">)</span> <span style="color: #990000">|</span> sort <span style="color: #990000">|</span> tr <span style="color: #FF0000">' '</span> <span style="color: #990000">.</span> <span style="color: #990000">|</span> cut -d<span style="color: #990000">.</span> -f<span style="color: #993399">1</span><span style="color: #990000">,</span><span style="color: #993399">4</span></tt></pre></div></div>
+<div class="listingblock">
+<div class="title">zipfile</div>
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="color: #990000">.</span>header on
+<span style="color: #990000">.</span>mode column
+<span style="color: #990000">.</span>width <span style="color: #993399">10</span>
+SELECT quote<span style="color: #990000">(</span>readfile<span style="color: #990000">(</span><span style="color: #FF0000">'temp.zip'</span><span style="color: #990000">))</span> AS X<span style="color: #990000">;</span>
+CREATE VIRTUAL TABLE temp<span style="color: #990000">.</span>zip USING zipfile<span style="color: #990000">(</span><span style="color: #FF0000">'temp.zip'</span><span style="color: #990000">);</span>
+DELETE FROM temp<span style="color: #990000">.</span>zip<span style="color: #990000">;</span>
+INSERT INTO temp<span style="color: #990000">.</span>zip<span style="color: #990000">(</span>name<span style="color: #990000">,</span> data<span style="color: #990000">)</span> VALUES<span style="color: #990000">(</span><span style="color: #FF0000">'dir1'</span><span style="color: #990000">,</span> NULL<span style="color: #990000">);</span>           -- Add directory
+INSERT INTO temp<span style="color: #990000">.</span>zip<span style="color: #990000">(</span>name<span style="color: #990000">,</span> data<span style="color: #990000">)</span> VALUES<span style="color: #990000">(</span><span style="color: #FF0000">'m.txt'</span><span style="color: #990000">,</span> <span style="color: #FF0000">'abcdefghi'</span><span style="color: #990000">);</span>   -- Add regular file
+SELECT <span style="color: #990000">*</span> FROM temp<span style="color: #990000">.</span>zip<span style="color: #990000">;</span></tt></pre></div></div>
 </div>
 </div>
 </div>
@@ -867,7 +882,7 @@ YASH
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2018-10-11 19:06:03 CEST
+ 2018-10-29 12:28:09 CET
 </div>
 </div>
 </body>

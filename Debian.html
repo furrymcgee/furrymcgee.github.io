@@ -848,11 +848,17 @@ Dhcp bootfile option can be used for ipxe or a debian preseed config.
 There is a conflict when qemu and debian use dhcp filename option (bootfile?) for
 pxelinux.0 and preseed.cfg!
 The ipxe boot file may be loaded from tftp.
-It may require additional configuration in dnsmasq.conf.</p></div>
+It may require additional configuration in dnsmasq.conf.
+(dhcp-boot=pxelinux.0)</p></div>
 <div class="ulist"><ul>
 <li>
 <p>
 <a href="https://www.debian.org/releases/stable/i386/ch04s05">https://www.debian.org/releases/stable/i386/ch04s05</a>
+</p>
+</li>
+<li>
+<p>
+<a href="https://wiki.debian.org/DebianInstaller/Preseed">https://wiki.debian.org/DebianInstaller/Preseed</a>
 </p>
 </li>
 <li>
@@ -875,6 +881,16 @@ It may require additional configuration in dnsmasq.conf.</p></div>
 <a href="http://www.briancarpio.com/2012/04/04/system-automation-part-1/">http://www.briancarpio.com/2012/04/04/system-automation-part-1/</a>
 </p>
 </li>
+<li>
+<p>
+<a href="http://hands.com/d-i/">http://hands.com/d-i/</a>
+</p>
+</li>
+<li>
+<p>
+<a href="file:///usr/share/doc/debian-installer/devel/internals/index.html">file:///usr/share/doc/debian-installer/devel/internals/index.html</a>
+</p>
+</li>
 </ul></div>
 <div class="listingblock">
 <div class="title">Debian</div>
@@ -882,49 +898,19 @@ It may require additional configuration in dnsmasq.conf.</p></div>
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
-<pre><tt><span style="font-style: italic"><span style="color: #9A1900"># Download netboot files</span></span>
-apt-get install debian-installer-<span style="color: #993399">9</span>-netboot-i<span style="color: #993399">386</span> -y
-<span style="font-style: italic"><span style="color: #9A1900">#wget -r --no-parent --no-host-directories --cut-dirs 7 http://ftp.debian.org/debian/dists/stable/main/installer-i386/current/images/netboot/</span></span>
-<span style="font-style: italic"><span style="color: #9A1900">#curl -o- http://ftp.debian.org/debian/dists/stable/main/installer-i386/current/images/netboot/netboot.tar.gz | tar xzf -</span></span>
+<pre><tt><span style="font-style: italic"><span style="color: #9A1900">#!/bin/sh</span></span>
 
-<span style="font-style: italic"><span style="color: #9A1900"># Boot with debian mini.iso and dhcp bootfile preseed.cfg</span></span>
-wget http<span style="color: #990000">:</span>//ftp<span style="color: #990000">.</span>debian<span style="color: #990000">.</span>org/debian/dists/stable<span style="color: #990000">/\</span>
-        main/installer-i<span style="color: #993399">386</span>/current/images/netboot/mini<span style="color: #990000">.</span>iso
+<span style="color: #990000">:</span> <span style="color: #009900">DEBIAN_FRONTEND</span><span style="color: #990000">=</span>noninteractive apt install --yes --no-install-recommends kvmtool btrfs-progs
+<span style="color: #990000">:</span> cd <span style="color: #009900">$(</span>mktemp -d<span style="color: #990000">)</span>
+<span style="color: #990000">:</span> wget -c -r -nc -np -nH -nd -P amd64 http<span style="color: #990000">:</span>//cdn-fastly<span style="color: #990000">.</span>deb<span style="color: #990000">.</span>debian<span style="color: #990000">.</span>org/debian/dists/stable/main/installer-amd<span style="color: #993399">64</span>/current/images/netboot/debian-installer/amd<span style="color: #993399">64</span><span style="color: #990000">/</span>
+<span style="color: #990000">:</span> sysctl net<span style="color: #990000">.</span>ipv4<span style="color: #990000">.</span><span style="color: #009900">ip_forward</span><span style="color: #990000">=</span><span style="color: #993399">1</span>
+<span style="color: #990000">:</span> brctl addif br0 tap0
+<span style="color: #990000">:</span> ifconfig tap0 <span style="color: #993399">0</span>
 
-<span style="font-style: italic"><span style="color: #9A1900"># Boot with pxelinux.0 as dhcp bootfile</span></span>
-qemu-system-i<span style="color: #993399">386</span> -net nic <span style="color: #990000">\</span>
-        -net user<span style="color: #990000">,</span><span style="color: #009900">tftp</span><span style="color: #990000">=</span>/usr/lib/debian-installer/images<span style="color: #990000">/</span><span style="color: #993399">9</span>/i<span style="color: #993399">386</span>/text<span style="color: #990000">,</span><span style="color: #009900">bootfile</span><span style="color: #990000">=</span>/pxelinux<span style="color: #990000">.</span><span style="color: #993399">0</span> <span style="color: #990000">\</span>
-        -m <span style="color: #993399">512</span> -boot c -drive <span style="color: #009900">format</span><span style="color: #990000">=</span>raw<span style="color: #990000">,</span><span style="color: #009900">file</span><span style="color: #990000">=</span>disk<span style="color: #990000">.</span>img --enable-kvm
+<span style="font-style: italic"><span style="color: #9A1900"># setup disk image</span></span>
+dd <span style="color: #009900">count</span><span style="color: #990000">=</span><span style="color: #993399">0</span> <span style="color: #009900">seek</span><span style="color: #990000">=</span>6M <span style="color: #009900">of</span><span style="color: #990000">=</span>disk<span style="color: #990000">.</span>img
 
-<span style="font-style: italic"><span style="color: #9A1900"># Examples with preseed config as dhcp bootfile and mini.iso</span></span>
-qemu-system-i<span style="color: #993399">386</span> -net nic <span style="color: #990000">\</span>
-        -net user<span style="color: #990000">,</span><span style="color: #009900">tftp</span><span style="color: #990000">=</span><span style="color: #009900">$PWD</span><span style="color: #990000">,</span><span style="color: #009900">bootfile</span><span style="color: #990000">=</span>tftp<span style="color: #990000">://</span><span style="color: #993399">10.0</span><span style="color: #990000">.</span><span style="color: #993399">2.2</span>/d-i/stretch<span style="color: #990000">/.</span>/preseed<span style="color: #990000">.</span>cfg <span style="color: #990000">\</span>
-        -m <span style="color: #993399">512</span> -cdrom mini<span style="color: #990000">.</span>iso -boot d -drive <span style="color: #009900">format</span><span style="color: #990000">=</span>raw<span style="color: #990000">,</span><span style="color: #009900">file</span><span style="color: #990000">=</span>disk<span style="color: #990000">.</span>img --enable-kvm
-
-<span style="font-style: italic"><span style="color: #9A1900"># Load kernel from qemu</span></span>
-qemu-system-i<span style="color: #993399">386</span> -net nic <span style="color: #990000">\</span>
-        -net user<span style="color: #990000">,</span><span style="color: #009900">tftp</span><span style="color: #990000">=</span><span style="color: #009900">$PWD</span><span style="color: #990000">,</span><span style="color: #009900">bootfile</span><span style="color: #990000">=</span>tftp<span style="color: #990000">://</span><span style="color: #993399">10.0</span><span style="color: #990000">.</span><span style="color: #993399">2.2</span>/d-i/stretch<span style="color: #990000">/.</span>/preseed<span style="color: #990000">.</span>cfg <span style="color: #990000">\</span>
-        -kernel /usr/lib/debian-installer/images<span style="color: #990000">/</span><span style="color: #993399">9</span>/i<span style="color: #993399">386</span>/text/debian-installer/i<span style="color: #993399">386</span>/linux <span style="color: #990000">\</span>
-        -initrd /usr/lib/debian-installer/images<span style="color: #990000">/</span><span style="color: #993399">9</span>/i<span style="color: #993399">386</span>/text/debian-installer/i<span style="color: #993399">386</span>/initrd<span style="color: #990000">.</span>gz <span style="color: #990000">\</span>
-        -append <span style="color: #009900">auto</span><span style="color: #990000">=</span><span style="font-weight: bold"><span style="color: #0000FF">true</span></span> <span style="color: #990000">\</span>
-        -m <span style="color: #993399">512</span> -boot c -drive <span style="color: #009900">format</span><span style="color: #990000">=</span>raw<span style="color: #990000">,</span><span style="color: #009900">file</span><span style="color: #990000">=</span>disk<span style="color: #990000">.</span>img --enable-kvm
-
-<span style="font-style: italic"><span style="color: #9A1900"># Configuration files for ipxe over tftp</span></span>
-cat <span style="color: #990000">&gt;&gt;</span> tftpboot/pxelinux<span style="color: #990000">.</span>cfg/default <span style="color: #990000">&lt;&lt;</span>IPXE
-timeout <span style="color: #993399">10</span>
-default pxe
-label pxe
-        menu label <span style="color: #990000">^</span>pxe
-        kernel ipxe<span style="color: #990000">.</span>lkrn
-                append <span style="color: #009900">initrd</span><span style="color: #990000">=</span>pxe<span style="color: #990000">.</span>cfg
-IPXE
-
-cat <span style="color: #990000">&gt;</span> tftpboot/pxe<span style="color: #990000">.</span>cfg <span style="color: #990000">&lt;&lt;</span>IPXE
-dhcp
-kernel debian-installer/i<span style="color: #993399">386</span>/linux <span style="color: #009900">auto</span><span style="color: #990000">=</span><span style="font-weight: bold"><span style="color: #0000FF">true</span></span> <span style="color: #009900">priority</span><span style="color: #990000">=</span>critical <span style="color: #009900">vga</span><span style="color: #990000">=</span><span style="color: #993399">788</span> <span style="color: #009900">initrd</span><span style="color: #990000">=</span>debian-installer/i<span style="color: #993399">386</span>/initrd<span style="color: #990000">.</span>gz netcfg/disable<span style="color: #009900">_dhcp</span><span style="color: #990000">=</span><span style="font-weight: bold"><span style="color: #0000FF">true</span></span> <span style="color: #009900">url</span><span style="color: #990000">=</span>tftp<span style="color: #990000">://</span><span style="color: #993399">10.0</span><span style="color: #990000">.</span><span style="color: #993399">2.2</span>/preseed<span style="color: #990000">.</span>cfg <span style="color: #009900">ip</span><span style="color: #990000">=</span><span style="color: #993399">10.0</span><span style="color: #990000">.</span><span style="color: #993399">2.100</span><span style="color: #990000">:::</span><span style="color: #993399">255.255</span><span style="color: #990000">.</span><span style="color: #993399">255.0</span><span style="color: #990000">:</span>linux<span style="color: #990000">:</span>eth0<span style="color: #990000">:</span>on
-initrd debian-installer/i<span style="color: #993399">386</span>/initrd<span style="color: #990000">.</span>gz
-boot
-IPXE</tt></pre></div></div>
+lkvm run -n -d disk<span style="color: #990000">.</span>img -k amd64/linux -i amd64/initrd<span style="color: #990000">.</span>gz -p <span style="color: #FF0000">'root=/dev/vda auto=true priority=critical url=tftp://192.168.33.100/preseed.cfg'</span></tt></pre></div></div>
 <div class="paragraph"><p>Bug#749991
 Besides installing dist=stable by default, also testing and sid are supported.</p></div>
 <div class="paragraph"><p>Just adding <em>mirror/suite=testing</em> as additional param to the kernel command line is enough.</p></div>
@@ -1241,11 +1227,13 @@ by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
 <pre><tt><span style="font-style: italic"><span style="color: #9A1900">#!/bin/bash</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># Debian debootstrap and schroot</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># wget --continue --no-check-certificate https://cdimage.debian.org/cdimage/weekly-builds/amd64/iso-cd/debian-testing-amd64-netinst.iso</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># Devuan debootstrap and schroot</span></span>
 
 cd <span style="color: #009900">$(</span>mktemp -d<span style="color: #990000">)</span>
-mount <span style="color: #990000">..</span>/devuan<span style="color: #990000">*</span>iso <span style="color: #990000">.</span>
+apt install --yes debootstrap schroot
+wget --continue --no-check-certificate --output-document <span style="color: #990000">..</span>/debian-testing-amd<span style="color: #993399">64</span>-netinst<span style="color: #990000">.</span>iso <span style="color: #990000">\</span>
+        ftp<span style="color: #990000">:</span>//mirror<span style="color: #990000">.</span>leaseweb<span style="color: #990000">.</span>com/devuan/devuan_ascii/installer-iso/devuan_ascii_2<span style="color: #990000">.</span><span style="color: #993399">0</span><span style="color: #990000">.</span>0_amd64_netinst<span style="color: #990000">.</span>iso
+mount <span style="color: #990000">..</span>/devuan<span style="color: #990000">*</span>netinst<span style="color: #990000">.</span>iso <span style="color: #990000">.</span>
 
 cd <span style="color: #009900">$(</span>mktemp -d<span style="color: #990000">)</span>
 cat <span style="color: #990000">&gt;</span> /etc/schroot/chroot<span style="color: #990000">.</span>d/schroot<span style="color: #990000">.</span>conf <span style="color: #990000">&lt;&lt;</span>-EOF
@@ -1257,11 +1245,12 @@ cat <span style="color: #990000">&gt;</span> /etc/schroot/chroot<span style="col
         <span style="color: #009900">directory</span><span style="color: #990000">=</span><span style="color: #009900">$PWD</span>
         preserve-environment<span style="color: #990000">=</span><span style="font-weight: bold"><span style="color: #0000FF">false</span></span>
         <span style="color: #009900">groups</span><span style="color: #990000">=</span>sudo
+        <span style="font-style: italic"><span style="color: #9A1900">#union-type=overlay</span></span>
 EOF
 
 bash -ex <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'BASH'</span>
         <span style="font-style: italic"><span style="color: #9A1900">#chmod 755 .</span></span>
-        debootstrap --verbose --include<span style="color: #990000">=</span>sudo --verbose --no-check-gpg testing <span style="color: #990000">.</span> file<span style="color: #990000">://</span><span style="color: #009900">$OLDPWD</span>
+        debootstrap --verbose --include<span style="color: #990000">=</span>wget<span style="color: #990000">,</span>sudo --verbose --no-check-gpg testing <span style="color: #990000">.</span> file<span style="color: #990000">://</span><span style="color: #009900">$OLDPWD</span>
         cp -av /lib/modules lib<span style="color: #990000">/</span>
         cp -av /boot/vmlinuz-<span style="color: #990000">*</span>-amd<span style="color: #993399">64</span> boot<span style="color: #990000">/</span>
         <span style="font-style: italic"><span style="color: #9A1900"># debootstrap --verbose --keyring=/usr/share/keyrings/archive-keyring.gpg --no-check-gpg sid . file:///var/cache/apt/debian</span></span>
@@ -1269,66 +1258,6 @@ BASH
 
 umount <span style="color: #009900">$OLDPWD</span>
 rmdir <span style="color: #009900">$OLDPWD</span>
-cd <span style="color: #009900">$(</span>mktemp -d<span style="color: #990000">)</span>
-
-<span style="color: #009900">TERM</span><span style="color: #990000">=</span>linux <span style="color: #009900">EDITOR</span><span style="color: #990000">=</span>vi schroot -- bash -e -l -i -x -o vi <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">"EOT"</span>
-        cat <span style="color: #990000">&gt;</span> /etc/apt/sources<span style="color: #990000">.</span>list <span style="color: #990000">&lt;&lt;</span>-EOF
-                deb http<span style="color: #990000">:</span>//deb<span style="color: #990000">.</span>devuan<span style="color: #990000">.</span>org/merged ascii main
-        EOF
-        wget -c http<span style="color: #990000">:</span>//deb<span style="color: #990000">.</span>devuan<span style="color: #990000">.</span>org/devuan/pool/main/d/devuan-keyring/devuan-keyring_2017<span style="color: #990000">.</span><span style="color: #993399">10</span><span style="color: #990000">.</span>03_all<span style="color: #990000">.</span>deb
-        dpkg -i devuan-keyring<span style="color: #990000">*</span>
-        apt update
-        apt install --assume-yes supermin kvmtool bash man busybox samba udhcpc strace ncurses-term ncurses-bin samba smbclient cifs-utils
-
-        bash <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'BASH'</span>
-                supermin --verbose --prepare --use-installed -o supermin<span style="color: #990000">.</span>d busybox mount bash udhcpc strace samba file bsdutils mailutils coreutils tzdata ncurses-bin ncurses-term eudev net-tools hostname
-                cat <span style="color: #990000">&gt;</span> init <span style="color: #990000">&lt;&lt;</span>EOF
-                <span style="font-style: italic"><span style="color: #9A1900">#!/bin/bash</span></span>
-                <span style="font-style: italic"><span style="color: #9A1900"># users and groups</span></span>
-                groupadd -g <span style="color: #993399">0</span>  root
-                useradd -u <span style="color: #993399">0</span> -g <span style="color: #993399">0</span> -d /root root
-                useradd nobody
-                hostname samba
-                <span style="font-style: italic"><span style="color: #9A1900"># devices</span></span>
-                mknod -m <span style="color: #993399">666</span> /dev/null c <span style="color: #993399">1</span> <span style="color: #993399">3</span>
-                mknod -m <span style="color: #993399">666</span> /dev/zero c <span style="color: #993399">1</span> <span style="color: #993399">5</span>
-                chown root<span style="color: #990000">:</span>root /dev/null /dev/zero
-                mknod -m <span style="color: #993399">666</span> /dev/random c <span style="color: #993399">1</span> <span style="color: #993399">8</span>
-                mknod -m <span style="color: #993399">666</span> /dev/urandom c <span style="color: #993399">1</span> <span style="color: #993399">9</span>
-                chown root<span style="color: #990000">:</span>root /dev/random /dev/urandom
-
-                mount -t proc /proc /proc
-                mount -t sysfs /sys /sys
-                busybox --install -s
-                <span style="font-style: italic"><span style="color: #9A1900"># lo</span></span>
-                ifconfig lo <span style="color: #993399">127.0</span><span style="color: #990000">.</span><span style="color: #993399">0.1</span>
-                ifconfig eth0 up
-                udhcpc eth0
-                ln -sf /usr/share/zoneinfo/UTC /etc/localtime
-                cp /usr/share/samba/smb<span style="color: #990000">.</span>conf /etc/samba/smb<span style="color: #990000">.</span>conf
-                cat <span style="color: #990000">&gt;&gt;</span> /etc/samba/smb<span style="color: #990000">.</span>conf <span style="color: #990000">&lt;&lt;</span><span style="color: #FF0000">'SMB'</span>
-                <span style="color: #990000">[</span>pub<span style="color: #990000">]</span>
-                        comment <span style="color: #990000">=</span> Some useful files
-                        <span style="font-weight: bold"><span style="color: #0000FF">read</span></span> only <span style="color: #990000">=</span> no
-                        path <span style="color: #990000">=</span> /tmp
-                        guest ok <span style="color: #990000">=</span> yes
-                        browsable <span style="color: #990000">=</span> yes
-                        guest account <span style="color: #990000">=</span> nobody
-                        guest only <span style="color: #990000">=</span> yes
-                SMB
-                /etc/init<span style="color: #990000">.</span>d/samba start
-                echo Welcome to supermin<span style="color: #990000">!</span>
-                <span style="font-weight: bold"><span style="color: #0000FF">exec</span></span> bash -i -l -o vi
-                EOF
-
-                chmod <span style="color: #990000">+</span>x init
-                tar zcf supermin<span style="color: #990000">.</span>d/init<span style="color: #990000">.</span>tar<span style="color: #990000">.</span>gz <span style="color: #990000">.</span>/init
-
-                supermin --verbose --build supermin<span style="color: #990000">.</span>d -f ext2 -o appliance<span style="color: #990000">.</span>d
-        BASH
-EOT
-
-lkvm run -n -k appliance<span style="color: #990000">.</span>d/kernel -i appliance<span style="color: #990000">.</span>d/initrd -d appliance<span style="color: #990000">.</span>d/root -p <span style="color: #FF0000">'root=/dev/vda'</span>
 </tt></pre></div></div>
 </div>
 </div>
@@ -1338,7 +1267,7 @@ lkvm run -n -k appliance<span style="color: #990000">.</span>d/kernel -i applian
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2018-10-22 22:55:45 CEST
+ 2018-10-30 18:06:16 CET
 </div>
 </div>
 </body>
