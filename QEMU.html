@@ -1182,10 +1182,10 @@ http://www.gnu.org/software/src-highlite -->
 
         apt update
         apt install --yes supermin kvmtool
-        <span style="color: #009900">DEBIAN_FRONTEND</span><span style="color: #990000">=</span>noninteractive apt install --option<span style="color: #990000">=</span><span style="color: #FF0000">'APT::Get::Download-Only=false'</span> --quiet --assume-yes bash man mount busybox strace ncurses-term ncurses-bin samba smbclient cifs-utils smbldap-tools ldap-utils
+        <span style="color: #009900">DEBIAN_FRONTEND</span><span style="color: #990000">=</span>noninteractive apt install --option<span style="color: #990000">=</span><span style="color: #FF0000">'APT::Get::Download-Only=false'</span> --quiet --assume-yes bash man mount busybox strace ncurses-term ncurses-bin samba smbclient cifs-utils smbldap-tools ldap-utils udhcpc
 
         bash <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'BASH'</span>
-                supermin --verbose --prepare --use-installed -o supermin<span style="color: #990000">.</span>d busybox mount bash udhcpc strace samba file bsdutils mailutils coreutils tzdata ncurses-bin ncurses-term eudev net-tools hostname elogind
+                supermin --verbose --prepare --use-installed -o supermin<span style="color: #990000">.</span>d busybox mount bash udhcpc strace samba file bsdutils mailutils coreutils tzdata ncurses-bin ncurses-term eudev net-tools hostname elogind smbclient
                 cat <span style="color: #990000">&gt;</span> init <span style="color: #990000">&lt;&lt;</span>EOF
                 <span style="font-style: italic"><span style="color: #9A1900">#!/bin/bash</span></span>
                 <span style="font-style: italic"><span style="color: #9A1900"># users and groups</span></span>
@@ -1232,7 +1232,7 @@ http://www.gnu.org/software/src-highlite -->
         BASH
 EOT
 
-lkvm run -n -k appliance<span style="color: #990000">.</span>d/kernel -i appliance<span style="color: #990000">.</span>d/initrd -d appliance<span style="color: #990000">.</span>d/root -p <span style="color: #FF0000">'root=/dev/vda'</span>
+<span style="font-weight: bold"><span style="color: #0000FF">exec</span></span> lkvm run -n -k appliance<span style="color: #990000">.</span>d/kernel -i appliance<span style="color: #990000">.</span>d/initrd -d appliance<span style="color: #990000">.</span>d/root -p <span style="color: #FF0000">'root=/dev/vda'</span>
 
 </tt></pre></div></div>
 <div class="listingblock">
