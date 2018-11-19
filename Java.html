@@ -855,43 +855,6 @@ jar cvfe my-app<span style="color: #990000">.</span>jar com<span style="color: #
 mvn -Dmaven<span style="color: #990000">.</span>compiler<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #0000FF">source</span></span><span style="color: #990000">=</span><span style="color: #993399">1.6</span> -Dmaven<span style="color: #990000">.</span>coiler<span style="color: #990000">.</span><span style="color: #009900">target</span><span style="color: #990000">=</span><span style="color: #993399">1.6</span> -Dmaven<span style="color: #990000">.</span>repo<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #0000FF">local</span></span><span style="color: #990000">=</span>/tmp/pub/repo --file my-app/pom<span style="color: #990000">.</span>xml -Ddependency<span style="color: #990000">.</span>locations<span style="color: #990000">.</span><span style="color: #009900">enabled</span><span style="color: #990000">=</span><span style="font-weight: bold"><span style="color: #0000FF">false</span></span> site
 
 </tt></pre></div></div>
-<div class="paragraph"><div class="title">Samba</div><p><a href="./Devuan.html">Devuan SMB server</a></p></div>
-<div class="listingblock">
-<div class="title">Gradle</div>
-<div class="content"><!-- Generator: GNU source-highlight 3.1.8
-by Lorenzo Bettini
-http://www.lorenzobettini.it
-http://www.gnu.org/software/src-highlite -->
-<pre><tt><span style="font-style: italic"><span style="color: #9A1900">#!/bin/bash</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># create gradle-3.3.0-1 package for debian</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># https://www.debian.org/doc/manuals/maint-guide/index.en.html</span></span>
-<span style="font-weight: bold"><span style="color: #0000FF">set</span></span> -e
-<span style="font-weight: bold"><span style="color: #0000FF">set</span></span> -x
-
-<span style="font-style: italic"><span style="color: #9A1900">## Install dependencies</span></span>
-apt install packaging-dev -y
-apt build-dep gradle -y
-
-<span style="font-style: italic"><span style="color: #9A1900"># Build with debug symbols (objcopy --only-keep-debug)</span></span>
-
-git init gradle-<span style="color: #993399">3.3</span><span style="color: #990000">.</span><span style="color: #993399">0</span>
-cd gradle-<span style="color: #993399">3.3</span><span style="color: #990000">.</span><span style="color: #993399">0</span>
-git remote add origin https<span style="color: #990000">:</span>//anonscm<span style="color: #990000">.</span>debian<span style="color: #990000">.</span>org/git/pkg-java/gradle<span style="color: #990000">.</span>git
-git remote add upstream https<span style="color: #990000">:</span>//github<span style="color: #990000">.</span>com/gradle/gradle<span style="color: #990000">.</span>git
-git fetch --all
-git checkout debian<span style="color: #990000">/</span><span style="color: #993399">3.2</span><span style="color: #990000">.</span><span style="color: #993399">1</span>-<span style="color: #993399">1</span>
-git rebase v3<span style="color: #990000">.</span><span style="color: #993399">2.1</span> v3<span style="color: #990000">.</span><span style="color: #993399">3.0</span> --onto debian<span style="color: #990000">/</span><span style="color: #993399">3.2</span><span style="color: #990000">.</span><span style="color: #993399">1</span>-<span style="color: #993399">1</span> --strategy<span style="color: #990000">=</span>recursive --strategy-option<span style="color: #990000">=</span>ours <span style="color: #990000">||</span> <span style="color: #990000">\</span>
-    <span style="font-weight: bold"><span style="color: #0000FF">while</span></span> <span style="color: #990000">!</span> git rebase --continue<span style="color: #990000">;</span> <span style="font-weight: bold"><span style="color: #0000FF">do</span></span>
-        git rm <span style="color: #009900">$(</span>git ls-files -u <span style="color: #990000">|</span> cut -f<span style="color: #993399">2</span> <span style="color: #990000">)</span>
-    <span style="font-weight: bold"><span style="color: #0000FF">done</span></span>
-
-wget -O- http<span style="color: #990000">:</span>//paste<span style="color: #990000">.</span>debian<span style="color: #990000">.</span>net/downloadh<span style="color: #990000">/</span>2d45d7c3 <span style="color: #990000">|</span> <span style="color: #990000">\</span>
-    patch -p<span style="color: #993399">1</span>
-
-dch --newversion <span style="color: #993399">3.3</span><span style="color: #990000">.</span><span style="color: #993399">0</span>-<span style="color: #993399">1</span> <span style="color: #FF0000">"Merge upstream v3.3.0"</span>
-dh_make --indep --yes --createorig <span style="color: #990000">||</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span>
-
-debuild</tt></pre></div></div>
 </div>
 </div>
 </div>
@@ -900,7 +863,7 @@ debuild</tt></pre></div></div>
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2018-10-25 11:47:39 CEST
+ 2018-11-19 18:43:24 CET
 </div>
 </div>
 </body>

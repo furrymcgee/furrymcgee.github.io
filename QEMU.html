@@ -1140,17 +1140,6 @@ lxe-destroy -n busybox -t busybox
 lxc-create --name<span style="color: #990000">=</span>debian --template<span style="color: #990000">=</span>debian
 lxc-start --name<span style="color: #990000">=</span>debian
 lxc-attach --name<span style="color: #990000">=</span>debian</tt></pre></div></div>
-<div class="sect2">
-<h3 id="_chroot">Chroot</h3>
-<div class="paragraph"><p>This creates a new root filesystem without container</p></div>
-<div class="listingblock">
-<div class="title">schroot</div>
-<div class="content"><!-- Generator: GNU source-highlight 3.1.8
-by Lorenzo Bettini
-http://www.lorenzobettini.it
-http://www.gnu.org/software/src-highlite -->
-<pre><tt></tt></pre></div></div>
-</div>
 </div>
 </div>
 <div class="sect1">
@@ -1266,18 +1255,12 @@ EOF</tt></pre></div></div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_devuan_samba_server_with_debootstrap_and_kvm">Devuan SAMBA server with debootstrap and KVM</h2>
-<div class="sectionbody">
-<div class="paragraph"><p><a href="./Devuan.html">Devuan SAMBA server</a></p></div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_qemu_cross_platform"># QEMU cross platform</h2>
+<h2 id="_qemu_s390_emulation">QEMU s390 emulation</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>In virtualization with KVM the guest and host use the same cpu instructions.
-With QEMU a different processor architecture can be emulated.</p></div>
-<div class="paragraph"><p>Debian GNU/Linux on IBM S/390</p></div>
+With QEMU a different processor architecture can be emulated. This can be used to test Debian GNU/Linux on IBM S/390</p></div>
 <div class="listingblock">
+<div class="title">s390-ccw</div>
 <div class="content"><!-- Generator: GNU source-highlight 3.1.8
 by Lorenzo Bettini
 http://www.lorenzobettini.it
@@ -1321,7 +1304,7 @@ qemu-system-s390x <span style="color: #990000">\</span>
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2018-11-15 01:02:40 CET
+ 2018-11-19 18:58:51 CET
 </div>
 </div>
 </body>

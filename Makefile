@@ -22,9 +22,10 @@ index.html: README.html \
 	wiki/Wiki.html \
 	wiki/cpp/Cpp.html \
 	wiki/database/SQLite.html \
-	wiki/debian/Debian.html \
-	wiki/debian/Devuan.html \
-	wiki/debian/Samba.html \
+	wiki/linux/Debian.html \
+	wiki/linux/Devuan.html \
+	wiki/linux/SUSE.html \
+	wiki/linux/Samba.html \
 	wiki/documentation/AsciiDoc.html \
 	wiki/git/Git.html \
 	wiki/java/Java.html \

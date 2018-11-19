@@ -736,57 +736,112 @@ asciidoc.install();
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="_welcome_to_the_wiki">Welcome to the wiki!</h2>
+<h2 id="_opensuse">openSUSE</h2>
 <div class="sectionbody">
-<div class="paragraph"><p>This is the wiki for all projects of furrymcgee on GitHub. <span class="footnote"><br />[<a href="https://github.com/furrymcgee">https://github.com/furrymcgee</a>]<br /></span>.
-The Wiki is written in AsciiDoc <span class="footnote"><br />[<a href="http://asciidoc.org/index.html">http://asciidoc.org/index.html</a>]<br /></span> and markdown <span class="footnote"><br />[<a href="https://github.github.com/gfm/">https://github.github.com/gfm/</a>]<br /></span>. This is the only project with a wiki. The other projects dont use the wiki feature.
-The complete source of this wiki is available as git repository. <span class="footnote"><br />[<a href="https://github.com/furrymcgee/furrymcgee.github.io.wiki.git">https://github.com/furrymcgee/furrymcgee.github.io.wiki.git</a>]<br /></span>
-Single files can be linked online for example this home page. <span class="footnote"><br />[<a href="https://raw.githubusercontent.com/wiki/furrymcgee/furrymcgee.github.io/Wiki.asciidoc">https://raw.githubusercontent.com/wiki/furrymcgee/furrymcgee.github.io/Wiki.asciidoc</a>]<br /></span>
-The weppages are browsable in <a href="https://furrymcgee.github.io">WEB</a>.
-This page in <a href="https://github.com/furrymcgee/Wiki.html">HTML</a> and <a href="https://raw.githubusercontent.com/wiki/furrymcgee/furrymcgee.github.io/Wiki.asciidoc">RAW</a> and format.</p></div>
-<div class="tableblock">
-<table rules="all"
-width="100%"
-frame="border"
-cellspacing="0" cellpadding="4">
-<caption class="title">Table 1. Webpages</caption>
-<col width="22%" />
-<col width="77%" />
-<tbody>
-<tr>
-<td align="left" valign="top"><p class="table"><a href="./AsciiDoc.html">AsciiDoc</a>, <a href="./XML.html">XML</a></p></td>
-<td align="left" valign="top"><div><div class="paragraph"><p>Markup Languages</p></div></div></td>
-</tr>
-<tr>
-<td align="left" valign="top"><p class="table"><a href="./Bash.html">Bash</a>, <a href="./Perl.html">Perl</a></p></td>
-<td align="left" valign="top"><div><div class="paragraph"><p>Interpreter</p></div></div></td>
-</tr>
-<tr>
-<td align="left" valign="top"><p class="table"><a href="./Cpp.html">Cpp</a>, <a href="./Java.html">Java</a></p></td>
-<td align="left" valign="top"><div><div class="paragraph"><p>High Level Programming Languages</p></div></div></td>
-</tr>
-<tr>
-<td align="left" valign="top"><p class="table"><a href="./Debian.html">Debian</a>, <a href="./Devuan.html">Devuan</a>, <a href="./SUSE.html">SUSE</a></p></td>
-<td align="left" valign="top"><div><div class="paragraph"><p>GNU/Linux Operating Systems</p></div></div></td>
-</tr>
-<tr>
-<td align="left" valign="top"><p class="table"><a href="./Git.html">Git</a></p></td>
-<td align="left" valign="top"><div><div class="paragraph"><p>Distributed Version Control System</p></div></div></td>
-</tr>
-<tr>
-<td align="left" valign="top"><p class="table"><a href="./QEMU.html">QEMU</a></p></td>
-<td align="left" valign="top"><div><div class="paragraph"><p>Hardware Virtualization</p></div></div></td>
-</tr>
-<tr>
-<td align="left" valign="top"><p class="table"><a href="./SQLite.html">SQLite</a></p></td>
-<td align="left" valign="top"><div><div class="paragraph"><p>File based SQL Database</p></div></div></td>
-</tr>
-<tr>
-<td align="left" valign="top"><p class="table"><a href="./Samba.html">Samba</a></p></td>
-<td align="left" valign="top"><div><div class="paragraph"><p>Windows AD and SMB/CIFS fileserver for UNIX</p></div></div></td>
-</tr>
-</tbody>
-</table>
+<div class="sect2">
+<h3 id="_rpm_package_manager">RPM Package Manager</h3>
+<div class="paragraph"><p>Packages of SUSE and Red Hat distributions use RPM format.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="https://mirrors.opensuse.org/">https://mirrors.opensuse.org/</a>
+</p>
+</li>
+<li>
+<p>
+<a href="https://build.opensuse.org/">https://build.opensuse.org/</a>
+</p>
+</li>
+<li>
+<p>
+<a href="https://rpm-packaging-guide.github.io/#prerequisites">https://rpm-packaging-guide.github.io/#prerequisites</a>
+</p>
+</li>
+<li>
+<p>
+<a href="https://docs.fedoraproject.org/en-US/quick-docs/creating-rpm-packages/index.html">https://docs.fedoraproject.org/en-US/quick-docs/creating-rpm-packages/index.html</a>
+</p>
+</li>
+</ul></div>
+<div class="listingblock">
+<div class="title">install</div>
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-style: italic"><span style="color: #9A1900">#!/bin/bash</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># DEBIAN_FRONTEND=noninteractive apt install --yes --no-install-recommends qemu kvmtool bridge-utils util-linux mount btrfs-progs</span></span>
+
+<span style="font-weight: bold"><span style="color: #0000FF">shopt</span></span> -s nullglob
+
+cd <span style="color: #009900">$(</span>mktemp -d<span style="color: #990000">)</span> <span style="color: #990000">&amp;&amp;</span> cd <span style="color: #990000">..</span>
+
+<span style="font-style: italic"><span style="color: #9A1900"># openSUSE or Devuan</span></span>
+wget --continue --no-check-certificate <span style="color: #990000">\</span>
+        http<span style="color: #990000">:</span>//download<span style="color: #990000">.</span>opensuse<span style="color: #990000">.</span>org/distribution/openSUSE-current/jeos/openSUSE-Leap-<span style="color: #993399">15.0</span>-JeOS<span style="color: #990000">.</span>x86_64-<span style="color: #993399">15.0</span><span style="color: #990000">.</span><span style="color: #993399">1</span>-kvm-and-xen-Snapshot<span style="color: #993399">20.99</span><span style="color: #990000">.</span>qcow2
+        <span style="font-style: italic"><span style="color: #9A1900">#https://mirror.leaseweb.com/devuan/devuan_ascii/virtual/devuan_ascii_2.0.0_amd64_qemu.qcow2.xz</span></span>
+        <span style="font-style: italic"><span style="color: #9A1900">#http://download.opensuse.org/tumbleweed/iso/openSUSE-Tumbleweed-KDE-Live-x86_64-Snapshot20181112-Media.iso || true</span></span>
+
+<span style="color: #990000">[</span> openSUSE<span style="color: #990000">*</span>iso <span style="color: #990000">]</span> <span style="color: #990000">&amp;&amp;</span> {
+        mount openSUSE<span style="color: #990000">*</span> <span style="color: #009900">$OLDPWD</span>
+        cp -a <span style="color: #009900">$OLDPWD</span>/boot <span style="color: #990000">.</span>
+        mv boot/x86_64/loader/linux boot/vmlinuz<span style="color: #990000">.</span>amd64
+        mv boot/x86_64/loader/initrd boot/initrd<span style="color: #990000">.</span>amd64
+        <span style="color: #990000">[</span> openSUSE<span style="color: #990000">*</span>Live<span style="color: #990000">*</span> <span style="color: #990000">]</span> <span style="color: #990000">&amp;&amp;</span> {
+                mount <span style="color: #009900">$OLDPWD</span>/LiveOS/squashfs<span style="color: #990000">.</span>img <span style="color: #009900">$OLDPWD</span>
+                cp <span style="color: #009900">$OLDPWD</span>/LiveOS/rootfs<span style="color: #990000">.</span>img <span style="color: #990000">.</span>
+                umount <span style="color: #009900">$OLDPWD</span>
+        }
+        umount <span style="color: #009900">$OLDPWD</span>
+}
+
+echo devuan<span style="color: #990000">*.</span>qcow2<span style="color: #990000">.</span>xz <span style="color: #990000">|</span> xargs -r xz -d -f -k
+echo <span style="color: #990000">*.</span>qcow2 <span style="color: #990000">|</span> xargs -I@ -r qemu-img convert @ rootfs<span style="color: #990000">.</span>img
+echo devuan<span style="color: #990000">*.</span>qcow2 <span style="color: #990000">|</span> xargs -r rm
+
+losetup --find --show --partscan rootfs<span style="color: #990000">.</span>img <span style="color: #990000">|</span> <span style="color: #990000">\</span>
+        <span style="font-weight: bold"><span style="color: #0000FF">while</span></span> <span style="font-weight: bold"><span style="color: #0000FF">read</span></span><span style="color: #990000">;</span> <span style="font-weight: bold"><span style="color: #0000FF">do</span></span>
+                <span style="color: #990000">[</span> devuan<span style="color: #990000">*</span> <span style="color: #990000">]</span> <span style="color: #990000">&amp;&amp;</span> mount <span style="color: #009900">${REPLY}</span>p1 <span style="color: #009900">$OLDPWD</span>
+                <span style="color: #990000">[</span> openSUSE<span style="color: #990000">*</span>JeOS<span style="color: #990000">*</span> <span style="color: #990000">]</span> <span style="color: #990000">&amp;&amp;</span> mount <span style="color: #009900">${REPLY}</span>p3 <span style="color: #009900">$OLDPWD</span>
+                <span style="color: #990000">[</span> openSUSE<span style="color: #990000">*</span>Live<span style="color: #990000">*</span> <span style="color: #990000">]</span> <span style="color: #990000">&amp;&amp;</span> mount <span style="color: #009900">${REPLY}</span> <span style="color: #009900">$OLDPWD</span>
+                cp -a <span style="color: #009900">$OLDPWD</span>/boot <span style="color: #990000">.</span> <span style="color: #990000">&amp;&amp;</span>
+                        umount <span style="color: #009900">$OLDPWD</span> <span style="color: #990000">&amp;&amp;</span> <span style="color: #990000">\</span>
+                        rmdir <span style="color: #009900">$OLDPWD</span> <span style="color: #990000">&amp;&amp;</span> <span style="color: #990000">\</span>
+                        losetup -d <span style="color: #009900">$REPLY</span>
+        <span style="font-weight: bold"><span style="color: #0000FF">done</span></span>
+
+<span style="color: #990000">[</span> openSUSE<span style="color: #990000">*</span>JeOS<span style="color: #990000">*</span> <span style="color: #990000">]</span> <span style="color: #990000">&amp;&amp;</span> rename s<span style="color: #990000">/</span><span style="color: #009900">$/</span><span style="color: #990000">.</span>xz<span style="color: #990000">/</span> boot/initrd<span style="color: #990000">*</span>default <span style="color: #990000">&amp;&amp;</span> xz -d boot<span style="color: #990000">/*.</span>xz
+
+<span style="color: #990000">[</span> devuan<span style="color: #990000">*</span> <span style="color: #990000">]</span> <span style="color: #990000">&amp;&amp;</span> <span style="color: #990000">\</span>
+        <span style="font-weight: bold"><span style="color: #0000FF">exec</span></span> lkvm run -n -m<span style="color: #993399">2000</span> -d rootfs<span style="color: #990000">.</span>img -k boot/vmlinuz<span style="color: #990000">*</span>amd64 -i boot/initrd<span style="color: #990000">*</span>amd64 <span style="color: #990000">\</span>
+                -p <span style="color: #FF0000">'root=/dev/vda1'</span>
+<span style="color: #990000">[</span> openSUSE<span style="color: #990000">*</span>JeOS<span style="color: #990000">*</span> <span style="color: #990000">]</span> <span style="color: #990000">&amp;&amp;</span> <span style="color: #990000">\</span>
+        <span style="font-weight: bold"><span style="color: #0000FF">exec</span></span> lkvm run -n -m<span style="color: #993399">2000</span> -d rootfs<span style="color: #990000">.</span>img -k boot/vmlinuz -i boot/initrd<span style="color: #990000">*</span>default <span style="color: #990000">\</span>
+                -p <span style="color: #FF0000">'root=/dev/vda3 rw'</span>
+
+<span style="color: #990000">[</span> openSUSE<span style="color: #990000">*</span>Live<span style="color: #990000">*</span> <span style="color: #990000">]</span> <span style="color: #990000">&amp;&amp;</span> <span style="color: #990000">\</span>
+        <span style="font-weight: bold"><span style="color: #0000FF">exec</span></span> lkvm run -n -m<span style="color: #993399">2000</span> -d rootfs<span style="color: #990000">.</span>img -k boot/vmlinuz<span style="color: #990000">*</span>amd64 -i boot/initrd<span style="color: #990000">*</span>amd64 <span style="color: #990000">\</span>
+        -p <span style="color: #FF0000">'initrd=initrd splash=silent quiet root=live:CDLABEL=openSUSE_Tumbleweed_KDE_Live rd.live.image rd.live.overlay.persistent rd.live.overlay.cowfs=ext4 mediacheck=1 plymouth.enable=0 showopts'</span>
+
+<span style="font-weight: bold"><span style="color: #0000FF">exec</span></span> qemu-system-x86_64 <span style="color: #990000">\</span>
+        -nographic <span style="color: #990000">\</span>
+        --enable-kvm <span style="color: #990000">\</span>
+        -append <span style="color: #FF0000">'console=ttyS0 root=/dev/sda3 rw'</span> <span style="color: #990000">\</span>
+        -initrd boot/initrd-<span style="color: #993399">4.12</span><span style="color: #990000">.</span><span style="color: #993399">14</span>-lp<span style="color: #993399">150.12</span><span style="color: #990000">.</span><span style="color: #993399">25</span>-default <span style="color: #990000">\</span>
+        -kernel boot/vmlinuz-<span style="color: #993399">4.12</span><span style="color: #990000">.</span><span style="color: #993399">14</span>-lp<span style="color: #993399">150.12</span><span style="color: #990000">.</span><span style="color: #993399">25</span>-default <span style="color: #990000">\</span>
+        -drive <span style="color: #009900">file</span><span style="color: #990000">=</span>rootfs<span style="color: #990000">.</span>img
+
+
+<span style="font-style: italic"><span style="color: #9A1900"># sysctl net.ipv4.ip_forward=1 &amp;&amp; ifconfig tap0 0 &amp;&amp; brctl addif br0 tap0</span></span></tt></pre></div></div>
+<div class="listingblock">
+<div class="title">zypper</div>
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>zypper install gcc rpm-build rpm-devel rpmlint make python bash coreutils diffutils patch rpmdevtools automake libtool
+rsync -av rsync<span style="color: #990000">:</span>//ftp<span style="color: #990000">.</span>gwdg<span style="color: #990000">.</span>de/pub/opensuse/repositories/network<span style="color: #990000">:</span>/jangouts/openSUSE_Leap_15<span style="color: #990000">.</span><span style="color: #993399">0</span>/src<span style="color: #990000">/</span> <span style="color: #990000">.</span>
+rpmbuild --rebuild <span style="color: #990000">~</span>/rpmbuild/SRPMS/bello-<span style="color: #993399">0.1</span>-<span style="color: #993399">1</span><span style="color: #990000">.</span>el7<span style="color: #990000">.</span>src<span style="color: #990000">.</span>rpmddj</tt></pre></div></div>
 </div>
 </div>
 </div>
@@ -795,7 +850,7 @@ cellspacing="0" cellpadding="4">
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2018-11-19 16:12:24 CET
+ 2018-11-19 18:53:03 CET
 </div>
 </div>
 </body>

@@ -893,64 +893,22 @@ It may require additional configuration in dnsmasq.conf.
 </li>
 </ul></div>
 <div class="listingblock">
-<div class="title">Debian</div>
+<div class="title">netboot</div>
 <div class="content"><!-- Generator: GNU source-highlight 3.1.8
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
-<pre><tt><span style="font-style: italic"><span style="color: #9A1900">#!/bin/sh</span></span>
-<span style="color: #990000">:</span> <span style="color: #009900">DEBIAN_FRONTEND</span><span style="color: #990000">=</span>noninteractive apt install --yes --no-install-recommends kvmtool btrfs-progs
-sysctl net<span style="color: #990000">.</span>ipv4<span style="color: #990000">.</span><span style="color: #009900">ip_forward</span><span style="color: #990000">=</span><span style="color: #993399">1</span>
-<span style="color: #990000">:</span> brctl addif br0 tap0
-<span style="color: #990000">:</span> ifconfig tap0 <span style="color: #993399">0</span>
-
-
+<pre><tt><span style="font-style: italic"><span style="color: #9A1900"># Debian netboot installation</span></span>
 cd <span style="color: #009900">$(</span>mktemp -d<span style="color: #990000">)</span> <span style="color: #990000">&amp;&amp;</span> cd <span style="color: #990000">..</span>
 dd <span style="color: #009900">count</span><span style="color: #990000">=</span><span style="color: #993399">0</span> <span style="color: #009900">seek</span><span style="color: #990000">=</span>6M <span style="color: #009900">of</span><span style="color: #990000">=</span>disk<span style="color: #990000">.</span>img
+wget -c -r -nc -np -nH -nd -P amd64 <span style="color: #990000">\</span>
+        http<span style="color: #990000">:</span>//cdn-fastly<span style="color: #990000">.</span>deb<span style="color: #990000">.</span>debian<span style="color: #990000">.</span>org/debian/dists/stable/main/installer-amd<span style="color: #993399">64</span>/current/images/netboot/debian-installer/amd<span style="color: #993399">64</span><span style="color: #990000">/</span>
+<span style="font-weight: bold"><span style="color: #0000FF">exec</span></span> lkvm run -n -d disk<span style="color: #990000">.</span>img -k amd64/linux -i amd64/initrd<span style="color: #990000">.</span>gz -p <span style="color: #FF0000">'root=/dev/vda auto=true priority=critical url=tftp://192.168.33.100/preseed.cfg'</span>
 
-<span style="font-weight: bold"><span style="color: #0000FF">if</span></span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span>
-<span style="font-weight: bold"><span style="color: #0000FF">then</span></span>
-        <span style="font-style: italic"><span style="color: #9A1900"># Debian netboot installation</span></span>
-        wget -c -r -nc -np -nH -nd -P amd64 <span style="color: #990000">\</span>
-                http<span style="color: #990000">:</span>//cdn-fastly<span style="color: #990000">.</span>deb<span style="color: #990000">.</span>debian<span style="color: #990000">.</span>org/debian/dists/stable/main/installer-amd<span style="color: #993399">64</span>/current/images/netboot/debian-installer/amd<span style="color: #993399">64</span><span style="color: #990000">/</span>
-        <span style="font-weight: bold"><span style="color: #0000FF">exec</span></span> lkvm run -n -d disk<span style="color: #990000">.</span>img -k amd64/linux -i amd64/initrd<span style="color: #990000">.</span>gz -p <span style="color: #FF0000">'root=/dev/vda auto=true priority=critical url=tftp://192.168.33.100/preseed.cfg'</span>
-<span style="font-weight: bold"><span style="color: #0000FF">elif</span></span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span>
-<span style="font-weight: bold"><span style="color: #0000FF">then</span></span>
-        <span style="font-style: italic"><span style="color: #9A1900"># Devuan ascii iso installation</span></span>
-        wget --continue --no-check-certificate <span style="color: #990000">\</span>
-                ftp<span style="color: #990000">:</span>//mirror<span style="color: #990000">.</span>leaseweb<span style="color: #990000">.</span>com/devuan/devuan_ascii/installer-iso/devuan_ascii_2<span style="color: #990000">.</span><span style="color: #993399">0</span><span style="color: #990000">.</span>0_amd64_netinst<span style="color: #990000">.</span>iso
-        cd - <span style="color: #990000">&amp;&amp;</span> <span style="color: #990000">\</span>
-                mount <span style="color: #990000">..</span>/devuan<span style="color: #990000">*</span>iso <span style="color: #990000">.</span>
-        cd - <span style="color: #990000">&amp;&amp;</span> <span style="color: #990000">\</span>
-                cp -av <span style="color: #009900">$OLDPWD</span>/install<span style="color: #990000">.</span>amd <span style="color: #990000">.</span>
-        umount <span style="color: #009900">$OLDPWD</span> <span style="color: #990000">&amp;&amp;</span> rmdir <span style="color: #009900">$OLDPWD</span>
-        lkvm run -n -d disk<span style="color: #990000">.</span>img -k install<span style="color: #990000">.</span>amd/vmlinuz -i install<span style="color: #990000">.</span>amd/initrd<span style="color: #990000">.</span>gz -p <span style="color: #FF0000">'root=/dev/vda'</span>
-<span style="font-weight: bold"><span style="color: #0000FF">elif</span></span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span>
-<span style="font-weight: bold"><span style="color: #0000FF">then</span></span>
-        <span style="font-style: italic"><span style="color: #9A1900"># SUSE current remote installation</span></span>
-        <span style="font-style: italic"><span style="color: #9A1900"># https://en.opensuse.org/SDB:Remote_installation</span></span>
-        wget --continue --no-check-certificate <span style="color: #990000">\</span>
-                http<span style="color: #990000">:</span>//download<span style="color: #990000">.</span>opensuse<span style="color: #990000">.</span>org/distribution/openSUSE-current/repo/oss/boot/x86_64/loader/linux
-        wget --continue --no-check-certificate <span style="color: #990000">\</span>
-                http<span style="color: #990000">:</span>//download<span style="color: #990000">.</span>opensuse<span style="color: #990000">.</span>org/distribution/openSUSE-current/repo/oss/boot/x86_64/loader/initrd <span style="color: #990000">&amp;&amp;</span> xz -d <span style="color: #990000">&gt;</span> initrd<span style="color: #990000">.</span>cpio <span style="color: #990000">&lt;</span> initrd
-        <span style="font-weight: bold"><span style="color: #0000FF">exec</span></span> lkvm run -n -m<span style="color: #993399">1000</span> -d disk<span style="color: #990000">.</span>img -k linux -i initrd<span style="color: #990000">.</span>cpio -p <span style="color: #FF0000">'root=/dev/vda install=https://download.opensuse.org/distribution/openSUSE-current/repo/oss/'</span>
-<span style="font-weight: bold"><span style="color: #0000FF">else</span></span>
-        <span style="font-style: italic"><span style="color: #9A1900"># SUSE leap 15.1 iso installation</span></span>
-        wget --continue --no-check-certificate <span style="color: #990000">\</span>
-                http<span style="color: #990000">:</span>//download<span style="color: #990000">.</span>opensuse<span style="color: #990000">.</span>org/tumbleweed/iso/openSUSE-Tumbleweed-NET-x86_64-Current<span style="color: #990000">.</span>iso
-        cd - <span style="color: #990000">&amp;&amp;</span> <span style="color: #990000">\</span>
-                mount <span style="color: #990000">..</span>/openSUSE<span style="color: #990000">*</span>iso <span style="color: #990000">.</span>
-        cd - <span style="color: #990000">&amp;&amp;</span> <span style="color: #990000">\</span>
-                cp -av <span style="color: #009900">$OLDPWD</span>/boot/x86_64/loader/linux <span style="color: #990000">.</span> <span style="color: #990000">&amp;&amp;</span> <span style="color: #990000">\</span>
-                unxz -d <span style="color: #990000">&lt;</span> <span style="color: #009900">$OLDPWD</span>/boot/x86_64/loader/initrd <span style="color: #990000">&gt;</span> initrd
-        umount <span style="color: #009900">$OLDPWD</span> <span style="color: #990000">&amp;&amp;</span> rmdir <span style="color: #009900">$OLDPWD</span>
-        <span style="font-weight: bold"><span style="color: #0000FF">exec</span></span> lkvm run -n -m<span style="color: #993399">1000</span> -d disk<span style="color: #990000">.</span>img -k linux -i initrd -p <span style="color: #FF0000">'root=/dev/vda install=https://download.opensuse.org/tumbleweed/repo/oss/'</span>
-<span style="font-weight: bold"><span style="color: #0000FF">fi</span></span>
-
-</tt></pre></div></div>
-<div class="paragraph"><p>Bug#749991
-Besides installing dist=stable by default, also testing and sid are supported.</p></div>
-<div class="paragraph"><p>Just adding <em>mirror/suite=testing</em> as additional param to the kernel command line is enough.</p></div>
+<span style="font-style: italic"><span style="color: #9A1900">#Bug#749991</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">#Besides installing dist=stable by default, also testing and sid are supported.</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">#</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">#Just adding 'mirror/suite=testing' as additional param to the kernel command line is enough.</span></span></tt></pre></div></div>
 </div>
 </div>
 <div class="sect1">
@@ -1210,14 +1168,14 @@ deb-src <span style="color: #990000">[</span>signed-by<span style="color: #99000
 
 <span style="font-style: italic"><span style="color: #9A1900">#deb [signed-by=/usr/share/keyrings/archive-keyring.gpg] file:/srv/reprepro/debian /</span></span>
 <span style="font-style: italic"><span style="color: #9A1900">#deb-src [signed-by=/usr/share/keyrings/archive-keyring.gpg] file:/srv/reprepro/debian /</span></span>
-APT
-</tt></pre></div></div>
+APT</tt></pre></div></div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="_ultimate_debian_database">Ultimate debian database</h2>
 <div class="sectionbody">
 <div class="listingblock">
+<div class="title">udd</div>
 <div class="content"><!-- Generator: GNU source-highlight 3.1.8
 by Lorenzo Bettini
 http://www.lorenzobettini.it
@@ -1243,68 +1201,12 @@ time sudo -u postgres bash <span style="color: #990000">&lt;&lt;</span>-<span st
 BASH</tt></pre></div></div>
 </div>
 </div>
-<div class="sect1">
-<h2 id="_devuan">Devuan</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_debootstrap_samba_server_with_debootstrap_and_kvm">Debootstrap SAMBA server with debootstrap and KVM</h3>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_devuan_2">Devuan</h2>
-<div class="sectionbody">
-<div class="paragraph"><p>Devuan is a GNU/Linux operating system mirroring the Debian distribution without systemd and dbus requirements.</p></div>
-<div class="sect2">
-<h3 id="_debootstrap">debootstrap</h3>
-<div class="listingblock">
-<div class="title">Devuan</div>
-<div class="content"><!-- Generator: GNU source-highlight 3.1.8
-by Lorenzo Bettini
-http://www.lorenzobettini.it
-http://www.gnu.org/software/src-highlite -->
-<pre><tt><span style="font-style: italic"><span style="color: #9A1900">#!/bin/bash</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># Devuan debootstrap and schroot</span></span>
-
-cd <span style="color: #009900">$(</span>mktemp -d<span style="color: #990000">)</span>
-apt install --yes debootstrap schroot
-wget --continue --no-check-certificate --output-document <span style="color: #990000">..</span>/devuan_ascii_2<span style="color: #990000">.</span><span style="color: #993399">0</span><span style="color: #990000">.</span>0_amd64_netinst<span style="color: #990000">.</span>iso <span style="color: #990000">\</span>
-        ftp<span style="color: #990000">:</span>//mirror<span style="color: #990000">.</span>leaseweb<span style="color: #990000">.</span>com/devuan/devuan_ascii/installer-iso/devuan_ascii_2<span style="color: #990000">.</span><span style="color: #993399">0</span><span style="color: #990000">.</span>0_amd64_netinst<span style="color: #990000">.</span>iso
-mount <span style="color: #990000">..</span>/devuan<span style="color: #990000">*</span>netinst<span style="color: #990000">.</span>iso <span style="color: #990000">.</span>
-
-cd <span style="color: #009900">$(</span>mktemp -d<span style="color: #990000">)</span>
-cat <span style="color: #990000">&gt;</span> /etc/schroot/chroot<span style="color: #990000">.</span>d/schroot<span style="color: #990000">.</span>conf <span style="color: #990000">&lt;&lt;</span>-EOF
-        <span style="font-style: italic"><span style="color: #9A1900"># schroot chroot definitions.</span></span>
-        <span style="font-style: italic"><span style="color: #9A1900"># See schroot.conf(5) for complete documentation of the file format.</span></span>
-        <span style="color: #990000">[</span>default<span style="color: #990000">]</span>
-        <span style="color: #009900">description</span><span style="color: #990000">=</span>Debian
-        <span style="font-weight: bold"><span style="color: #0000FF">type</span></span><span style="color: #990000">=</span>directory
-        <span style="color: #009900">directory</span><span style="color: #990000">=</span><span style="color: #009900">$PWD</span>
-        preserve-environment<span style="color: #990000">=</span><span style="font-weight: bold"><span style="color: #0000FF">false</span></span>
-        <span style="color: #009900">groups</span><span style="color: #990000">=</span>sudo
-        <span style="font-style: italic"><span style="color: #9A1900">#union-type=overlay</span></span>
-EOF
-
-bash -ex <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'BASH'</span>
-        <span style="font-style: italic"><span style="color: #9A1900">#chmod 755 .</span></span>
-        debootstrap --verbose --include<span style="color: #990000">=</span>wget<span style="color: #990000">,</span>sudo --verbose --no-check-gpg testing <span style="color: #990000">.</span> file<span style="color: #990000">://</span><span style="color: #009900">$OLDPWD</span>
-        cp -av /lib/modules lib<span style="color: #990000">/</span>
-        cp -av /boot/vmlinuz-<span style="color: #990000">*</span>-amd<span style="color: #993399">64</span> boot<span style="color: #990000">/</span>
-        <span style="font-style: italic"><span style="color: #9A1900"># debootstrap --verbose --keyring=/usr/share/keyrings/archive-keyring.gpg --no-check-gpg sid . file:///var/cache/apt/debian</span></span>
-BASH
-
-umount <span style="color: #009900">$OLDPWD</span>
-rmdir <span style="color: #009900">$OLDPWD</span>
-</tt></pre></div></div>
-</div>
-</div>
-</div>
 </div>
 <div id="footnotes"><hr /></div>
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2018-11-15 00:37:10 CET
+ 2018-11-19 18:44:59 CET
 </div>
 </div>
 </body>

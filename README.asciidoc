@@ -1,8 +1,8 @@
 == Welcome
 
-This pages are written in AsciiDoc.
+This is a free software developers handbook written in asciidoc
 
-.Webpages
+.Content
 include::./wiki/_Sidebar.asciidoc[]
 
 /////
