@@ -772,23 +772,17 @@ Sorting of data requires self join and a a comparison and a group by. This is si
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
-<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">select</span></span> count<span style="color: #990000">(*),</span> x<span style="color: #990000">.*</span> from <span style="color: #990000">(</span>
-                <span style="font-weight: bold"><span style="color: #0000FF">select</span></span> <span style="color: #FF0000">'a'</span><span style="color: #990000">,</span> <span style="color: #993399">21</span>
+<pre><tt>with a as
+<span style="color: #990000">(</span>
+                <span style="font-weight: bold"><span style="color: #0000FF">select</span></span> <span style="color: #FF0000">'a'</span> as x<span style="color: #990000">,</span> <span style="color: #993399">21</span>
                 union all
                 <span style="font-weight: bold"><span style="color: #0000FF">select</span></span> <span style="color: #FF0000">'b'</span><span style="color: #990000">,</span> <span style="color: #993399">2</span>
                 union all
                 <span style="font-weight: bold"><span style="color: #0000FF">select</span></span> <span style="color: #FF0000">'d'</span><span style="color: #990000">,</span> <span style="color: #993399">23</span>
                 union all
-                <span style="font-weight: bold"><span style="color: #0000FF">select</span></span> <span style="color: #FF0000">'c'</span> as w<span style="color: #990000">,</span> <span style="color: #993399">221</span> as x
-<span style="color: #990000">)</span> as x join <span style="color: #990000">(</span>
-                <span style="font-weight: bold"><span style="color: #0000FF">select</span></span> <span style="color: #FF0000">'a'</span><span style="color: #990000">,</span> <span style="color: #993399">21</span>
-                union all
-                <span style="font-weight: bold"><span style="color: #0000FF">select</span></span> <span style="color: #FF0000">'b'</span><span style="color: #990000">,</span> <span style="color: #993399">2</span>
-                union all
-                <span style="font-weight: bold"><span style="color: #0000FF">select</span></span> <span style="color: #FF0000">'d'</span><span style="color: #990000">,</span> <span style="color: #993399">23</span>
-                union all
-                <span style="font-weight: bold"><span style="color: #0000FF">select</span></span> <span style="color: #FF0000">'c'</span> as w<span style="color: #990000">,</span> <span style="color: #993399">221</span> as x
-<span style="color: #990000">)</span> as y
+                <span style="font-weight: bold"><span style="color: #0000FF">select</span></span> <span style="color: #FF0000">'c'</span><span style="color: #990000">,</span> <span style="color: #993399">221</span>
+<span style="color: #990000">)</span>
+<span style="font-weight: bold"><span style="color: #0000FF">select</span></span> count<span style="color: #990000">(*),</span> x<span style="color: #990000">.*</span> from a as x join a as y
 where y<span style="color: #990000">.</span>x <span style="color: #990000">&lt;=</span> x<span style="color: #990000">.</span>x
 group by x<span style="color: #990000">.</span>x
 order by count<span style="color: #990000">(*)</span>
@@ -806,6 +800,16 @@ by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
 <pre><tt><span style="font-weight: bold"><span style="color: #0000FF">WITH</span></span> RECURSIVE
+        count_down<span style="color: #990000">(</span>x<span style="color: #990000">,</span>y<span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #0000FF">AS</span></span> <span style="color: #990000">(</span>
+        <span style="font-weight: bold"><span style="color: #0000FF">SELECT</span></span> <span style="color: #993399">5</span> <span style="font-weight: bold"><span style="color: #0000FF">as</span></span> x<span style="color: #990000">,</span> <span style="color: #993399">0</span> <span style="font-weight: bold"><span style="color: #0000FF">as</span></span> y
+                <span style="font-weight: bold"><span style="color: #0000FF">UNION</span></span> <span style="font-weight: bold"><span style="color: #0000FF">ALL</span></span>
+        <span style="font-weight: bold"><span style="color: #0000FF">SELECT</span></span> cd<span style="color: #990000">.</span>x <span style="color: #990000">-</span> <span style="color: #993399">1</span><span style="color: #990000">,</span>cd<span style="color: #990000">.</span>x<span style="color: #990000">||</span>cd<span style="color: #990000">.</span>y
+        <span style="font-weight: bold"><span style="color: #0000FF">FROM</span></span> count_down <span style="font-weight: bold"><span style="color: #0000FF">AS</span></span> cd
+        <span style="font-weight: bold"><span style="color: #0000FF">WHERE</span></span> cd<span style="color: #990000">.</span>x <span style="color: #990000">&gt;</span> <span style="color: #993399">0</span>
+        <span style="color: #990000">)</span>
+<span style="font-weight: bold"><span style="color: #0000FF">SELECT</span></span> <span style="color: #990000">*</span> <span style="font-weight: bold"><span style="color: #0000FF">FROM</span></span> count_down<span style="color: #990000">;</span>
+
+<span style="font-weight: bold"><span style="color: #0000FF">WITH</span></span> RECURSIVE
 example<span style="color: #990000">(</span>name<span style="color: #990000">,</span> list<span style="color: #990000">,</span> element<span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #0000FF">AS</span></span> <span style="color: #990000">(</span>
                 <span style="font-weight: bold"><span style="color: #0000FF">select</span></span> name<span style="color: #990000">,</span> substr<span style="color: #990000">(</span>list<span style="color: #990000">,</span> <span style="color: #993399">1</span><span style="color: #990000">+</span>instr<span style="color: #990000">(</span>list<span style="color: #990000">,</span> <span style="color: #FF0000">","</span><span style="color: #990000">)),</span> substr<span style="color: #990000">(</span>list<span style="color: #990000">,</span> <span style="color: #993399">0</span><span style="color: #990000">,</span> instr<span style="color: #990000">(</span>list<span style="color: #990000">,</span> <span style="color: #FF0000">","</span><span style="color: #990000">))</span> <span style="font-weight: bold"><span style="color: #0000FF">from</span></span> <span style="color: #990000">(</span>
                         <span style="font-weight: bold"><span style="color: #0000FF">select</span></span> <span style="color: #FF0000">'letter'</span> <span style="font-weight: bold"><span style="color: #0000FF">as</span></span> name<span style="color: #990000">,</span> <span style="color: #FF0000">"A,B,C,"</span> <span style="font-weight: bold"><span style="color: #0000FF">as</span></span> list
@@ -882,7 +886,7 @@ SELECT <span style="color: #990000">*</span> FROM temp<span style="color: #99000
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2018-11-17 11:51:22 CET
+ 2018-11-22 14:40:24 CET
 </div>
 </div>
 </body>

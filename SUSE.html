@@ -778,8 +778,8 @@ cd <span style="color: #009900">$(</span>mktemp -d<span style="color: #990000">)
 
 <span style="font-style: italic"><span style="color: #9A1900"># openSUSE or Devuan</span></span>
 wget --continue --no-check-certificate <span style="color: #990000">\</span>
-        http<span style="color: #990000">:</span>//download<span style="color: #990000">.</span>opensuse<span style="color: #990000">.</span>org/distribution/openSUSE-current/jeos/openSUSE-Leap-<span style="color: #993399">15.0</span>-JeOS<span style="color: #990000">.</span>x86_64-<span style="color: #993399">15.0</span><span style="color: #990000">.</span><span style="color: #993399">1</span>-kvm-and-xen-Snapshot<span style="color: #993399">20.99</span><span style="color: #990000">.</span>qcow2
-        <span style="font-style: italic"><span style="color: #9A1900">#https://mirror.leaseweb.com/devuan/devuan_ascii/virtual/devuan_ascii_2.0.0_amd64_qemu.qcow2.xz</span></span>
+        https<span style="color: #990000">:</span>//mirror<span style="color: #990000">.</span>leaseweb<span style="color: #990000">.</span>com/devuan/devuan_ascii/virtual/devuan_ascii_2<span style="color: #990000">.</span><span style="color: #993399">0</span><span style="color: #990000">.</span>0_amd64_qemu<span style="color: #990000">.</span>qcow2<span style="color: #990000">.</span>xz
+        <span style="font-style: italic"><span style="color: #9A1900">#http://download.opensuse.org/distribution/openSUSE-current/jeos/openSUSE-Leap-15.0-JeOS.x86_64-15.0.1-kvm-and-xen-Snapshot20.99.qcow2</span></span>
         <span style="font-style: italic"><span style="color: #9A1900">#http://download.opensuse.org/tumbleweed/iso/openSUSE-Tumbleweed-KDE-Live-x86_64-Snapshot20181112-Media.iso || true</span></span>
 
 <span style="color: #990000">[</span> openSUSE<span style="color: #990000">*</span>iso <span style="color: #990000">]</span> <span style="color: #990000">&amp;&amp;</span> {
@@ -801,9 +801,11 @@ echo devuan<span style="color: #990000">*.</span>qcow2 <span style="color: #9900
 
 losetup --find --show --partscan rootfs<span style="color: #990000">.</span>img <span style="color: #990000">|</span> <span style="color: #990000">\</span>
         <span style="font-weight: bold"><span style="color: #0000FF">while</span></span> <span style="font-weight: bold"><span style="color: #0000FF">read</span></span><span style="color: #990000">;</span> <span style="font-weight: bold"><span style="color: #0000FF">do</span></span>
-                <span style="color: #990000">[</span> devuan<span style="color: #990000">*</span> <span style="color: #990000">]</span> <span style="color: #990000">&amp;&amp;</span> mount <span style="color: #009900">${REPLY}</span>p1 <span style="color: #009900">$OLDPWD</span>
-                <span style="color: #990000">[</span> openSUSE<span style="color: #990000">*</span>JeOS<span style="color: #990000">*</span> <span style="color: #990000">]</span> <span style="color: #990000">&amp;&amp;</span> mount <span style="color: #009900">${REPLY}</span>p3 <span style="color: #009900">$OLDPWD</span>
                 <span style="color: #990000">[</span> openSUSE<span style="color: #990000">*</span>Live<span style="color: #990000">*</span> <span style="color: #990000">]</span> <span style="color: #990000">&amp;&amp;</span> mount <span style="color: #009900">${REPLY}</span> <span style="color: #009900">$OLDPWD</span>
+                <span style="color: #990000">[</span> openSUSE<span style="color: #990000">*</span>JeOS<span style="color: #990000">*</span> <span style="color: #990000">]</span> <span style="color: #990000">&amp;&amp;</span> mount <span style="color: #009900">${REPLY}</span>p3 <span style="color: #009900">$OLDPWD</span>
+                <span style="font-style: italic"><span style="color: #9A1900"># https://git.busybox.net/busybox/tree/examples/inittab</span></span>
+                <span style="color: #990000">[</span> devuan<span style="color: #990000">*</span> <span style="color: #990000">]</span> <span style="color: #990000">&amp;&amp;</span> mount <span style="color: #009900">${REPLY}</span>p1 <span style="color: #009900">$OLDPWD</span> <span style="color: #990000">&amp;&amp;</span> <span style="color: #990000">\</span>
+                        sed <span style="color: #FF0000">'/1:2345:respawn:/s/38400 tty1/-L ttyS0 9600 vt100/'</span> -i <span style="color: #009900">$OLDPWD</span>/etc/inittab
                 cp -a <span style="color: #009900">$OLDPWD</span>/boot <span style="color: #990000">.</span> <span style="color: #990000">&amp;&amp;</span>
                         umount <span style="color: #009900">$OLDPWD</span> <span style="color: #990000">&amp;&amp;</span> <span style="color: #990000">\</span>
                         rmdir <span style="color: #009900">$OLDPWD</span> <span style="color: #990000">&amp;&amp;</span> <span style="color: #990000">\</span>
@@ -812,9 +814,6 @@ losetup --find --show --partscan rootfs<span style="color: #990000">.</span>img 
 
 <span style="color: #990000">[</span> openSUSE<span style="color: #990000">*</span>JeOS<span style="color: #990000">*</span> <span style="color: #990000">]</span> <span style="color: #990000">&amp;&amp;</span> rename s<span style="color: #990000">/</span><span style="color: #009900">$/</span><span style="color: #990000">.</span>xz<span style="color: #990000">/</span> boot/initrd<span style="color: #990000">*</span>default <span style="color: #990000">&amp;&amp;</span> xz -d boot<span style="color: #990000">/*.</span>xz
 
-<span style="color: #990000">[</span> devuan<span style="color: #990000">*</span> <span style="color: #990000">]</span> <span style="color: #990000">&amp;&amp;</span> <span style="color: #990000">\</span>
-        <span style="font-weight: bold"><span style="color: #0000FF">exec</span></span> lkvm run -n -m<span style="color: #993399">2000</span> -d rootfs<span style="color: #990000">.</span>img -k boot/vmlinuz<span style="color: #990000">*</span>amd64 -i boot/initrd<span style="color: #990000">*</span>amd64 <span style="color: #990000">\</span>
-                -p <span style="color: #FF0000">'root=/dev/vda1'</span>
 <span style="color: #990000">[</span> openSUSE<span style="color: #990000">*</span>JeOS<span style="color: #990000">*</span> <span style="color: #990000">]</span> <span style="color: #990000">&amp;&amp;</span> <span style="color: #990000">\</span>
         <span style="font-weight: bold"><span style="color: #0000FF">exec</span></span> lkvm run -n -m<span style="color: #993399">2000</span> -d rootfs<span style="color: #990000">.</span>img -k boot/vmlinuz -i boot/initrd<span style="color: #990000">*</span>default <span style="color: #990000">\</span>
                 -p <span style="color: #FF0000">'root=/dev/vda3 rw'</span>
@@ -823,14 +822,20 @@ losetup --find --show --partscan rootfs<span style="color: #990000">.</span>img 
         <span style="font-weight: bold"><span style="color: #0000FF">exec</span></span> lkvm run -n -m<span style="color: #993399">2000</span> -d rootfs<span style="color: #990000">.</span>img -k boot/vmlinuz<span style="color: #990000">*</span>amd64 -i boot/initrd<span style="color: #990000">*</span>amd64 <span style="color: #990000">\</span>
         -p <span style="color: #FF0000">'initrd=initrd splash=silent quiet root=live:CDLABEL=openSUSE_Tumbleweed_KDE_Live rd.live.image rd.live.overlay.persistent rd.live.overlay.cowfs=ext4 mediacheck=1 plymouth.enable=0 showopts'</span>
 
-<span style="font-weight: bold"><span style="color: #0000FF">exec</span></span> qemu-system-x86_64 <span style="color: #990000">\</span>
+<span style="color: #990000">[</span> devuan<span style="color: #990000">*</span> <span style="color: #990000">]</span> <span style="color: #990000">&amp;&amp;</span> <span style="font-weight: bold"><span style="color: #0000FF">exec</span></span> qemu-system-x86_64 <span style="color: #990000">\</span>
+        -m 1G <span style="color: #990000">\</span>
         -nographic <span style="color: #990000">\</span>
-        --enable-kvm <span style="color: #990000">\</span>
-        -append <span style="color: #FF0000">'console=ttyS0 root=/dev/sda3 rw'</span> <span style="color: #990000">\</span>
-        -initrd boot/initrd-<span style="color: #993399">4.12</span><span style="color: #990000">.</span><span style="color: #993399">14</span>-lp<span style="color: #993399">150.12</span><span style="color: #990000">.</span><span style="color: #993399">25</span>-default <span style="color: #990000">\</span>
-        -kernel boot/vmlinuz-<span style="color: #993399">4.12</span><span style="color: #990000">.</span><span style="color: #993399">14</span>-lp<span style="color: #993399">150.12</span><span style="color: #990000">.</span><span style="color: #993399">25</span>-default <span style="color: #990000">\</span>
-        -drive <span style="color: #009900">file</span><span style="color: #990000">=</span>rootfs<span style="color: #990000">.</span>img
+        -enable-kvm <span style="color: #990000">\</span>
+        -append <span style="color: #FF0000">'console=ttyS0 root=/dev/sda1 rw'</span> <span style="color: #990000">\</span>
+        -initrd boot/initrd{-<span style="color: #993399">4.12</span><span style="color: #990000">.</span><span style="color: #993399">14</span>-lp<span style="color: #993399">150.12</span><span style="color: #990000">.</span><span style="color: #993399">25</span>-<span style="color: #990000">*,.</span>img-<span style="color: #993399">4.9</span><span style="color: #990000">.</span><span style="color: #993399">0</span>-<span style="color: #993399">6</span>-<span style="color: #990000">*</span>} <span style="color: #990000">\</span>
+        -kernel boot/vmlinuz-{<span style="color: #993399">4.12</span><span style="color: #990000">.</span><span style="color: #993399">14</span>-lp<span style="color: #993399">150.12</span><span style="color: #990000">.</span><span style="color: #993399">25</span>-<span style="color: #990000">*,</span><span style="color: #993399">4.9</span><span style="color: #990000">.</span><span style="color: #993399">0</span>-<span style="color: #993399">6</span>-<span style="color: #990000">*</span>} <span style="color: #990000">\</span>
+        -drive <span style="color: #009900">file</span><span style="color: #990000">=</span>rootfs<span style="color: #990000">.</span>img <span style="color: #990000">\</span>
+        -netdev tap<span style="color: #990000">,</span><span style="color: #009900">id</span><span style="color: #990000">=</span>nd1<span style="color: #990000">,</span><span style="color: #009900">ifname</span><span style="color: #990000">=</span>tap1 -device rtl8139<span style="color: #990000">,</span><span style="color: #009900">netdev</span><span style="color: #990000">=</span>nd1
 
+
+<span style="color: #990000">[</span> devuan<span style="color: #990000">*</span> <span style="color: #990000">]</span> <span style="color: #990000">&amp;&amp;</span> <span style="color: #990000">\</span>
+        <span style="font-weight: bold"><span style="color: #0000FF">exec</span></span> lkvm run -n -m<span style="color: #993399">2000</span> -d rootfs<span style="color: #990000">.</span>img -k boot/vmlinuz<span style="color: #990000">*</span>amd64 -i boot/initrd<span style="color: #990000">*</span>amd64 <span style="color: #990000">\</span>
+                -p <span style="color: #FF0000">'root=/dev/vda1'</span>
 
 <span style="font-style: italic"><span style="color: #9A1900"># sysctl net.ipv4.ip_forward=1 &amp;&amp; ifconfig tap0 0 &amp;&amp; brctl addif br0 tap0</span></span></tt></pre></div></div>
 <div class="listingblock">
@@ -850,7 +855,7 @@ rpmbuild --rebuild <span style="color: #990000">~</span>/rpmbuild/SRPMS/bello-<s
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2018-11-19 18:53:03 CET
+ 2018-11-22 14:55:35 CET
 </div>
 </div>
 </body>
