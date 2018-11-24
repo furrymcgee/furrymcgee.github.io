@@ -872,15 +872,79 @@ http://www.gnu.org/software/src-highlite -->
                 <span style="color: #990000">&lt;(</span>cat <span style="color: #990000">&lt;&amp;</span><span style="color: #993399">5</span><span style="color: #990000">)</span> <span style="color: #990000">\</span>
                 <span style="color: #990000">|</span> tee <span style="color: #990000">&gt;(</span>cat <span style="color: #990000">&gt;&amp;</span><span style="color: #993399">3</span><span style="color: #990000">)</span> <span style="color: #990000">&gt;&amp;</span><span style="color: #993399">3</span>
 <span style="color: #990000">)</span></tt></pre></div></div>
-<div class="paragraph"><p>The next chapter is about coprocesses in bash. As mentioned earlier coproc is a
-method for pipeline redirection. This is not required by the Posix standard. At
-first coproc was used to join two streams and concurrent writes to stdout was
-difficult. The next example shows a standard conforming solution. It uses grep
-and corutils to sort the stdout of subprocesses. A key for ordering is added
-with the join program. After writing this solution coproc seems to be redundant.
-This example from IRC shows how to use tee, grep, join and finally sort:
+</div>
+</div>
+<div class="sect1">
+<h2 id="_coreutils">Coreutils</h2>
+<div class="sectionbody">
+<div class="quoteblock">
+<div class="content"><em>
+ This package contains the basic file, shell and text manipulation
+ utilities which are expected to exist on every operating system.
+</em></div>
+<div class="attribution">
+&#8212; Debian
+</div></div>
+<div class="paragraph"><p>Many commands in coreutils are a tools for text processing.  All together they
+are like the SQL of shell programming. The join command is one of the most
+important commands in SQL and coreutils. There is no self join in coreutils.
+In coreutils the joined columns is moved to the left. Empty values are equal!</p></div>
+<div class="listingblock">
+<div class="title">join</div>
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-style: italic"><span style="color: #9A1900"># Column with two rows</span></span>
+seq <span style="color: #993399">2</span>
+
+<span style="font-style: italic"><span style="color: #9A1900"># Additional column with two rows</span></span>
+seq <span style="color: #993399">2</span> <span style="color: #990000">|</span> nl
+
+<span style="font-style: italic"><span style="color: #9A1900"># Inner join with three rows</span></span>
+seq <span style="color: #993399">2</span> <span style="color: #990000">|</span> nl <span style="color: #990000">|</span> join - <span style="color: #990000">&lt;(</span>seq <span style="color: #993399">3</span><span style="color: #990000">)</span>
+
+<span style="font-style: italic"><span style="color: #9A1900"># Outer join with three rows</span></span>
+seq <span style="color: #993399">2</span> <span style="color: #990000">|</span> nl <span style="color: #990000">|</span> join - <span style="color: #990000">&lt;(</span>seq <span style="color: #993399">3</span><span style="color: #990000">)</span> -a<span style="color: #993399">2</span>
+
+<span style="font-style: italic"><span style="color: #9A1900"># Cross join with the empty columns</span></span>
+seq <span style="color: #993399">2</span> <span style="color: #990000">|</span> nl <span style="color: #990000">|</span> join - <span style="color: #990000">&lt;(</span>seq <span style="color: #993399">3</span><span style="color: #990000">)</span> -j<span style="color: #993399">3</span>
+
+<span style="font-style: italic"><span style="color: #9A1900"># Additional column with a cross join of a single row</span></span>
+seq <span style="color: #993399">2</span> <span style="color: #990000">|</span> nl <span style="color: #990000">|</span> join - <span style="color: #990000">&lt;(</span>seq <span style="color: #993399">1</span><span style="color: #990000">)</span> -j<span style="color: #993399">3</span></tt></pre></div></div>
+<div class="paragraph"><p>A additonal key column can be added before ordering with the join program.
+.join</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>seq <span style="color: #993399">6</span> <span style="color: #990000">|</span> sed s<span style="color: #990000">/^/\\\\</span>x4<span style="color: #990000">/</span> <span style="color: #990000">|</span> xargs -<span style="color: #993399">0</span> <span style="font-weight: bold"><span style="color: #0000FF">printf</span></span> <span style="color: #990000">%</span>b <span style="color: #990000">|</span> nl <span style="color: #990000">\</span>
+        <span style="color: #990000">|</span> tee <span style="color: #990000">\</span>
+                <span style="color: #990000">&gt;(</span>head -n<span style="color: #993399">4</span> <span style="color: #990000">|</span> join -j<span style="color: #993399">3</span> <span style="color: #990000">&lt;(</span>seq <span style="color: #993399">1</span><span style="color: #990000">)</span> -<span style="color: #990000">)</span> <span style="color: #990000">\</span>
+                        <span style="color: #990000">&gt;</span> <span style="color: #990000">\</span>
+                <span style="color: #990000">&gt;(</span>tail -n<span style="color: #993399">4</span> <span style="color: #990000">|</span> join -j<span style="color: #993399">3</span> <span style="color: #990000">&lt;(</span>seq <span style="color: #993399">2</span> <span style="color: #993399">2</span><span style="color: #990000">)</span> -<span style="color: #990000">)</span> <span style="color: #990000">\</span>
+        <span style="color: #990000">|</span> sort -k<span style="color: #993399">2</span> <span style="color: #990000">|</span> join -<span style="color: #993399">11</span> -<span style="color: #993399">22</span> <span style="color: #990000">&lt;(</span>seq <span style="color: #993399">3</span> <span style="color: #993399">4</span><span style="color: #990000">)</span> -</tt></pre></div></div>
+<div class="paragraph"><p>The join command moves the key column to the left. There is no easy way to
+reorder columns with coreutils. With cut the order remains in the same order
+that is read. This is where awk becomes a useful tool.
+- <a href="https://lists.gnu.org/archive/html/bug-coreutils/2012-12/msg00117.html">https://lists.gnu.org/archive/html/bug-coreutils/2012-12/msg00117.html</a></p></div>
+<div class="paragraph"><p>This example from IRC:
 Nov 12 14:08 &lt; sruli&gt; i have 2 columns with numbers, i need to replace the
 numbers in column 2 with a "0" where column 1 != "0" how do i go about that</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>bash <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'EOF'</span>
+        paste <span style="color: #990000">&lt;(</span>
+                echo $<span style="color: #FF0000">'a</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">0</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">b</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">0</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">c'</span>
+        <span style="color: #990000">)</span> <span style="color: #990000">&lt;(</span>
+                seq -<span style="color: #993399">5</span> -<span style="color: #993399">1</span>
+        <span style="color: #990000">)</span> <span style="color: #990000">|</span> awk <span style="color: #FF0000">'{if($1) print $1,0; else print $1,$2} '</span>
+EOF</tt></pre></div></div>
+<div class="paragraph"><p>The same example with grep and coreutils to sort the stdout of subprocesses.</p></div>
 <div class="listingblock">
 <div class="content"><!-- Generator: GNU source-highlight 3.1.8
 by Lorenzo Bettini
@@ -909,33 +973,15 @@ http://www.gnu.org/software/src-highlite -->
                         <span style="color: #990000">)</span> -j<span style="color: #993399">3</span> -a<span style="color: #993399">1</span> <span style="color: #990000">|</span> cut -d<span style="color: #990000">\</span>  -f<span style="color: #993399">1</span><span style="color: #990000">,</span><span style="color: #993399">2</span><span style="color: #990000">,</span><span style="color: #993399">5</span>
                 <span style="color: #990000">)</span> <span style="color: #990000">|</span> sort -k<span style="color: #993399">2</span> <span style="color: #990000">|</span> cut -d<span style="color: #990000">\</span>  -f<span style="color: #993399">1</span><span style="color: #990000">,</span><span style="color: #993399">3</span>
 EOF</tt></pre></div></div>
-<div class="paragraph"><p>The previous example is awkward because there is no easy way to sort columns
-with coreutils. With cut the order remains in the same order that is read. This
-is where awk becomes a useful tool.</p></div>
-<div class="ulist"><ul>
-<li>
-<p>
-<a href="https://lists.gnu.org/archive/html/bug-coreutils/2012-12/msg00117.html">https://lists.gnu.org/archive/html/bug-coreutils/2012-12/msg00117.html</a>
-</p>
-</li>
-</ul></div>
-<div class="listingblock">
-<div class="content"><!-- Generator: GNU source-highlight 3.1.8
-by Lorenzo Bettini
-http://www.lorenzobettini.it
-http://www.gnu.org/software/src-highlite -->
-<pre><tt>bash <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'EOF'</span>
-        paste <span style="color: #990000">&lt;(</span>
-                echo $<span style="color: #FF0000">'a</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">0</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">b</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">0</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">c'</span>
-        <span style="color: #990000">)</span> <span style="color: #990000">&lt;(</span>
-                seq -<span style="color: #993399">5</span> -<span style="color: #993399">1</span>
-        <span style="color: #990000">)</span> <span style="color: #990000">|</span> awk <span style="color: #FF0000">'{if($1) print $1" 0";else print $1" "$2} '</span>
-EOF</tt></pre></div></div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_coprocesses">Coprocesses</h2>
+<h2 id="_coprocess">Coprocess</h2>
 <div class="sectionbody">
+<div class="paragraph"><p>A problem with bash and coreutils is how to do a self join with data from
+standard input. This requires a coproc.  As mentioned earlier coproc is a
+method for pipeline redirection. This is not required by the Posix standard. A
+coproc can join two streams.</p></div>
 <div class="paragraph"><p>In Bash coproc returns a pair file descriptors for input and output
 Similar to named pipes coproc command can be used to redirect data streams.
 A coproc returns a pair of file descriptors for input and output.
@@ -956,22 +1002,32 @@ http://www.gnu.org/software/src-highlite -->
 EOF</tt></pre></div></div>
 <div class="paragraph"><p>There are a some problems with bash&#8217;s coproc.
 Array variables are not exported like filedescriptors.
-This is in bash 4.4 (man bash | grep -A16 BUGS).
-This does not work because of the pipe between coproc and tee.
-It returns <em>Bad file descriptor</em>
-Note: This can be done with as compound command</p></div>
+This is in bash 4.4 (man bash | grep -A16 BUGS).</p></div>
+<div class="paragraph"><p>This does not work because of the pipe between coproc and tee.
+It returns <em>Bad file descriptor</em>.
+.bad filedescriptor</p></div>
 <div class="listingblock">
 <div class="content"><!-- Generator: GNU source-highlight 3.1.8
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
-<pre><tt>{ date <span style="color: #990000">|</span> tee <span style="color: #990000">;</span> } <span style="color: #990000">&gt;&amp;</span><span style="color: #009900">${COPROC[1]}</span>
-bash -e <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'ERROR'</span>
+<pre><tt>bash -e <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'ERROR'</span>
         coproc BAD { head <span style="color: #990000">|</span> nl<span style="color: #990000">;</span> }
         date <span style="color: #990000">|</span> tee <span style="color: #990000">&gt;&amp;</span><span style="color: #009900">${BAD[1]}</span>
 ERROR</tt></pre></div></div>
-<div class="paragraph"><p>The filedescriptors can be duplicated.
-In this  way they are exported and closing them is easier.</p></div>
+<div class="paragraph"><p>The bad file descriptor can be prevented with a compound command.
+.compound command</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>bash -e <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'OK'</span>
+        coproc { head <span style="color: #990000">|</span> nl<span style="color: #990000">;</span> }
+        { date <span style="color: #990000">|</span> tee <span style="color: #990000">;</span> } <span style="color: #990000">&gt;&amp;</span><span style="color: #009900">${COPROC[1]}</span>
+OK</tt></pre></div></div>
+<div class="paragraph"><p>The file descriptors can be duplicated.
+In this way they are exported and closing them is easier.</p></div>
 <div class="listingblock">
 <div class="content"><!-- Generator: GNU source-highlight 3.1.8
 by Lorenzo Bettini
@@ -1008,18 +1064,15 @@ http://www.gnu.org/software/src-highlite -->
         }
 <span style="color: #990000">)</span>
 EOF</tt></pre></div></div>
-<div class="paragraph"><p>A file output file discriptor can not connect to a input.
-Joining the result of different threads requires coproc or named pipes.
-But there is a warning about multiple coproc in Bash version 4.4.
-<a href="https://unix.stackexchange.com/questions/86270/how-do-you-use-the-command-coproc-in-various-shells">https://unix.stackexchange.com/questions/86270/how-do-you-use-the-command-coproc-in-various-shells</a>
-The yash shell has pipeline redirection.
-The coproc can be replaced with fifo or yash pipline redirection.
-Yash shell can be invoked from bash.
-Both shells use with a here document for input.
-In GNU Bash 4.4 there is a warning about multiple coproc.
+<div class="paragraph"><p>A file output file discriptor can not connect to a input.  Joining the result
+of different processes requires coproc or named pipes.  Coproc is not a
+standard feature and there is a warning about multiple coproc in version
+4.4 of bash.</p></div>
+<div class="paragraph"><p>The coproc can be replaced with fifo or yash pipline redirection.
+The yash shell has pipeline redirection.  Yash shell can be invoked from bash.
 Yash shell has a &gt;&gt;| operator which creates a pipe in a similar way as coproc.
-<a href="https://unix.stackexchange.com/questions/86270/how-do-you-use-the-command-coproc-in-various-shells">https://unix.stackexchange.com/questions/86270/how-do-you-use-the-command-coproc-in-various-shells</a>
-The two pipes (4&gt;&gt;|5 and 6&gt;&gt;|7) join head and tail of the input.
+- <a href="https://unix.stackexchange.com/questions/86270/how-do-you-use-the-command-coproc-in-various-shells">https://unix.stackexchange.com/questions/86270/how-do-you-use-the-command-coproc-in-various-shells</a></p></div>
+<div class="paragraph"><p>The two pipes (4&gt;&gt;|5 and 6&gt;&gt;|7) join head and tail of the input.
 It creates two filedescriptor like the coproc bash.</p></div>
 <div class="listingblock">
 <div class="content"><!-- Generator: GNU source-highlight 3.1.8
@@ -1029,8 +1082,9 @@ http://www.gnu.org/software/src-highlite -->
 <pre><tt>bash <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'EOF'</span>
         <span style="font-weight: bold"><span style="color: #0000FF">exec</span></span> yash -c <span style="color: #FF0000">'exec bash 3&gt;&gt;|4'</span>
 EOF</tt></pre></div></div>
-<div class="paragraph"><p>Both shells can be invoked with input from a here document.
-Unfortunately yash can not process substitution.
+<div class="paragraph"><p>Shells can be invoked with input from a here document.  The syntax of yash
+process redirection is shorter than coproc.  Unfortunately yash can not process
+substitution.
 Example: Join head and tail with yash pipeline redirection.</p></div>
 <div class="listingblock">
 <div class="content"><!-- Generator: GNU source-highlight 3.1.8
@@ -1178,7 +1232,7 @@ http://www.gnu.org/software/src-highlite -->
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2018-11-22 14:55:35 CET
+ 2018-11-24 20:19:54 CET
 </div>
 </div>
 </body>
