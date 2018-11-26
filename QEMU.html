@@ -972,7 +972,7 @@ slirpvde -s /var/run/vde<span style="color: #993399">2</span>/vde<span style="co
 dpipe vde_plug /var/run/vde<span style="color: #993399">2</span>/vde<span style="color: #993399">0</span><span style="color: #990000">.</span>ctl<span style="color: #990000">/</span> -m <span style="color: #993399">660</span> -g vde2-net <span style="color: #990000">=</span> vde_plug -m <span style="color: #993399">660</span> -g vde2-net /var/run/vde<span style="color: #993399">2</span>/mytap<span style="color: #990000">.</span>ctl<span style="color: #990000">/</span>
 vde_pcapplug -m <span style="color: #993399">660</span> -g vde2-net -s /var/run/vde<span style="color: #993399">2</span>/mytap<span style="color: #990000">.</span>ctl tap0
 vde_plug2tap
-qemu-system-x86_64 -nographic -append <span style="color: #009900">console</span><span style="color: #990000">=</span>ttyS0
+qemu-system-x86_64 -nographic -append <span style="color: #009900">console</span><span style="color: #990000">=</span>ttyS0 -net user -net nic
 
 qemu-system-x86_64 -enable-kvm -cpu host -m 2G -hda VirtualXPVHD -nographic -monitor stdio -serial none -netdev vde<span style="color: #990000">,</span><span style="color: #009900">sock</span><span style="color: #990000">=</span>/var/run/vde<span style="color: #993399">2</span>/vde<span style="color: #993399">0</span><span style="color: #990000">.</span>ctl<span style="color: #990000">,</span><span style="color: #009900">id</span><span style="color: #990000">=</span>vde -device rtl8139<span style="color: #990000">,</span><span style="color: #009900">netdev</span><span style="color: #990000">=</span>vde -vnc <span style="color: #990000">:</span><span style="color: #993399">0</span>
 
@@ -1157,13 +1157,22 @@ http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
 <pre><tt>lkvm run -k vmlinuz-<span style="color: #993399">4.18</span><span style="color: #990000">.</span><span style="color: #993399">5</span>-<span style="color: #993399">300</span><span style="color: #990000">.</span>fc29<span style="color: #990000">.</span>x86_64 -i initramfs-<span style="color: #993399">4.18</span><span style="color: #990000">.</span><span style="color: #993399">5</span>-<span style="color: #993399">300</span><span style="color: #990000">.</span>fc29<span style="color: #990000">.</span>x86_64<span style="color: #990000">.</span>img -d disk<span style="color: #990000">.</span>img -n -m <span style="color: #993399">2000</span> -p <span style="color: #FF0000">'root=UUID=04277801-2387-4949-a82a-46b5d6f2dbd4'</span></tt></pre></div></div>
 <div class="listingblock">
+<div class="title">network</div>
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>sysctl net<span style="color: #990000">.</span>ipv4<span style="color: #990000">.</span><span style="color: #009900">ip_forward</span><span style="color: #990000">=</span><span style="color: #993399">1</span>
+ifconfig tap0 <span style="color: #993399">0</span>
+brctl addif br0 tap0 eth0</tt></pre></div></div>
+<div class="listingblock">
 <div class="title">supermin</div>
 <div class="content"><!-- Generator: GNU source-highlight 3.1.8
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
 <pre><tt><span style="font-style: italic"><span style="color: #9A1900">#!/bin/sh</span></span>
-<span style="color: #009900">TERM</span><span style="color: #990000">=</span>linux <span style="color: #009900">EDITOR</span><span style="color: #990000">=</span>vi schroot -- bash -e -l -i -x -o vi <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">"EOT"</span>
+<span style="color: #009900">TERM</span><span style="color: #990000">=</span>linux schroot -- bash -e -l -i -x -o vi <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">"EOT"</span>
         update-alternatives --set editor /usr/bin/vim<span style="color: #990000">.</span>tiny
         wget -c http<span style="color: #990000">:</span>//deb<span style="color: #990000">.</span>devuan<span style="color: #990000">.</span>org/devuan/pool/main/d/devuan-keyring/devuan-keyring_2017<span style="color: #990000">.</span><span style="color: #993399">10</span><span style="color: #990000">.</span>03_all<span style="color: #990000">.</span>deb
         dpkg -i devuan-keyring<span style="color: #990000">*</span>
@@ -1305,7 +1314,7 @@ qemu-system-s390x <span style="color: #990000">\</span>
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2018-11-24 19:48:44 CET
+ 2018-11-26 08:11:38 CET
 </div>
 </div>
 </body>
