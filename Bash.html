@@ -1041,7 +1041,8 @@ http://www.gnu.org/software/src-highlite -->
         <span style="font-weight: bold"><span style="color: #0000FF">exec</span></span> <span style="color: #993399">4</span><span style="color: #990000">&gt;&amp;</span>-
 EOF</tt></pre></div></div>
 <div class="paragraph"><p>A second coproc is necessary to join two streams.
-At some point the input must be closed before reading the output.</p></div>
+At some point the input must be closed before reading the output.
+This is a good example for self join.</p></div>
 <div class="paragraph"><p>But there is a warning about multiple coproc in Bash version 4.4.
 <a href="https://unix.stackexchange.com/questions/86270/how-do-you-use-the-command-coproc-in-various-shells">https://unix.stackexchange.com/questions/86270/how-do-you-use-the-command-coproc-in-various-shells</a>
 This example uses file descriptors of coproc
@@ -1054,7 +1055,6 @@ by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
 <pre><tt>bash -e <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'EOF'</span>
-<span style="color: #990000">(</span>
         seq <span style="color: #993399">123</span> <span style="color: #990000">|</span> {
                 coproc A { head <span style="color: #990000">|</span> nl<span style="color: #990000">;</span> }<span style="color: #990000">;</span>
                 coproc B { tail <span style="color: #990000">|</span> nl<span style="color: #990000">;</span> }<span style="color: #990000">;</span>
@@ -1062,7 +1062,6 @@ http://www.gnu.org/software/src-highlite -->
                 <span style="font-weight: bold"><span style="color: #0000FF">eval</span></span> <span style="font-weight: bold"><span style="color: #0000FF">exec</span></span> <span style="color: #FF0000">"${A[1]}&gt;&amp;- ${B[1]}&gt;&amp;-"</span><span style="color: #990000">;</span>
                 join <span style="color: #990000">&lt;(</span>cat <span style="color: #990000">&lt;&amp;</span><span style="color: #009900">${A[0]}</span><span style="color: #990000">)</span> <span style="color: #990000">&lt;(</span>cat <span style="color: #990000">&lt;&amp;</span><span style="color: #009900">${B[0]}</span><span style="color: #990000">);</span>
         }
-<span style="color: #990000">)</span>
 EOF</tt></pre></div></div>
 <div class="paragraph"><p>A file output file discriptor can not connect to a input.  Joining the result
 of different processes requires coproc or named pipes.  Coproc is not a
@@ -1232,7 +1231,7 @@ http://www.gnu.org/software/src-highlite -->
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2018-11-26 08:18:16 CET
+ 2018-11-26 22:34:21 CET
 </div>
 </div>
 </body>

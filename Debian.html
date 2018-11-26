@@ -845,8 +845,7 @@ view /usr/share/tasksel/descs/debian-tasks<span style="color: #990000">.</span>d
 <div class="sectionbody">
 <div class="paragraph"><p>Debian automated installation with dhcp and tftp.
 Dhcp bootfile option can be used for ipxe or a debian preseed config.
-There is a conflict when qemu and debian use dhcp filename option (bootfile?) for
-pxelinux.0 and preseed.cfg!
+There is a conflict when qemu and debian use dhcp filename option (bootfile?) for pxelinux.0 and preseed.cfg!
 The ipxe boot file may be loaded from tftp.
 It may require additional configuration in dnsmasq.conf.
 (dhcp-boot=pxelinux.0)</p></div>
@@ -1112,32 +1111,59 @@ debmirror --verbose --progress --debug --keyring pubring<span style="color: #990
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
-<pre><tt>mkdir -p dists/experimental/main/binary-amd<span style="color: #993399">64</span>
-mkdir -p dists/experimental/main/source
-find <span style="color: #009900">$OLDPWD</span> -maxdepth <span style="color: #993399">1</span> -name <span style="color: #FF0000">"*gradle*deb"</span> -type f -exec cp -a {} dists/experimental/main/binary-amd<span style="color: #993399">64</span> <span style="color: #990000">\;</span>
-find <span style="color: #009900">$OLDPWD</span> -maxdepth <span style="color: #993399">1</span> -name <span style="color: #FF0000">"*gradle*xy"</span> -type f -exec cp -a {} dists/experimental/main/source <span style="color: #990000">\;</span>
+<pre><tt><span style="font-style: italic"><span style="color: #9A1900">#!/bin/bash</span></span>
+apt install --yes dpkg-dev
+
+mkdir -p /srv/mirror/debian
+cd /srv/mirror/debian
+
+mkdir -p doc
+touch README
 
 <span style="font-weight: bold"><span style="color: #0000FF">while</span></span> <span style="font-weight: bold"><span style="color: #0000FF">read</span></span><span style="color: #990000">;</span> <span style="font-weight: bold"><span style="color: #0000FF">do</span></span>
+        mkdir -p dists/experimental/main<span style="color: #990000">/</span><span style="color: #009900">$REPLY</span>
     cat <span style="color: #990000">&gt;</span> dists/experimental/main<span style="color: #990000">/</span><span style="color: #009900">$REPLY</span>/Release <span style="color: #990000">&lt;&lt;</span>-EOF
-    Archive<span style="color: #990000">:</span> unstable
-    Origin<span style="color: #990000">:</span> Debian
-    Label<span style="color: #990000">:</span> Debian
-    Suite<span style="color: #990000">:</span> experimental
-    Codename<span style="color: #990000">:</span> experimental
-    Valid-Until<span style="color: #990000">:</span> <span style="color: #009900">$(</span>date --rfc-<span style="color: #993399">2822</span> --utc --date<span style="color: #990000">=</span>@<span style="color: #993399">1600000000</span><span style="color: #990000">)</span>
-    Architectures<span style="color: #990000">:</span> amd64
-    Components<span style="color: #990000">:</span> main
-    Description<span style="color: #990000">:</span> Debian x<span style="color: #990000">.</span>y Unstable - Not Released
+                Archive<span style="color: #990000">:</span> unstable
+                Origin<span style="color: #990000">:</span> Debian
+                Label<span style="color: #990000">:</span> Debian
+                Suite<span style="color: #990000">:</span> experimental
+                Codename<span style="color: #990000">:</span> experimental
+                Valid-Until<span style="color: #990000">:</span> <span style="color: #009900">$(</span>date --rfc-<span style="color: #993399">2822</span> --utc --date<span style="color: #990000">=</span>@<span style="color: #993399">1600000000</span><span style="color: #990000">)</span>
+                Architectures<span style="color: #990000">:</span> amd64
+                Components<span style="color: #990000">:</span> main
+                Description<span style="color: #990000">:</span> Debian x<span style="color: #990000">.</span>y Unstable - Not Released
 EOF
-<span style="font-weight: bold"><span style="color: #0000FF">done</span></span> <span style="color: #990000">&lt;&lt;</span>ARCH
-binary-amd<span style="color: #993399">64</span>
-<span style="font-weight: bold"><span style="color: #0000FF">source</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">done</span></span> <span style="color: #990000">&lt;&lt;</span>-ARCH
+        binary-amd<span style="color: #993399">64</span>
+        <span style="font-weight: bold"><span style="color: #0000FF">source</span></span>
 ARCH
 
-dpkg-scanpackages dists/experimental/main/binary-amd<span style="color: #993399">64</span><span style="color: #990000">/</span> <span style="color: #990000">&gt;</span> <span style="color: #990000">\</span>
-    dists/experimental/main/binary-amd<span style="color: #993399">64</span>/Packages
-dpkg-scansources dists/experimental/main/source<span style="color: #990000">/</span> <span style="color: #990000">&gt;</span> <span style="color: #990000">\</span>
-    dists/experimental/main/source/Sources
+<span style="font-style: italic"><span style="color: #9A1900"># packages required in mirror</span></span>
+cd dists/experimental/main/binary-amd<span style="color: #993399">64</span>
+<span style="font-weight: bold"><span style="color: #0000FF">while</span></span> <span style="font-weight: bold"><span style="color: #0000FF">read</span></span>
+        <span style="font-weight: bold"><span style="color: #0000FF">do</span></span>
+                apt download <span style="color: #009900">$REPLY</span>
+        <span style="font-weight: bold"><span style="color: #0000FF">done</span></span> <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'EOF'</span>
+        coreutils
+        debian-archive-keyring
+        debian-installer
+        debootstrap
+        installation-guide-amd<span style="color: #993399">64</span>
+        isolinux
+        syslinux-common
+        task-desktop
+        tasksel-data
+EOF
+cd -
+
+<span style="font-style: italic"><span style="color: #9A1900">#find $OLDPWD -maxdepth 1 -name "*deb" -type f -exec cp -a {} dists/experimental/main/binary-amd64 \;</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">#find $OLDPWD -maxdepth 1 -name "*xy" -type f -exec cp -a {} dists/experimental/main/source \;</span></span>
+dpkg-scanpackages dists/experimental/main/binary-amd<span style="color: #993399">64</span><span style="color: #990000">/</span> <span style="color: #990000">|</span> <span style="color: #990000">\</span>
+        tee dists/experimental/main/binary-amd<span style="color: #993399">64</span>/Packages <span style="color: #990000">|</span> xz -z <span style="color: #990000">&gt;</span> <span style="color: #990000">\</span>
+    dists/experimental/main/binary-amd<span style="color: #993399">64</span>/Packages<span style="color: #990000">.</span>xz
+dpkg-scansources dists/experimental/main/source<span style="color: #990000">/</span> <span style="color: #990000">|</span>  <span style="color: #990000">\</span>
+        tee dists/experimental/main/source/Sources <span style="color: #990000">|</span> xz -z <span style="color: #990000">&gt;</span> <span style="color: #990000">\</span>
+    dists/experimental/main/source/Sources<span style="color: #990000">.</span>xz
 
 <span style="color: #990000">&gt;</span> dists/experimental/Release apt-ftparchive release dists/experimental <span style="color: #990000">\</span>
     -o APT<span style="color: #990000">::</span>FTPArchive<span style="color: #990000">::</span>Release<span style="color: #990000">::</span><span style="color: #009900">Architectures</span><span style="color: #990000">=</span><span style="color: #FF0000">"amd64 source"</span> <span style="color: #990000">\</span>
@@ -1148,8 +1174,7 @@ dpkg-scansources dists/experimental/main/source<span style="color: #990000">/</s
     -o APT<span style="color: #990000">::</span>FTPArchive<span style="color: #990000">::</span>Release<span style="color: #990000">::</span><span style="color: #009900">Origin</span><span style="color: #990000">=</span><span style="color: #FF0000">"Debian"</span> <span style="color: #990000">\</span>
     -o APT<span style="color: #990000">::</span>FTPArchive<span style="color: #990000">::</span>Release<span style="color: #990000">::</span><span style="color: #009900">Suite</span><span style="color: #990000">=</span><span style="color: #FF0000">"experimental"</span> <span style="color: #990000">\</span>
 
-<span style="font-weight: bold"><span style="color: #0000FF">exit</span></span>
-
+<span style="color: #990000">:</span> <span style="color: #990000">&lt;&lt;</span>SKIP
 <span style="font-style: italic"><span style="color: #9A1900"># Sign files</span></span>
 gpg --yes -abs -o dists/experimental/Release<span style="color: #990000">.</span>gpg dists/experimental/Release
 gpg --clearsign -o dists/experimental/InRelease dists/experimental/Release
@@ -1160,15 +1185,66 @@ gpg --list-sigs
 gpg --export 0123456789ABCDEF <span style="color: #990000">&gt;</span> /usr/share/keyrings/archive-keyring<span style="color: #990000">.</span>gpg
 
 cat <span style="color: #990000">&gt;&gt;</span> /etc/apt/sources<span style="color: #990000">.</span>list <span style="color: #990000">&lt;&lt;</span>APT
-deb <span style="color: #990000">[</span>signed-by<span style="color: #990000">=</span>/usr/share/keyrings/archive-keyring<span style="color: #990000">.</span>gpg<span style="color: #990000">]</span> ftp<span style="color: #990000">:</span>//localhost/debian experimental main
-deb-src <span style="color: #990000">[</span>signed-by<span style="color: #990000">=</span>/usr/share/keyrings/archive-keyring<span style="color: #990000">.</span>gpg<span style="color: #990000">]</span> ftp<span style="color: #990000">:</span>//localhost/debian experimental main
+        deb <span style="color: #990000">[</span>signed-by<span style="color: #990000">=</span>/usr/share/keyrings/archive-keyring<span style="color: #990000">.</span>gpg<span style="color: #990000">]</span> ftp<span style="color: #990000">:</span>//localhost/debian experimental main
+        deb-src <span style="color: #990000">[</span>signed-by<span style="color: #990000">=</span>/usr/share/keyrings/archive-keyring<span style="color: #990000">.</span>gpg<span style="color: #990000">]</span> ftp<span style="color: #990000">:</span>//localhost/debian experimental main
 
-<span style="font-style: italic"><span style="color: #9A1900">#deb file:/var/www/html/packages/amd64/ /</span></span>
-<span style="font-style: italic"><span style="color: #9A1900">#deb-src file:/var/www/html/packages/amd64/ /</span></span>
+        <span style="font-style: italic"><span style="color: #9A1900">#deb file:/var/www/html/packages/amd64/ /</span></span>
+        <span style="font-style: italic"><span style="color: #9A1900">#deb-src file:/var/www/html/packages/amd64/ /</span></span>
 
-<span style="font-style: italic"><span style="color: #9A1900">#deb [signed-by=/usr/share/keyrings/archive-keyring.gpg] file:/srv/reprepro/debian /</span></span>
-<span style="font-style: italic"><span style="color: #9A1900">#deb-src [signed-by=/usr/share/keyrings/archive-keyring.gpg] file:/srv/reprepro/debian /</span></span>
-APT</tt></pre></div></div>
+        <span style="font-style: italic"><span style="color: #9A1900">#deb [signed-by=/usr/share/keyrings/archive-keyring.gpg] file:/srv/reprepro/debian /</span></span>
+        <span style="font-style: italic"><span style="color: #9A1900">#deb-src [signed-by=/usr/share/keyrings/archive-keyring.gpg] file:/srv/reprepro/debian /</span></span>
+APT
+SKIP</tt></pre></div></div>
+<div class="sect2">
+<h3 id="_netboot">Netboot</h3>
+<div class="listingblock">
+<div class="title">debiancd</div>
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-style: italic"><span style="color: #9A1900">#!/bin/sh</span></span>
+apt install --yes debian-cd
+
+<span style="font-style: italic"><span style="color: #9A1900"># ftparchive</span></span>
+cd /srv/mirror <span style="color: #990000">||</span> <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span>
+
+<span style="font-style: italic"><span style="color: #9A1900"># check packages required in mirror</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">while</span></span> <span style="font-weight: bold"><span style="color: #0000FF">read</span></span>
+        <span style="font-weight: bold"><span style="color: #0000FF">do</span></span>
+                /usr/share/debian-cd/tools/which_deb debian experimental <span style="color: #009900">$REPLY</span> binary
+        <span style="font-weight: bold"><span style="color: #0000FF">done</span></span> <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'EOF'</span>
+        coreutils
+        debian-archive-keyring
+        debian-installer
+        debootstrap
+        installation-guide-amd<span style="color: #993399">64</span>
+        isolinux
+        syslinux-common
+        task-desktop
+        tasksel-data
+EOF
+
+wget -c -r -nc -np -nH --cut-dirs<span style="color: #990000">=</span><span style="color: #993399">3</span> -P debian/dists/experimental <span style="color: #990000">\</span>
+        http<span style="color: #990000">:</span>//cdn-fastly<span style="color: #990000">.</span>deb<span style="color: #990000">.</span>debian<span style="color: #990000">.</span>org/debian/dists/buster/main/installer-amd<span style="color: #993399">64</span>/current/images/cdrom<span style="color: #990000">/</span>
+
+cd /usr/share/debian-cd
+ln -sf sid tasks/experimental
+ln -sf sid data/experimental
+ln -sf sid tools/boot/experimental
+sed -i CONF<span style="color: #990000">.</span>sh <span style="color: #990000">\</span>
+        -e <span style="color: #990000">/^</span><span style="font-weight: bold"><span style="color: #0000FF">export</span></span><span style="color: #990000">\</span> <span style="color: #009900">CONTRIB</span><span style="color: #990000">=</span><span style="color: #993399">1</span>/s<span style="color: #990000">/^/\</span><span style="font-style: italic"><span style="color: #9A1900">#/ \</span></span>
+        -e <span style="color: #990000">/^</span><span style="font-weight: bold"><span style="color: #0000FF">export</span></span><span style="color: #990000">\</span> <span style="color: #009900">CODENAME</span><span style="color: #990000">=</span>stretch/s/stretch/experimental<span style="color: #990000">/</span> <span style="color: #990000">\</span>
+        -e <span style="color: #990000">/^\</span><span style="font-style: italic"><span style="color: #9A1900">#export\ OMIT_DOC_TOOLS=1/s/^\#//</span></span>
+
+<span style="color: #009900">VERBOSE_MAKE</span><span style="color: #990000">=</span><span style="color: #993399">1</span> bash -ex <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'EOF'</span>
+        <span style="font-weight: bold"><span style="color: #0000FF">source</span></span> CONF<span style="color: #990000">.</span>sh
+        make distclean
+        make experimental_status
+        make mirrorcheck
+        make official_images
+EOF</tt></pre></div></div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -1206,7 +1282,7 @@ BASH</tt></pre></div></div>
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2018-11-26 08:18:16 CET
+ 2018-11-26 22:35:46 CET
 </div>
 </div>
 </body>
