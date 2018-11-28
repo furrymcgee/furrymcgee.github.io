@@ -1112,7 +1112,7 @@ by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
 <pre><tt><span style="font-style: italic"><span style="color: #9A1900">#!/bin/bash</span></span>
-apt install --yes dpkg-dev
+apt-get install --yes dpkg-dev
 
 mkdir -p /srv/mirror/debian
 cd /srv/mirror/debian
@@ -1121,13 +1121,13 @@ mkdir -p doc
 touch README
 
 <span style="font-weight: bold"><span style="color: #0000FF">while</span></span> <span style="font-weight: bold"><span style="color: #0000FF">read</span></span><span style="color: #990000">;</span> <span style="font-weight: bold"><span style="color: #0000FF">do</span></span>
-        mkdir -p dists/experimental/main<span style="color: #990000">/</span><span style="color: #009900">$REPLY</span>
-    cat <span style="color: #990000">&gt;</span> dists/experimental/main<span style="color: #990000">/</span><span style="color: #009900">$REPLY</span>/Release <span style="color: #990000">&lt;&lt;</span>-EOF
+        mkdir -p dists/sid/main<span style="color: #990000">/</span><span style="color: #009900">$REPLY</span>
+    cat <span style="color: #990000">&gt;</span> dists/sid/main<span style="color: #990000">/</span><span style="color: #009900">$REPLY</span>/Release <span style="color: #990000">&lt;&lt;</span>-EOF
                 Archive<span style="color: #990000">:</span> unstable
                 Origin<span style="color: #990000">:</span> Debian
                 Label<span style="color: #990000">:</span> Debian
-                Suite<span style="color: #990000">:</span> experimental
-                Codename<span style="color: #990000">:</span> experimental
+                Suite<span style="color: #990000">:</span> unstable
+                Codename<span style="color: #990000">:</span> sid
                 Valid-Until<span style="color: #990000">:</span> <span style="color: #009900">$(</span>date --rfc-<span style="color: #993399">2822</span> --utc --date<span style="color: #990000">=</span>@<span style="color: #993399">1600000000</span><span style="color: #990000">)</span>
                 Architectures<span style="color: #990000">:</span> amd64
                 Components<span style="color: #990000">:</span> main
@@ -1138,46 +1138,62 @@ EOF
         <span style="font-weight: bold"><span style="color: #0000FF">source</span></span>
 ARCH
 
-<span style="font-style: italic"><span style="color: #9A1900"># packages required in mirror</span></span>
-cd dists/experimental/main/binary-amd<span style="color: #993399">64</span>
-<span style="font-weight: bold"><span style="color: #0000FF">while</span></span> <span style="font-weight: bold"><span style="color: #0000FF">read</span></span>
-        <span style="font-weight: bold"><span style="color: #0000FF">do</span></span>
-                apt download <span style="color: #009900">$REPLY</span>
-        <span style="font-weight: bold"><span style="color: #0000FF">done</span></span> <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'EOF'</span>
+xargs -L<span style="color: #993399">1</span> wget -c -r -l<span style="color: #993399">6</span> -nv -nc -np -nH --cut-dirs<span style="color: #990000">=</span><span style="color: #993399">3</span> -P dists/sid <span style="color: #990000">&lt;&lt;</span>-EOF
+        http<span style="color: #990000">:</span>//deb<span style="color: #990000">.</span>devuan<span style="color: #990000">.</span>org/devuan/dists/sid/main/debian-installer/binary-amd<span style="color: #993399">64</span><span style="color: #990000">/</span>
+        http<span style="color: #990000">:</span>//deb<span style="color: #990000">.</span>devuan<span style="color: #990000">.</span>org/devuan/dists/sid/main/installer-amd<span style="color: #993399">64</span>/current/images<span style="color: #990000">/</span>
+EOF
+
+<span style="font-style: italic"><span style="color: #9A1900"># packages required in debian-cd</span></span>
+mkdir -p pool/main
+cd pool/main
+tee <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'EOF'</span> <span style="color: #990000">\</span>
+<span style="color: #990000">&gt;(</span> <span style="color: #990000">\</span>
+        xargs apt-cache depends --implicit <span style="color: #990000">|</span> <span style="color: #990000">\</span>
+        grep Depends<span style="color: #990000">:</span> <span style="color: #990000">|</span> <span style="color: #990000">\</span>
+        cut -d<span style="color: #990000">:</span> -f<span style="color: #993399">2</span> <span style="color: #990000">|</span> <span style="color: #990000">\</span>
+        cut -d<span style="color: #990000">\</span>  -f<span style="color: #993399">2</span> <span style="color: #990000">|</span> <span style="color: #990000">\</span>
+        grep -v <span style="color: #FF0000">'^&lt;'</span> <span style="color: #990000">;</span> <span style="color: #990000">\</span>
+<span style="color: #990000">)</span> <span style="color: #990000">|</span>     xargs apt-get download <span style="color: #990000">;</span>
+        adduser
+        apt
+        ca-certificates
         coreutils
         debian-archive-keyring
         debian-installer
         debootstrap
-        installation-guide-amd<span style="color: #993399">64</span>
+        dpkg
         isolinux
         syslinux-common
-        task-desktop
+        tasksel
         tasksel-data
+        task-web-server
+        task-desktop
 EOF
+
 cd -
 
-<span style="font-style: italic"><span style="color: #9A1900">#find $OLDPWD -maxdepth 1 -name "*deb" -type f -exec cp -a {} dists/experimental/main/binary-amd64 \;</span></span>
-<span style="font-style: italic"><span style="color: #9A1900">#find $OLDPWD -maxdepth 1 -name "*xy" -type f -exec cp -a {} dists/experimental/main/source \;</span></span>
-dpkg-scanpackages dists/experimental/main/binary-amd<span style="color: #993399">64</span><span style="color: #990000">/</span> <span style="color: #990000">|</span> <span style="color: #990000">\</span>
-        tee dists/experimental/main/binary-amd<span style="color: #993399">64</span>/Packages <span style="color: #990000">|</span> xz -z <span style="color: #990000">&gt;</span> <span style="color: #990000">\</span>
-    dists/experimental/main/binary-amd<span style="color: #993399">64</span>/Packages<span style="color: #990000">.</span>xz
-dpkg-scansources dists/experimental/main/source<span style="color: #990000">/</span> <span style="color: #990000">|</span>  <span style="color: #990000">\</span>
-        tee dists/experimental/main/source/Sources <span style="color: #990000">|</span> xz -z <span style="color: #990000">&gt;</span> <span style="color: #990000">\</span>
-    dists/experimental/main/source/Sources<span style="color: #990000">.</span>xz
+<span style="font-style: italic"><span style="color: #9A1900">#find $OLDPWD -maxdepth 1 -name "*deb" -type f -exec cp -a {} dists/sid/main/binary-amd64 \;</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">#find $OLDPWD -maxdepth 1 -name "*xy" -type f -exec cp -a {} dists/sid/main/source \;</span></span>
+dpkg-scanpackages pool/main <span style="color: #990000">|</span> <span style="color: #990000">\</span>
+        tee dists/sid/main/binary-amd<span style="color: #993399">64</span>/Packages <span style="color: #990000">|</span> xz -z <span style="color: #990000">&gt;</span> <span style="color: #990000">\</span>
+    dists/sid/main/binary-amd<span style="color: #993399">64</span>/Packages<span style="color: #990000">.</span>xz
+dpkg-scansources pool/main <span style="color: #990000">|</span>  <span style="color: #990000">\</span>
+        tee dists/sid/main/source/Sources <span style="color: #990000">|</span> xz -z <span style="color: #990000">&gt;</span> <span style="color: #990000">\</span>
+    dists/sid/main/source/Sources<span style="color: #990000">.</span>xz
 
-<span style="color: #990000">&gt;</span> dists/experimental/Release apt-ftparchive release dists/experimental <span style="color: #990000">\</span>
+<span style="color: #990000">&gt;</span> dists/sid/Release apt-ftparchive release dists/sid <span style="color: #990000">\</span>
     -o APT<span style="color: #990000">::</span>FTPArchive<span style="color: #990000">::</span>Release<span style="color: #990000">::</span><span style="color: #009900">Architectures</span><span style="color: #990000">=</span><span style="color: #FF0000">"amd64 source"</span> <span style="color: #990000">\</span>
-    -o APT<span style="color: #990000">::</span>FTPArchive<span style="color: #990000">::</span>Release<span style="color: #990000">::</span><span style="color: #009900">Codename</span><span style="color: #990000">=</span><span style="color: #FF0000">"experimental"</span> <span style="color: #990000">\</span>
+    -o APT<span style="color: #990000">::</span>FTPArchive<span style="color: #990000">::</span>Release<span style="color: #990000">::</span><span style="color: #009900">Codename</span><span style="color: #990000">=</span><span style="color: #FF0000">"sid"</span> <span style="color: #990000">\</span>
     -o APT<span style="color: #990000">::</span>FTPArchive<span style="color: #990000">::</span>Release<span style="color: #990000">::</span><span style="color: #009900">Components</span><span style="color: #990000">=</span><span style="color: #FF0000">"main"</span> <span style="color: #990000">\</span>
     -o APT<span style="color: #990000">::</span>FTPArchive<span style="color: #990000">::</span>Release<span style="color: #990000">::</span><span style="color: #009900">Description</span><span style="color: #990000">=</span><span style="color: #FF0000">"Description: Experimental packages - not released use at your own risk."</span> <span style="color: #990000">\</span>
     -o APT<span style="color: #990000">::</span>FTPArchive<span style="color: #990000">::</span>Release<span style="color: #990000">::</span><span style="color: #009900">Label</span><span style="color: #990000">=</span><span style="color: #FF0000">"Debian"</span> <span style="color: #990000">\</span>
     -o APT<span style="color: #990000">::</span>FTPArchive<span style="color: #990000">::</span>Release<span style="color: #990000">::</span><span style="color: #009900">Origin</span><span style="color: #990000">=</span><span style="color: #FF0000">"Debian"</span> <span style="color: #990000">\</span>
-    -o APT<span style="color: #990000">::</span>FTPArchive<span style="color: #990000">::</span>Release<span style="color: #990000">::</span><span style="color: #009900">Suite</span><span style="color: #990000">=</span><span style="color: #FF0000">"experimental"</span> <span style="color: #990000">\</span>
+    -o APT<span style="color: #990000">::</span>FTPArchive<span style="color: #990000">::</span>Release<span style="color: #990000">::</span><span style="color: #009900">Suite</span><span style="color: #990000">=</span><span style="color: #FF0000">"unstable"</span> <span style="color: #990000">\</span>
 
 <span style="color: #990000">:</span> <span style="color: #990000">&lt;&lt;</span>SKIP
 <span style="font-style: italic"><span style="color: #9A1900"># Sign files</span></span>
-gpg --yes -abs -o dists/experimental/Release<span style="color: #990000">.</span>gpg dists/experimental/Release
-gpg --clearsign -o dists/experimental/InRelease dists/experimental/Release
+gpg --yes -abs -o dists/sid/Release<span style="color: #990000">.</span>gpg dists/sid/Release
+gpg --clearsign -o dists/sid/InRelease dists/sid/Release
 
 <span style="font-style: italic"><span style="color: #9A1900"># import signatures on client</span></span>
 gpg --recv-key --keyserver localhost 0123456789ABCDEF
@@ -1185,8 +1201,8 @@ gpg --list-sigs
 gpg --export 0123456789ABCDEF <span style="color: #990000">&gt;</span> /usr/share/keyrings/archive-keyring<span style="color: #990000">.</span>gpg
 
 cat <span style="color: #990000">&gt;&gt;</span> /etc/apt/sources<span style="color: #990000">.</span>list <span style="color: #990000">&lt;&lt;</span>APT
-        deb <span style="color: #990000">[</span>signed-by<span style="color: #990000">=</span>/usr/share/keyrings/archive-keyring<span style="color: #990000">.</span>gpg<span style="color: #990000">]</span> ftp<span style="color: #990000">:</span>//localhost/debian experimental main
-        deb-src <span style="color: #990000">[</span>signed-by<span style="color: #990000">=</span>/usr/share/keyrings/archive-keyring<span style="color: #990000">.</span>gpg<span style="color: #990000">]</span> ftp<span style="color: #990000">:</span>//localhost/debian experimental main
+        deb <span style="color: #990000">[</span>signed-by<span style="color: #990000">=</span>/usr/share/keyrings/archive-keyring<span style="color: #990000">.</span>gpg<span style="color: #990000">]</span> ftp<span style="color: #990000">:</span>//localhost/debian sid main
+        deb-src <span style="color: #990000">[</span>signed-by<span style="color: #990000">=</span>/usr/share/keyrings/archive-keyring<span style="color: #990000">.</span>gpg<span style="color: #990000">]</span> ftp<span style="color: #990000">:</span>//localhost/debian sid main
 
         <span style="font-style: italic"><span style="color: #9A1900">#deb file:/var/www/html/packages/amd64/ /</span></span>
         <span style="font-style: italic"><span style="color: #9A1900">#deb-src file:/var/www/html/packages/amd64/ /</span></span>
@@ -1204,16 +1220,19 @@ by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
 <pre><tt><span style="font-style: italic"><span style="color: #9A1900">#!/bin/sh</span></span>
-apt install --yes debian-cd
 
-<span style="font-style: italic"><span style="color: #9A1900"># ftparchive</span></span>
-cd /srv/mirror <span style="color: #990000">||</span> <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># see ftparchive.sh</span></span>
+cd /srv/mirror <span style="color: #990000">||</span> <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span> <span style="color: #993399">1</span>
+
+apt-get install --yes debian-cd
+
+cd /usr/share/debian-cd <span style="color: #990000">||</span> <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span> <span style="color: #993399">2</span>
 
 <span style="font-style: italic"><span style="color: #9A1900"># check packages required in mirror</span></span>
 <span style="font-weight: bold"><span style="color: #0000FF">while</span></span> <span style="font-weight: bold"><span style="color: #0000FF">read</span></span>
         <span style="font-weight: bold"><span style="color: #0000FF">do</span></span>
-                /usr/share/debian-cd/tools/which_deb debian experimental <span style="color: #009900">$REPLY</span> binary
-        <span style="font-weight: bold"><span style="color: #0000FF">done</span></span> <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'EOF'</span>
+                <span style="color: #990000">:</span> tools/which_deb <span style="color: #009900">$OLDPWD</span>/debian sid <span style="color: #009900">$REPLY</span> binary <span style="color: #990000">||</span> <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span> <span style="color: #993399">2</span>
+        <span style="font-weight: bold"><span style="color: #0000FF">done</span></span> <span style="color: #990000">&lt;&lt;</span>-EOF
         coreutils
         debian-archive-keyring
         debian-installer
@@ -1221,28 +1240,157 @@ cd /srv/mirror <span style="color: #990000">||</span> <span style="font-weight: 
         installation-guide-amd<span style="color: #993399">64</span>
         isolinux
         syslinux-common
-        task-desktop
         tasksel-data
 EOF
 
-wget -c -r -nc -np -nH --cut-dirs<span style="color: #990000">=</span><span style="color: #993399">3</span> -P debian/dists/experimental <span style="color: #990000">\</span>
-        http<span style="color: #990000">:</span>//cdn-fastly<span style="color: #990000">.</span>deb<span style="color: #990000">.</span>debian<span style="color: #990000">.</span>org/debian/dists/buster/main/installer-amd<span style="color: #993399">64</span>/current/images/cdrom<span style="color: #990000">/</span>
+<span style="font-style: italic"><span style="color: #9A1900"># tools/which_deb $OLDPWD/debian sid debootstrap || exit 3</span></span>
 
-cd /usr/share/debian-cd
-ln -sf sid tasks/experimental
-ln -sf sid data/experimental
-ln -sf sid tools/boot/experimental
+<span style="font-style: italic"><span style="color: #9A1900"># debootstrap --no-check-gpg --arch $(dpkg-architecture -qDEB_HOST_ARCH) --print-debs sid $OLDPWD/tmp/debootstrap.tmp file:$OLDPWD/debian | tr ' ' '\n' | tee $BDIR/debootstrap-list</span></span>
+
+<span style="font-style: italic"><span style="color: #9A1900"># BASEDIR=$PWD MIRROR=$OLDPWD/debian ARCHES=$(dpkg-architecture -qDEB_HOST_ARCH) TDIR=$OLDPWD/tmp CODENAME=sid DISKTYPE=CD OUT=$OLDPWD/debian-cd-test make ok || exit 4</span></span>
+
+<span style="font-style: italic"><span style="color: #9A1900"># mkdir -p $OLDPWD/tmp/sid &amp;&amp; BASEDIR=$PWD tools/grab_md5 $OLDPWD/debian $(dpkg-architecture -qDEB_HOST_ARCH) sid sid $OLDPWD/tmp/sid/md5-check || exit 5</span></span>
+
+
+sed -i Makefile <span style="color: #990000">\</span>
+        -e <span style="color: #FF0000">'/DEBOOTSTRAP_SCRIPT/s/</span><span style="color: #CC33CC">\s</span><span style="color: #FF0000">*2&gt;</span><span style="color: #CC33CC">\/</span><span style="color: #FF0000">dev</span><span style="color: #CC33CC">\/</span><span style="color: #FF0000">null</span><span style="color: #CC33CC">\s</span><span style="color: #FF0000">*/ /'</span> <span style="color: #990000">\</span>
+        -e /INC_SOURCE/s<span style="color: #990000">/^\\</span>tif<span style="color: #990000">/\\</span>t<span style="color: #990000">\\</span><span style="color: #009900">$\</span><span style="color: #990000">(</span>Q<span style="color: #990000">\)</span><span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">/</span> <span style="color: #990000">\</span>
+        -e s<span style="color: #990000">/^</span>correctstatus<span style="color: #990000">:</span>/in<span style="color: #990000">\&amp;/</span> <span style="color: #990000">\</span>
+        -e <span style="color: #990000">/\</span><span style="color: #009900">$\</span><span style="color: #990000">(</span>MAKE<span style="color: #990000">\)\</span> correctstatus<span style="color: #990000">\;</span>/s<span style="color: #990000">/\;/\</span> <span style="color: #990000">\|\|\</span> <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span><span style="color: #990000">\</span> <span style="color: #993399">1</span><span style="color: #990000">\;/</span> <span style="color: #990000">\</span>
+        -e <span style="color: #990000">/^\\\</span><span style="color: #009900">$\</span><span style="color: #990000">(</span>ADIR<span style="color: #990000">\)\\\</span>/status<span style="color: #990000">:</span>/s/status/fake<span style="color: #990000">\&amp;/</span> <span style="color: #990000">\</span>
+
+
+        <span style="font-style: italic"><span style="color: #9A1900">#-e /^apt=/s/=\\\$/=bash\ \\\$/ \</span></span>
+
 sed -i CONF<span style="color: #990000">.</span>sh <span style="color: #990000">\</span>
         -e <span style="color: #990000">/^</span><span style="font-weight: bold"><span style="color: #0000FF">export</span></span><span style="color: #990000">\</span> <span style="color: #009900">CONTRIB</span><span style="color: #990000">=</span><span style="color: #993399">1</span>/s<span style="color: #990000">/^/\</span><span style="font-style: italic"><span style="color: #9A1900">#/ \</span></span>
-        -e <span style="color: #990000">/^</span><span style="font-weight: bold"><span style="color: #0000FF">export</span></span><span style="color: #990000">\</span> <span style="color: #009900">CODENAME</span><span style="color: #990000">=</span>stretch/s/stretch/experimental<span style="color: #990000">/</span> <span style="color: #990000">\</span>
-        -e <span style="color: #990000">/^\</span><span style="font-style: italic"><span style="color: #9A1900">#export\ OMIT_DOC_TOOLS=1/s/^\#//</span></span>
+        -e <span style="color: #990000">/^</span><span style="font-weight: bold"><span style="color: #0000FF">export</span></span><span style="color: #990000">\</span> <span style="color: #009900">CODENAME</span><span style="color: #990000">=</span>stretch/s/stretch/sid<span style="color: #990000">/</span> <span style="color: #990000">\</span>
+        -e <span style="color: #990000">/^\</span><span style="font-style: italic"><span style="color: #9A1900">#export\ OMIT_DOC_TOOLS=1/s/^\#// \</span></span>
+        -e <span style="color: #990000">/^</span><span style="font-weight: bold"><span style="color: #0000FF">export</span></span><span style="color: #990000">\</span> DISKTYPE/s/CD/NETINST<span style="color: #990000">/</span> <span style="color: #990000">\</span>
 
-<span style="color: #009900">VERBOSE_MAKE</span><span style="color: #990000">=</span><span style="color: #993399">1</span> bash -ex <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'EOF'</span>
+<span style="color: #990000">:</span> <span style="color: #990000">\</span>
+        -e <span style="color: #990000">/^</span><span style="font-weight: bold"><span style="color: #0000FF">export</span></span><span style="color: #990000">\</span> INSTALLER_CD/s<span style="color: #990000">/^/\</span><span style="font-style: italic"><span style="color: #9A1900">#/ \</span></span>
+        -e <span style="color: #990000">/^</span><span style="font-weight: bold"><span style="color: #0000FF">export</span></span><span style="color: #990000">\</span> TASK/s<span style="color: #990000">/^/\</span><span style="font-style: italic"><span style="color: #9A1900">#/ \</span></span>
+        -e <span style="color: #990000">/^\</span><span style="font-style: italic"><span style="color: #9A1900">#export\ INSTALLER_CD/s/^\#// \</span></span>
+        -e <span style="color: #990000">/^\</span><span style="font-style: italic"><span style="color: #9A1900">#export\ TASK/s/^\#// \</span></span>
+        -e <span style="color: #990000">/^</span><span style="font-weight: bold"><span style="color: #0000FF">export</span></span><span style="color: #990000">\</span> <span style="color: #009900">INSTALLER_CD</span><span style="color: #990000">=</span>/s<span style="color: #990000">/^\\\(\.\*=\\\)./\\</span><span style="color: #993399">11</span><span style="color: #990000">/</span> <span style="color: #990000">\</span>
+        -e <span style="color: #990000">/^</span><span style="font-weight: bold"><span style="color: #0000FF">export</span></span><span style="color: #990000">\</span> <span style="color: #009900">TASK</span><span style="color: #990000">=</span>/s<span style="color: #990000">/^\\\(\.\*=\\\).\*/\\</span>1debian-installer<span style="color: #990000">/</span> <span style="color: #990000">\</span>
+        -e <span style="color: #990000">/^\</span><span style="font-style: italic"><span style="color: #9A1900">#export\ DISC_START_HOOK=/s/^\#// \</span></span>
+        -e <span style="color: #990000">/^</span><span style="font-weight: bold"><span style="color: #0000FF">export</span></span><span style="color: #990000">\</span> <span style="color: #009900">DISC_START_HOOK</span><span style="color: #990000">=</span>/s<span style="color: #990000">/^\\\(\.\*=\\\).*/\\</span>1echo<span style="color: #990000">\\\\\</span> start<span style="color: #990000">/</span> <span style="color: #990000">\</span>
+
+
+sed -i tools/make_disc_trees<span style="color: #990000">.</span>pl <span style="color: #990000">\</span>
+        -e <span style="color: #990000">/\</span><span style="color: #009900">$size_check</span><span style="color: #990000">\</span> <span style="color: #990000">\</span><span style="color: #009900">$cddir</span>/d
+
+sed -i tools/apt-selection <span style="color: #990000">\</span>
+        -e s<span style="color: #990000">/\\\.\</span> CONF<span style="color: #990000">\\\.</span>sh<span style="color: #990000">/.\</span> <span style="color: #990000">.\\\</span>/CONF<span style="color: #990000">.</span>sh<span style="color: #990000">/</span>
+
+sed -i tools/generate_di_list <span style="color: #990000">\</span>
+        -e /Missing<span style="color: #990000">\</span> package/s<span style="color: #990000">%</span>file<span style="color: #990000">.\*\\\\</span>n<span style="color: #990000">%</span>file<span style="color: #990000">:\</span> <span style="color: #990000">\</span><span style="color: #009900">$mirror_path</span><span style="color: #990000">/\</span><span style="color: #009900">$component</span>/debian-installer/binary-<span style="color: #990000">\</span><span style="color: #009900">$arch</span>/Packages<span style="color: #990000">.\</span>{gz<span style="color: #990000">,</span>xz<span style="color: #990000">\</span>}<span style="color: #990000">\\\\</span>n<span style="color: #990000">%</span>
+
+
+<span style="font-weight: bold"><span style="color: #000000">exit()</span></span>{
+<span style="font-weight: bold"><span style="color: #0000FF">while</span></span> <span style="font-weight: bold"><span style="color: #0000FF">read</span></span><span style="color: #990000">;</span> <span style="font-weight: bold"><span style="color: #0000FF">do</span></span>
+        <span style="font-weight: bold"><span style="color: #0000FF">unset</span></span> <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span> <span style="color: #990000">&amp;&amp;</span> <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span> <span style="color: #009900">$1</span>
+        apt-get <span style="color: #009900">$REPLY</span> check <span style="color: #990000">||</span> apt <span style="color: #009900">$REPLY</span> search <span style="color: #990000">.</span> <span style="color: #990000">&amp;&amp;</span> <span style="font-weight: bold"><span style="color: #0000FF">unset</span></span> <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span> <span style="color: #990000">&amp;&amp;</span> <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span> <span style="color: #009900">$1</span>
+<span style="font-weight: bold"><span style="color: #0000FF">done</span></span> <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'EOF'</span>
+        -o Dir<span style="color: #990000">::</span>State<span style="color: #990000">::</span><span style="color: #009900">status</span><span style="color: #990000">=</span><span style="color: #009900">$OLDPWD</span>/tmp/apt/sid-<span style="color: #009900">$(</span>dpkg-architecture -qDEB_HOST_ARCH<span style="color: #990000">)</span>/status <span style="color: #990000">\</span>
+        -o Dir<span style="color: #990000">::</span><span style="color: #009900">State</span><span style="color: #990000">=</span><span style="color: #009900">$OLDPWD</span>/tmp/apt/sid-<span style="color: #009900">$(</span>dpkg-architecture -qDEB_HOST_ARCH<span style="color: #990000">)</span>/apt-state<span style="color: #990000">/</span> <span style="color: #990000">\</span>
+        -o Dir<span style="color: #990000">::</span><span style="color: #009900">Cache</span><span style="color: #990000">=</span><span style="color: #009900">$OLDPWD</span>/tmp/apt/sid-<span style="color: #009900">$(</span>dpkg-architecture -qDEB_HOST_ARCH<span style="color: #990000">)</span>/apt-cache<span style="color: #990000">/</span> <span style="color: #990000">\</span>
+        -o Dir<span style="color: #990000">::</span><span style="color: #009900">Etc</span><span style="color: #990000">=</span><span style="color: #009900">$OLDPWD</span>/tmp/apt/sid-<span style="color: #009900">$(</span>dpkg-architecture -qDEB_HOST_ARCH<span style="color: #990000">)</span>/apt<span style="color: #990000">/</span> <span style="color: #990000">\</span>
+        -o APT<span style="color: #990000">::</span>Cache<span style="color: #990000">::</span><span style="color: #009900">AllVersions</span><span style="color: #990000">=</span><span style="color: #993399">0</span> <span style="color: #990000">\</span>
+        -o APT<span style="color: #990000">::</span>Cache<span style="color: #990000">::</span><span style="color: #009900">ShowVersion</span><span style="color: #990000">=</span><span style="color: #993399">1</span> <span style="color: #990000">\</span>
+        -o APT<span style="color: #990000">::</span><span style="color: #009900">Architecture</span><span style="color: #990000">=</span><span style="color: #009900">$(</span>dpkg-architecture -qDEB_HOST_ARCH<span style="color: #990000">)</span> <span style="color: #990000">\</span>
+        -o APT<span style="color: #990000">::</span>Architectures<span style="color: #990000">::=</span><span style="color: #009900">$(</span>dpkg-architecture -qDEB_HOST_ARCH<span style="color: #990000">)</span> <span style="color: #990000">\</span>
+        -o Acquire<span style="color: #990000">::</span><span style="color: #009900">Languages</span><span style="color: #990000">=</span>none <span style="color: #990000">\</span>
+
+EOF
+}
+
+<span style="font-style: italic"><span style="color: #9A1900"># https://wiki.debian.org/DebianCustomCD</span></span>
+<span style="color: #009900">VERBOSE</span><span style="color: #990000">=</span> <span style="color: #009900">VERBOSE_MAKE</span><span style="color: #990000">=</span> bash -ex <span style="color: #990000">&lt;&lt;</span>-EOF <span style="color: #990000">||</span> <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span> <span style="color: #009900">$?</span>
         <span style="font-weight: bold"><span style="color: #0000FF">source</span></span> CONF<span style="color: #990000">.</span>sh
-        make distclean
-        make experimental_status
-        make mirrorcheck
-        make official_images
+        make <span style="color: #990000">\</span>
+                distclean <span style="color: #990000">\</span>
+
+        mkdir -p <span style="color: #990000">\</span>
+                <span style="color: #009900">$OLDPWD</span>/tmp/apt/sid-amd<span style="color: #993399">64</span>/apt/preferences<span style="color: #990000">.</span>d<span style="color: #990000">/</span> <span style="color: #990000">\</span>
+                <span style="color: #009900">$OLDPWD</span>/tmp/apt/sid-amd<span style="color: #993399">64</span>/apt/sources<span style="color: #990000">.</span>list<span style="color: #990000">.</span>d<span style="color: #990000">/</span>
+
+        <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span> <span style="color: #993399">0</span>
+        make --debug <span style="color: #990000">\</span>
+                <span style="color: #009900">$OLDPWD</span>/tmp{<span style="color: #990000">,</span>/apt/status} <span style="color: #990000">\</span>
+
+<span style="color: #990000">:</span> <span style="color: #009900">ARCH</span><span style="color: #990000">=</span>amd64 tools/apt-selection update <span style="color: #990000">||</span> <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span> <span style="color: #993399">8</span>
+<span style="color: #990000">:</span> <span style="color: #009900">ARCH</span><span style="color: #990000">=</span>amd64 tools/apt-selection check <span style="color: #990000">||</span> <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span> <span style="color: #993399">9</span>
+        <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span> <span style="color: #993399">11</span>
+
+
+        <span style="color: #009900">VERBOSE</span><span style="color: #990000">=</span> <span style="color: #009900">BASEDIR</span><span style="color: #990000">=</span><span style="color: #009900">$PWD</span> <span style="color: #009900">MIRROR</span><span style="color: #990000">=</span><span style="color: #009900">$OLDPWD</span>/debian <span style="color: #009900">TDIR</span><span style="color: #990000">=</span><span style="color: #009900">$OLDPWD</span>/tmp <span style="color: #009900">APTTMP</span><span style="color: #990000">=</span><span style="color: #009900">$OLDPWD</span>/tmp/apt <span style="color: #009900">CODENAME</span><span style="color: #990000">=</span>sid <span style="color: #009900">ARCH</span><span style="color: #990000">=</span><span style="color: #009900">$(</span>dpkg-architecture -qDEB_HOST_ARCH<span style="color: #990000">)</span> tools/sort_deps_edu <span style="color: #009900">$OLDPWD</span>/tmp/sid/list
+
+        cpp <span style="color: #990000">\</span>
+                -nostdinc -P -undef -D ARCH_amd64 -U amd64 -U i386 -U linux -U unix -DFORCENONUSONCD<span style="color: #993399">1</span><span style="color: #990000">=</span><span style="color: #993399">0</span> -I <span style="color: #009900">$OLDPWD</span>/tmp/sid/tasks tasks/sid/Debian-generic
+
+        <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span> <span style="color: #993399">1</span>
+
+        <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span> <span style="color: #993399">0</span>
+EOF
+
+
+
+<span style="color: #009900">VERBOSE</span><span style="color: #990000">=</span> <span style="color: #009900">VERBOSE_MAKE</span><span style="color: #990000">=</span> bash -ex <span style="color: #990000">&lt;&lt;</span>-EOF <span style="color: #990000">||</span> <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span> <span style="color: #993399">7</span>
+        <span style="font-weight: bold"><span style="color: #0000FF">source</span></span> CONF<span style="color: #990000">.</span>sh
+
+        mkdir <span style="color: #009900">$OLDPWD</span>/tmp/sid
+
+        <span style="color: #990000">:</span> make --debug <span style="color: #990000">\</span>
+                mirrorcheck <span style="color: #990000">\</span>
+
+        make --debug <span style="color: #990000">\</span>
+                unstable-map <span style="color: #990000">\</span>
+
+        make --debug <span style="color: #990000">\</span>
+                sid_status <span style="color: #990000">\</span>
+
+        <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span> <span style="color: #993399">0</span>
+        make --debug <span style="color: #990000">\</span>
+                unstable-map init sid_status status <span style="color: #990000">\</span>
+
+        <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span> <span style="color: #993399">0</span>
+        make <span style="color: #990000">\</span>
+                <span style="color: #009900">$OLDPWD</span>/tmp/sid<span style="color: #990000">/</span>{raw<span style="color: #990000">,</span>}list <span style="color: #990000">\</span>
+                genlist packagelists <span style="color: #990000">\</span>
+
+        <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span> <span style="color: #993399">0</span>
+EOF
+
+<span style="color: #009900">VERBOSE</span><span style="color: #990000">=</span> <span style="color: #009900">VERBOSE_MAKE</span><span style="color: #990000">=</span> bash -ex <span style="color: #990000">&lt;&lt;</span>-EOF <span style="color: #990000">||</span> <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span> <span style="color: #993399">7</span>
+        <span style="font-weight: bold"><span style="color: #0000FF">source</span></span> CONF<span style="color: #990000">.</span>sh
+
+        <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span> <span style="color: #993399">0</span>
+
+        make --debug <span style="color: #990000">\</span>
+                <span style="color: #009900">$OLDPWD</span>/tmp/sid/tasks <span style="color: #990000">\</span>
+
+        make --debug <span style="color: #990000">\</span>
+                <span style="color: #009900">$OLDPWD</span>/tmp/sid/debootstrap <span style="color: #990000">\</span>
+        <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span> <span style="color: #993399">0</span>
+
+        make --debug <span style="color: #990000">\</span>
+                <span style="color: #009900">$OLDPWD</span>/tmp{<span style="color: #990000">,</span>/apt/status<span style="color: #990000">,</span>/sid{<span style="color: #990000">,</span>/tasks<span style="color: #990000">,</span>/debootstrap}} <span style="color: #990000">\</span>
+
+        make <span style="color: #990000">\</span>
+                --debug <span style="color: #009900">VERBOSE</span><span style="color: #990000">=</span><span style="color: #993399">1</span> <span style="color: #990000">\</span>
+                image-trees <span style="color: #990000">\</span>
+
+        make <span style="color: #990000">\</span>
+                images <span style="color: #990000">\</span>
+                official_images <span style="color: #990000">\</span>
+
+        <span style="color: #990000">:</span> make <span style="color: #990000">\</span>
+                clean <span style="color: #990000">\</span>
+
+        <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span> <span style="color: #993399">0</span>
 EOF</tt></pre></div></div>
 </div>
 </div>
@@ -1282,7 +1430,7 @@ BASH</tt></pre></div></div>
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2018-11-26 22:35:46 CET
+ 2018-11-28 11:54:01 CET
 </div>
 </div>
 </body>

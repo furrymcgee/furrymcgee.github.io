@@ -741,20 +741,24 @@ asciidoc.install();
 <div class="paragraph"><p>Devuan is a GNU/Linux operating system mirroring the Debian distribution without systemd and dbus requirements.</p></div>
 <div class="paragraph"><p>The debootstrap script creates a new root filesystem.</p></div>
 <div class="listingblock">
-<div class="title">debootstrap</div>
+<div class="title">debiancd</div>
 <div class="content"><!-- Generator: GNU source-highlight 3.1.8
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
-<pre><tt>sudo bash <span style="color: #993399">2</span><span style="color: #990000">&gt;&amp;</span><span style="color: #993399">1</span> <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'EOF'</span> <span style="color: #990000">|</span> tee log
+<pre><tt>bash -ex <span style="color: #993399">2</span><span style="color: #990000">&gt;&amp;</span><span style="color: #993399">1</span> <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'EOF'</span> <span style="color: #990000">|</span> tee log
         cat debootstrap<span style="color: #990000">.</span>sh schroot<span style="color: #990000">.</span>sh <span style="color: #990000">|</span> bash -ex
-        cat ftparchive<span style="color: #990000">.</span>sh debiancd<span style="color: #990000">.</span>sh <span style="color: #990000">|</span> schroot -- bash -ex
+        cat ftparchive<span style="color: #990000">.</span>sh <span style="color: #990000">|</span> schroot -- bash -ex
+        cat debiancd<span style="color: #990000">.</span>sh <span style="color: #990000">|</span> schroot -- bash -ex
 EOF
-cp -av /srv/mirror<span style="color: #990000">/</span>{debian-cd-test/debian<span style="color: #990000">*</span>iso<span style="color: #990000">,</span>tmp/experimental/CD<span style="color: #993399">1</span>/install<span style="color: #990000">.</span>amd} /tmp
-qemu-system-x86_64 --enable-kvm -net nic -nographic <span style="color: #990000">\</span>
-        -net user -m <span style="color: #993399">512</span> -cdrom /tmp/debian<span style="color: #990000">*</span>iso <span style="color: #990000">\</span>
-        -kernel /tmp/install<span style="color: #990000">.</span>amd/vmlinuz -initrd /tmp/install<span style="color: #990000">.</span>amd/initrd<span style="color: #990000">.</span>gz <span style="color: #990000">\</span>
-        -append <span style="color: #FF0000">'console=ttyS0 auto=true priority=critical url=tftp://10.0.2.2/example-preseed.txt'</span></tt></pre></div></div>
+
+qemu-system-x86_64 --enable-kvm --nographic -cpu host -m <span style="color: #993399">1000</span> <span style="color: #990000">\</span>
+        -net nic<span style="color: #990000">,</span><span style="color: #009900">model</span><span style="color: #990000">=</span>rtl8139 -net user<span style="color: #990000">,</span><span style="color: #009900">tftp</span><span style="color: #990000">=</span><span style="color: #009900">$PWD</span><span style="color: #990000">,</span><span style="color: #009900">bootfile</span><span style="color: #990000">=</span>tftp<span style="color: #990000">://</span><span style="color: #993399">10.0</span><span style="color: #990000">.</span><span style="color: #993399">2.2</span>/preseed<span style="color: #990000">.</span>cfg <span style="color: #990000">\</span>
+        -cdrom /tmp/tmp<span style="color: #990000">.*</span>/srv/mirror/debian-cd-test/debian-<span style="color: #993399">9.0</span>-amd<span style="color: #993399">64</span>-CD-<span style="color: #993399">1</span><span style="color: #990000">.</span>iso <span style="color: #990000">\</span>
+        -kernel /tmp/tmp<span style="color: #990000">.*</span>/srv/mirror/tmp/sid/CD<span style="color: #993399">1</span>/install<span style="color: #990000">.</span>amd/vmlinuz <span style="color: #990000">\</span>
+        -initrd /tmp/tmp<span style="color: #990000">.*</span>/srv/mirror/tmp/sid/CD<span style="color: #993399">1</span>/install<span style="color: #990000">.</span>amd/initrd<span style="color: #990000">.</span>gz <span style="color: #990000">\</span>
+        -append <span style="color: #FF0000">'console=ttyS0 auto=true priority=critical url=tftp://10.0.2.2/example-preseed.txt'</span> <span style="color: #990000">\</span>
+</tt></pre></div></div>
 <div class="listingblock">
 <div class="title">debootstrap</div>
 <div class="content"><!-- Generator: GNU source-highlight 3.1.8
@@ -765,8 +769,9 @@ http://www.gnu.org/software/src-highlite -->
 <span style="font-style: italic"><span style="color: #9A1900"># Devuan debootstrap and schroot</span></span>
 
 cd <span style="color: #009900">$(</span>mktemp -d<span style="color: #990000">)</span>
+chmod <span style="color: #993399">777</span> <span style="color: #990000">.</span>
 apt install --yes debootstrap schroot
-wget --continue --no-check-certificate --output-document <span style="color: #990000">..</span>/devuan_ascii_2<span style="color: #990000">.</span><span style="color: #993399">0</span><span style="color: #990000">.</span>0_amd64_netinst<span style="color: #990000">.</span>iso <span style="color: #990000">\</span>
+wget --no-verbose --continue --no-check-certificate --output-document <span style="color: #990000">..</span>/devuan_ascii_2<span style="color: #990000">.</span><span style="color: #993399">0</span><span style="color: #990000">.</span>0_amd64_netinst<span style="color: #990000">.</span>iso <span style="color: #990000">\</span>
         ftp<span style="color: #990000">:</span>//mirror<span style="color: #990000">.</span>leaseweb<span style="color: #990000">.</span>com/devuan/devuan_ascii/installer-iso/devuan_ascii_2<span style="color: #990000">.</span><span style="color: #993399">0</span><span style="color: #990000">.</span>0_amd64_netinst<span style="color: #990000">.</span>iso
 mount <span style="color: #990000">..</span>/devuan<span style="color: #990000">*</span>netinst<span style="color: #990000">.</span>iso <span style="color: #990000">.</span>
 
@@ -784,10 +789,10 @@ cat <span style="color: #990000">&gt;</span> /etc/schroot/chroot<span style="col
 EOF
 
 bash -ex <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'BASH'</span>
-        debootstrap --verbose --include<span style="color: #990000">=</span>wget<span style="color: #990000">,</span>sudo --verbose --no-check-gpg testing <span style="color: #990000">.</span> file<span style="color: #990000">://</span><span style="color: #009900">$OLDPWD</span>
+        debootstrap --include<span style="color: #990000">=</span>wget<span style="color: #990000">,</span>sudo --no-check-gpg testing <span style="color: #990000">.</span> file<span style="color: #990000">://</span><span style="color: #009900">$OLDPWD</span>
         cp -a /lib/modules lib<span style="color: #990000">/</span>
         cp -a /boot/vmlinuz-<span style="color: #990000">*</span>-amd<span style="color: #993399">64</span> boot<span style="color: #990000">/</span>
-        <span style="font-style: italic"><span style="color: #9A1900"># debootstrap --verbose --keyring=/usr/share/keyrings/archive-keyring.gpg --no-check-gpg sid . file:///var/cache/apt/debian</span></span>
+        <span style="font-style: italic"><span style="color: #9A1900"># debootstrap --keyring=/usr/share/keyrings/archive-keyring.gpg --no-check-gpg sid . file:///var/cache/apt/debian</span></span>
 BASH
 
 umount <span style="color: #009900">$OLDPWD</span>
@@ -800,7 +805,7 @@ rmdir <span style="color: #009900">$OLDPWD</span>
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2018-11-26 22:35:25 CET
+ 2018-11-30 22:22:36 CET
 </div>
 </div>
 </body>
