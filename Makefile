@@ -27,6 +27,7 @@ index.html: README.html \
 	wiki/linux/SUSE.html \
 	wiki/linux/Samba.html \
 	wiki/documentation/AsciiDoc.html \
+	wiki/documentation/Make.html \
 	wiki/git/Git.html \
 	wiki/java/Java.html \
 	wiki/perl/Perl.html \

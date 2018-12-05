@@ -736,147 +736,183 @@ asciidoc.install();
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="_devuan">Devuan</h2>
+<h2 id="_documentation_with_make">Documentation with Make</h2>
 <div class="sectionbody">
-<div class="paragraph"><p>Devuan is a GNU/Linux operating system mirroring the Debian distribution without systemd and dbus requirements.</p></div>
-<div class="paragraph"><p>The debootstrap script creates a new root filesystem.</p></div>
+<div class="paragraph"><p>Documentation requires conversion of different file formats.
+Asciidoc, Ghostscript and Pandoc are tools to convert documents.
+This is a typical use case for Make tool.</p></div>
+<div class="paragraph"><p>Generation of this Website</p></div>
 <div class="listingblock">
-<div class="title">debiancd</div>
+<div class="title">html</div>
 <div class="content"><!-- Generator: GNU source-highlight 3.1.8
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
-<pre><tt>cp <span style="color: #990000">..</span>/debian<span style="color: #990000">.</span>iso chroot/amd<span style="color: #993399">64</span>/usr/src/orig-iso/debian-<span style="color: #993399">8.4</span><span style="color: #990000">.</span><span style="color: #993399">0</span>-amd<span style="color: #993399">64</span>-xfce-CD-<span style="color: #993399">1</span><span style="color: #990000">.</span>iso
+<pre><tt><span style="color: #990000">%.</span>html<span style="color: #990000">:</span> <span style="color: #990000">%.</span>asciidoc
+        asciidoc -adata-uri -aicondir<span style="color: #990000">=</span><span style="color: #009900">$PWD</span> <span style="color: #009900">$&lt;</span>
 
-<span style="font-style: italic"><span style="color: #9A1900"># https://git.devuan.org/devuan/devuan-sdk</span></span>
-bash -ex <span style="color: #993399">2</span><span style="color: #990000">&gt;&amp;</span><span style="color: #993399">1</span> <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'EOF'</span> <span style="color: #990000">|</span> tee log
-        cat debootstrap<span style="color: #990000">.</span>sh schroot<span style="color: #990000">.</span>sh <span style="color: #990000">|</span> bash -ex
-        cat ftparchive<span style="color: #990000">.</span>sh <span style="color: #990000">|</span> schroot -- bash -ex
-        cat sdk<span style="color: #990000">.</span>sh <span style="color: #990000">|</span> schroot -- zsh -f
-EOF
+<span style="color: #990000">%.</span>txt<span style="color: #990000">:</span> <span style="color: #990000">%.</span>html
+        w3m <span style="color: #009900">$&lt;</span> <span style="color: #990000">&gt;</span> <span style="color: #009900">$@</span>
 
-qemu-system-x86_64 --enable-kvm --nographic -cpu host -m <span style="color: #993399">1000</span> <span style="color: #990000">\</span>
-        -net nic<span style="color: #990000">,</span><span style="color: #009900">model</span><span style="color: #990000">=</span>rtl8139 -net user<span style="color: #990000">,</span><span style="color: #009900">tftp</span><span style="color: #990000">=</span><span style="color: #009900">$PWD</span><span style="color: #990000">,</span><span style="color: #009900">bootfile</span><span style="color: #990000">=</span>tftp<span style="color: #990000">://</span><span style="color: #993399">10.0</span><span style="color: #990000">.</span><span style="color: #993399">2.2</span>/preseed<span style="color: #990000">.</span>cfg <span style="color: #990000">\</span>
-        -cdrom /tmp/tmp<span style="color: #990000">.*</span>/srv/mirror/debian-cd-test/debian-<span style="color: #993399">9.0</span>-amd<span style="color: #993399">64</span>-CD-<span style="color: #993399">1</span><span style="color: #990000">.</span>iso <span style="color: #990000">\</span>
-        -kernel /tmp/tmp<span style="color: #990000">.*</span>/srv/mirror/tmp/sid/CD<span style="color: #993399">1</span>/install<span style="color: #990000">.</span>amd/vmlinuz <span style="color: #990000">\</span>
-        -initrd /tmp/tmp<span style="color: #990000">.*</span>/srv/mirror/tmp/sid/CD<span style="color: #993399">1</span>/install<span style="color: #990000">.</span>amd/initrd<span style="color: #990000">.</span>gz <span style="color: #990000">\</span>
-        -append <span style="color: #FF0000">'console=ttyS0 auto=true priority=critical url=tftp://10.0.2.2/example-preseed.txt'</span> <span style="color: #990000">\</span>
+<span style="color: #990000">%.</span>png<span style="color: #990000">:</span> <span style="color: #990000">%.</span>html
+        wkhtmltoimage <span style="color: #009900">$&lt;</span> <span style="color: #009900">$@</span>
+
+<span style="color: #990000">%.</span><span style="color: #993399">256</span><span style="color: #990000">.</span>png<span style="color: #990000">:</span> <span style="color: #990000">%.</span>png
+        convert <span style="color: #009900">$&lt;</span> -scale <span style="color: #993399">256</span> <span style="color: #009900">$@</span>
+
+<span style="color: #990000">.</span>PHONY<span style="color: #990000">:</span> clean
+clean<span style="color: #990000">:</span>
+        find <span style="color: #990000">\(</span> -name <span style="color: #FF0000">'*.html'</span> -o -name <span style="color: #FF0000">'*.png'</span> -o -name <span style="color: #FF0000">'*.txt'</span> <span style="color: #990000">\)</span> -delete
+
+<span style="color: #990000">.</span>DEFAULT_GOAL<span style="color: #990000">:=</span>index<span style="color: #990000">.</span>html
+
+wiki/documentation/AsciiDoc<span style="color: #990000">.</span>html<span style="color: #990000">:</span> wiki/Wiki<span style="color: #990000">.</span><span style="color: #993399">256</span><span style="color: #990000">.</span>png
+
+index<span style="color: #990000">.</span>html<span style="color: #990000">:</span> README<span style="color: #990000">.</span>html <span style="color: #990000">\</span>
+        wiki/Wiki<span style="color: #990000">.</span>html <span style="color: #990000">\</span>
+        wiki/cpp/Cpp<span style="color: #990000">.</span>html <span style="color: #990000">\</span>
+        wiki/database/SQLite<span style="color: #990000">.</span>html <span style="color: #990000">\</span>
+        wiki/linux/Debian<span style="color: #990000">.</span>html <span style="color: #990000">\</span>
+        wiki/linux/Devuan<span style="color: #990000">.</span>html <span style="color: #990000">\</span>
+        wiki/linux/SUSE<span style="color: #990000">.</span>html <span style="color: #990000">\</span>
+        wiki/linux/Samba<span style="color: #990000">.</span>html <span style="color: #990000">\</span>
+        wiki/documentation/AsciiDoc<span style="color: #990000">.</span>html <span style="color: #990000">\</span>
+        wiki/documentation/Make<span style="color: #990000">.</span>html <span style="color: #990000">\</span>
+        wiki/git/Git<span style="color: #990000">.</span>html <span style="color: #990000">\</span>
+        wiki/java/Java<span style="color: #990000">.</span>html <span style="color: #990000">\</span>
+        wiki/perl/Perl<span style="color: #990000">.</span>html <span style="color: #990000">\</span>
+        wiki/qemu/QEMU<span style="color: #990000">.</span>html <span style="color: #990000">\</span>
+        wiki/qemu/VirtualXPVHD<span style="color: #990000">.</span>html <span style="color: #990000">\</span>
+        wiki/shell/Bash<span style="color: #990000">.</span>html <span style="color: #990000">\</span>
+        wiki/xml/XML<span style="color: #990000">.</span>html
+        cp <span style="color: #009900">$^</span> <span style="color: #990000">.</span> <span style="color: #993399">2</span><span style="color: #990000">&gt;&amp;</span>- <span style="color: #990000">||</span> cp <span style="color: #009900">$&lt;</span> index<span style="color: #990000">.</span>html
 </tt></pre></div></div>
-<div class="paragraph"><p>DEBOOTSTRAP_DIR="/tmp/tmp.QA7CNcWR1Q/lib/libdevuansdk/extra/debootstrap" /tmp/tmp.QA7CNcWR1Q/lib/libdevuansdk/extra/debootstrap/debootstrap --arch amd64 testing .</p></div>
+<div class="paragraph"><p>Here are some scripts for pdf documents.</p></div>
 <div class="listingblock">
-<div class="title">debiancd</div>
+<div class="title">pandoc</div>
 <div class="content"><!-- Generator: GNU source-highlight 3.1.8
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
-<pre><tt><span style="font-style: italic"><span style="color: #9A1900">#!/bin/bash</span></span>
+<pre><tt><span style="color: #990000">%.</span>pdf<span style="color: #990000">:</span> <span style="color: #990000">%.</span>md
+        pandoc <span style="color: #009900">$&lt;</span> <span style="color: #990000">\</span>
+                --metadata<span style="color: #990000">=</span><span style="color: #009900">papersize</span><span style="color: #990000">=</span>a4 <span style="color: #990000">\</span>
+                --metadata<span style="color: #990000">=</span><span style="color: #009900">lang</span><span style="color: #990000">=</span>gb <span style="color: #990000">\</span>
+                --metadata<span style="color: #990000">=</span><span style="color: #009900">bookmarks</span><span style="color: #990000">=</span><span style="font-weight: bold"><span style="color: #0000FF">true</span></span> <span style="color: #990000">\</span>
+                --metadata<span style="color: #990000">=</span><span style="color: #009900">colorlinks</span><span style="color: #990000">=</span><span style="font-weight: bold"><span style="color: #0000FF">true</span></span> <span style="color: #990000">\</span>
+                --output <span style="color: #009900">$@</span></tt></pre></div></div>
+<div class="paragraph"><p>This are rules for ps to pdf conversion with gs.</p></div>
+<div class="listingblock">
+<div class="title">ps2pdf</div>
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-style: italic"><span style="color: #9A1900"># include this in a makefile to convert documents</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># in ${PS2PDF} variable into a ${.DEFAULT_GOAL}.pdf</span></span>
 
-<span style="font-style: italic"><span style="color: #9A1900">#E: Couldn't find these debs: dialog build-essential debian-keyring curl fakeroot</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># grep -rn jessie . | cut -d: -f1 | xargs -L1 sed s/jessie/ascii/ -i</span></span>
-<span style="font-weight: bold"><span style="color: #0000FF">source</span></span> sdk
-sdk-init
+<span style="color: #990000">.</span>INTERMEDIATE<span style="color: #990000">:</span> pdfmarks <span style="color: #009900">${PS2PDF}</span>
 
-<span style="font-weight: bold"><span style="color: #0000FF">source</span></span> sdk
-<span style="color: #009900">chroot_variant</span><span style="color: #990000">=</span>minbase
-arch amd64
+ifdef PS2PDF
+<span style="color: #009900">${.DEFAULT_GOAL}</span><span style="color: #990000">.</span>ps<span style="color: #990000">:</span> <span style="color: #009900">${PS2PDF}</span>
+        psmerge <span style="color: #009900">$^</span> <span style="color: #990000">&gt;</span> <span style="color: #009900">$@</span>
 
-chroot-create first
-chroot-create third
-chdo uname -a
+<span style="font-style: italic"><span style="color: #9A1900"># gs(1): -q switch, to prevent Ghostscript</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># from writing messages to standard output</span></span>
+<span style="color: #009900">${.DEFAULT_GOAL}</span><span style="color: #990000">.</span>pdf<span style="color: #990000">:</span> pdfmarks <span style="color: #009900">${.DEFAULT_GOAL}</span><span style="color: #990000">.</span>ps
+        gs      -q -sOutputFile<span style="color: #990000">=</span>- -sDEVICE<span style="color: #990000">=</span>pdfwrite <span style="color: #990000">\</span>
+                -dPrinted<span style="color: #990000">=</span><span style="font-weight: bold"><span style="color: #0000FF">false</span></span> -dBATCH -dNOPAUSE <span style="color: #990000">\</span>
+                -dPDFSETTINGS<span style="color: #990000">=</span>/ebook -DSAFER <span style="color: #990000">\</span>
+        <span style="color: #009900">$^</span> <span style="color: #990000">|</span> <span style="color: #990000">.</span>/pdf2md5<span style="color: #990000">.</span>sh <span style="color: #990000">&gt;</span> <span style="color: #009900">$@</span>
+endif
 
-seed xfce
-<span style="color: #009900">iso_target</span><span style="color: #990000">=</span>
-auto-iso
+<span style="font-style: italic"><span style="color: #9A1900"># http://milan.kupcevic.net/ghostscript-ps-pdf/</span></span>
+<span style="color: #990000">.</span>ONESHELL<span style="color: #990000">:</span>
+pdfmarks<span style="color: #990000">:</span>
+        cat <span style="color: #990000">&gt;</span> <span style="color: #009900">$@</span> <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'EOF'</span>
+                <span style="color: #990000">[</span> /Title <span style="color: #990000">(</span>Document title<span style="color: #990000">)</span>
+                  /Author <span style="color: #990000">(</span>Author name<span style="color: #990000">)</span>
+                  /Subject <span style="color: #990000">(</span>Subject description<span style="color: #990000">)</span>
+                  /Keywords <span style="color: #990000">(</span>comma<span style="color: #990000">,</span> separated<span style="color: #990000">,</span> keywords<span style="color: #990000">)</span>
+                  /ModDate <span style="color: #990000">(</span>D<span style="color: #990000">:</span><span style="color: #993399">20061204092842</span><span style="color: #990000">)</span>
+                  /CreationDate <span style="color: #990000">(</span>D<span style="color: #990000">:</span><span style="color: #993399">20061204092842</span><span style="color: #990000">)</span>
+                  /Creator <span style="color: #990000">(</span>application name or creator note<span style="color: #990000">)</span>
+                  /Producer <span style="color: #990000">(</span>PDF producer name or note<span style="color: #990000">)</span>
+                  /DOCINFO pdfmark
+        EOF
+
+<span style="color: #990000">%.</span>ps<span style="color: #990000">:</span> <span style="color: #990000">%.</span>pdf
+        <span style="color: #990000">&lt;</span> <span style="color: #009900">$&lt;</span> pdf2ps - - <span style="color: #990000">&gt;</span> <span style="color: #009900">$@</span>
+
+<span style="color: #990000">%.</span>ps<span style="color: #990000">:</span> <span style="color: #990000">%.</span>BMP
+        convert <span style="color: #009900">$&lt;</span> <span style="color: #009900">$@</span>
+
+<span style="color: #990000">%.</span>ps<span style="color: #990000">:</span> <span style="color: #990000">%.</span>tif
+        convert <span style="color: #009900">$&lt;</span> <span style="color: #009900">$@</span>
 </tt></pre></div></div>
+<div class="paragraph"><p>This script writes zeros into uuid.</p></div>
 <div class="listingblock">
-<div class="title">debootstrap</div>
+<div class="title">pdf2md5</div>
 <div class="content"><!-- Generator: GNU source-highlight 3.1.8
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
-<pre><tt><span style="font-style: italic"><span style="color: #9A1900">#!/bin/bash</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># Devuan debootstrap and schroot</span></span>
-
-cd <span style="color: #009900">$(</span>mktemp -d<span style="color: #990000">)</span>
-chmod <span style="color: #993399">777</span> <span style="color: #990000">.</span>
-apt install --yes debootstrap schroot
-wget --continue --no-check-certificate --output-document <span style="color: #990000">..</span>/devuan_ascii_2<span style="color: #990000">.</span><span style="color: #993399">0</span><span style="color: #990000">.</span>0_amd64_cd-<span style="color: #993399">1</span><span style="color: #990000">.</span>iso <span style="color: #990000">\</span>
-        ftp<span style="color: #990000">:</span>//mirror<span style="color: #990000">.</span>leaseweb<span style="color: #990000">.</span>com/devuan/devuan_ascii/installer-iso/devuan_ascii_2<span style="color: #990000">.</span><span style="color: #993399">0</span><span style="color: #990000">.</span>0_amd64_cd-<span style="color: #993399">1</span><span style="color: #990000">.</span>iso
-
-mount <span style="color: #990000">..</span>/devuan<span style="color: #990000">*</span>cd-<span style="color: #993399">1</span><span style="color: #990000">.</span>iso <span style="color: #990000">.</span>
-
-cd <span style="color: #009900">$(</span>mktemp -d<span style="color: #990000">)</span>
-cat <span style="color: #990000">&gt;</span> /etc/schroot/chroot<span style="color: #990000">.</span>d/schroot<span style="color: #990000">.</span>conf <span style="color: #990000">&lt;&lt;</span>-EOF
-        <span style="font-style: italic"><span style="color: #9A1900"># schroot chroot definitions.</span></span>
-        <span style="font-style: italic"><span style="color: #9A1900"># See schroot.conf(5) for complete documentation of the file format.</span></span>
-        <span style="color: #990000">[</span>default<span style="color: #990000">]</span>
-        <span style="color: #009900">description</span><span style="color: #990000">=</span>Debian
-        <span style="font-weight: bold"><span style="color: #0000FF">type</span></span><span style="color: #990000">=</span>directory
-        <span style="color: #009900">directory</span><span style="color: #990000">=</span><span style="color: #009900">$PWD</span>
-        preserve-environment<span style="color: #990000">=</span><span style="font-weight: bold"><span style="color: #0000FF">false</span></span>
-        <span style="color: #009900">groups</span><span style="color: #990000">=</span>sudo
-        <span style="font-style: italic"><span style="color: #9A1900">#union-type=overlay</span></span>
-EOF
-
-bash -ex <span style="color: #990000">&lt;&lt;</span>-BASH
-        <span style="font-style: italic"><span style="color: #9A1900"># debootstrap --keyring=/usr/share/keyrings/archive-keyring.gpg --no-check-gpg sid . file:///var/cache/apt/debian</span></span>
-        debootstrap <span style="color: #990000">\</span>
-                --no-check-gpg <span style="color: #990000">\</span>
-                --exclude<span style="color: #990000">=</span><span style="color: #009900">$(</span> paste -s -d<span style="color: #990000">,</span> <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'EXCLUDE'</span>
-                                libsystemd0
-                                systemd
-                                systemd-sysv
-                        EXCLUDE
-                <span style="color: #990000">)</span> <span style="color: #990000">\</span>
-                --include<span style="color: #990000">=</span><span style="color: #009900">$(</span> paste -s -d<span style="color: #990000">,</span> <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'INCLUDE'</span>
-                                alsa-utils
-                                apt-utils
-                                bsdutils
-                                btrfs-tools
-                                bzip2
-                                debhelper
-                                devuan-baseconf
-                                devuan-keyring
-                                dpkg-dev
-                                file
-                                gcc-<span style="color: #993399">6</span>
-                                libc6
-                                less
-                                locales
-                                man-db
-                                mawk
-                                mlocate
-                                nano
-                                openssh-client
-                                openssh-server
-                                rsync
-                                screen
-                                sudo
-                                vim
-                                wget
-                                wireless-tools
-                                wpasupplicant
-                                xz-utils
-                                zsh
-                        INCLUDE
-                <span style="color: #990000">)</span> <span style="color: #990000">\</span>
-                        testing <span style="color: #990000">.</span> file<span style="color: #990000">://</span><span style="color: #009900">$OLDPWD</span> <span style="color: #990000">\</span>
-
-        cp -a /lib/modules lib<span style="color: #990000">/</span>
-        cp -a /boot/vmlinuz-<span style="color: #990000">*</span>-amd<span style="color: #993399">64</span> boot<span style="color: #990000">/</span>
-        <span style="font-style: italic"><span style="color: #9A1900"># debootstrap --keyring=/usr/share/keyrings/archive-keyring.gpg --no-check-gpg sid . file:///var/cache/apt/debian</span></span>
-BASH
-
-umount <span style="color: #009900">$OLDPWD</span>
-rmdir <span style="color: #009900">$OLDPWD</span>
+<pre><tt><span style="font-style: italic"><span style="color: #9A1900">#!/bin/sh</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># erase uuid and trailer in a pdf document</span></span>
+bbe -b /uuid<span style="color: #990000">:/:</span><span style="color: #993399">41</span> -e <span style="color: #FF0000">'f 5 </span><span style="color: #CC33CC">\x</span><span style="color: #FF0000">00'</span> <span style="color: #990000">|</span> <span style="color: #990000">\</span>
+tac <span style="color: #990000">|</span> <span style="color: #990000">\</span>
+bbe -e L<span style="color: #990000">\</span> <span style="color: #993399">1</span> -b <span style="color: #FF0000">'/[&lt;/:34'</span> -e <span style="color: #FF0000">'f 2 </span><span style="color: #CC33CC">\x</span><span style="color: #FF0000">00'</span> <span style="color: #990000">|</span> <span style="color: #990000">\</span>
+bbe -e L<span style="color: #990000">\</span> <span style="color: #993399">1</span> -b <span style="color: #FF0000">'/&gt;&lt;/:34'</span> -e <span style="color: #FF0000">'f 2 </span><span style="color: #CC33CC">\x</span><span style="color: #FF0000">00'</span> <span style="color: #990000">|</span> <span style="color: #990000">\</span>
+tac
 </tt></pre></div></div>
 <div class="listingblock">
-<div class="title">overlay</div>
+<div class="title">ps2pdf</div>
 <div class="content"><!-- Generator: GNU source-highlight 3.1.8
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
-<pre><tt>mount -t overlay -olowerdir<span style="color: #990000">=</span>/mnt/loop<span style="color: #990000">,</span><span style="color: #009900">upperdir</span><span style="color: #990000">=</span><span style="color: #009900">$PWD</span><span style="color: #990000">,</span><span style="color: #009900">workdir</span><span style="color: #990000">=</span><span style="color: #009900">$OLDPWD</span> overlay /var/www/debian<span style="color: #990000">/</span></tt></pre></div></div>
+<pre><tt><span style="font-style: italic"><span style="color: #9A1900"># include this in a makefile to convert documents</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># in ${PS2PDF} variable into a ${.DEFAULT_GOAL}.pdf</span></span>
+
+<span style="color: #990000">.</span>INTERMEDIATE<span style="color: #990000">:</span> pdfmarks <span style="color: #009900">${PS2PDF}</span>
+
+ifdef PS2PDF
+<span style="color: #009900">${.DEFAULT_GOAL}</span><span style="color: #990000">.</span>ps<span style="color: #990000">:</span> <span style="color: #009900">${PS2PDF}</span>
+        psmerge <span style="color: #009900">$^</span> <span style="color: #990000">&gt;</span> <span style="color: #009900">$@</span>
+
+<span style="font-style: italic"><span style="color: #9A1900"># gs(1): -q switch, to prevent Ghostscript</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># from writing messages to standard output</span></span>
+<span style="color: #009900">${.DEFAULT_GOAL}</span><span style="color: #990000">.</span>pdf<span style="color: #990000">:</span> pdfmarks <span style="color: #009900">${.DEFAULT_GOAL}</span><span style="color: #990000">.</span>ps
+        gs      -q -sOutputFile<span style="color: #990000">=</span>- -sDEVICE<span style="color: #990000">=</span>pdfwrite <span style="color: #990000">\</span>
+                -dPrinted<span style="color: #990000">=</span><span style="font-weight: bold"><span style="color: #0000FF">false</span></span> -dBATCH -dNOPAUSE <span style="color: #990000">\</span>
+                -dPDFSETTINGS<span style="color: #990000">=</span>/ebook -DSAFER <span style="color: #990000">\</span>
+        <span style="color: #009900">$^</span> <span style="color: #990000">|</span> <span style="color: #990000">.</span>/pdf2md5<span style="color: #990000">.</span>sh <span style="color: #990000">&gt;</span> <span style="color: #009900">$@</span>
+endif
+
+<span style="font-style: italic"><span style="color: #9A1900"># http://milan.kupcevic.net/ghostscript-ps-pdf/</span></span>
+<span style="color: #990000">.</span>ONESHELL<span style="color: #990000">:</span>
+pdfmarks<span style="color: #990000">:</span>
+        cat <span style="color: #990000">&gt;</span> <span style="color: #009900">$@</span> <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'EOF'</span>
+                <span style="color: #990000">[</span> /Title <span style="color: #990000">(</span>Document title<span style="color: #990000">)</span>
+                  /Author <span style="color: #990000">(</span>Author name<span style="color: #990000">)</span>
+                  /Subject <span style="color: #990000">(</span>Subject description<span style="color: #990000">)</span>
+                  /Keywords <span style="color: #990000">(</span>comma<span style="color: #990000">,</span> separated<span style="color: #990000">,</span> keywords<span style="color: #990000">)</span>
+                  /ModDate <span style="color: #990000">(</span>D<span style="color: #990000">:</span><span style="color: #993399">20061204092842</span><span style="color: #990000">)</span>
+                  /CreationDate <span style="color: #990000">(</span>D<span style="color: #990000">:</span><span style="color: #993399">20061204092842</span><span style="color: #990000">)</span>
+                  /Creator <span style="color: #990000">(</span>application name or creator note<span style="color: #990000">)</span>
+                  /Producer <span style="color: #990000">(</span>PDF producer name or note<span style="color: #990000">)</span>
+                  /DOCINFO pdfmark
+        EOF
+
+<span style="color: #990000">%.</span>ps<span style="color: #990000">:</span> <span style="color: #990000">%.</span>pdf
+        <span style="color: #990000">&lt;</span> <span style="color: #009900">$&lt;</span> pdf2ps - - <span style="color: #990000">&gt;</span> <span style="color: #009900">$@</span>
+
+<span style="color: #990000">%.</span>ps<span style="color: #990000">:</span> <span style="color: #990000">%.</span>BMP
+        convert <span style="color: #009900">$&lt;</span> <span style="color: #009900">$@</span>
+
+<span style="color: #990000">%.</span>ps<span style="color: #990000">:</span> <span style="color: #990000">%.</span>tif
+        convert <span style="color: #009900">$&lt;</span> <span style="color: #009900">$@</span>
+</tt></pre></div></div>
 </div>
 </div>
 </div>
@@ -884,7 +920,7 @@ http://www.gnu.org/software/src-highlite -->
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2018-12-04 20:16:01 CET
+ 2018-12-05 01:51:32 CET
 </div>
 </div>
 </body>
