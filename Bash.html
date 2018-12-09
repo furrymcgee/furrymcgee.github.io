@@ -850,6 +850,16 @@ by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
 <pre><tt><span style="color: #990000">(</span> { <span style="font-weight: bold"><span style="color: #0000FF">exec</span></span> <span style="color: #993399">0</span><span style="color: #990000">&gt;&amp;</span>-  <span style="color: #993399">3</span><span style="color: #990000">&lt;</span> <span style="color: #990000">&lt;(</span>seq <span style="color: #993399">6</span><span style="color: #990000">)</span> <span style="color: #993399">4</span><span style="color: #990000">&gt;&amp;</span><span style="color: #993399">1</span>- <span style="color: #990000">;</span> } <span style="color: #990000">;</span> {  <span style="color: #993399">0</span><span style="color: #990000">&gt;&amp;</span><span style="color: #993399">3</span>- pv -qL <span style="color: #993399">2</span> <span style="color: #990000">&gt;&amp;</span><span style="color: #993399">4</span>- <span style="color: #990000">;</span> } <span style="color: #990000">;</span> <span style="font-weight: bold"><span style="color: #0000FF">exec</span></span> <span style="color: #990000">&gt;&amp;</span><span style="color: #993399">3</span>-  <span style="color: #990000">;</span> ls /proc<span style="color: #990000">/</span><span style="color: #009900">$BASHPID</span>/fd <span style="color: #990000">&gt;&amp;</span><span style="color: #993399">4</span>-  <span style="color: #990000">)</span></tt></pre></div></div>
+<div class="paragraph"><p>File descriptors are closed in sudo by default.
+This can be changed with sudo --close-from=64 after
+modifying /etc/sudoers configuration.
+./etc/sudoers.d/override</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>Defaults closefrom_override</tt></pre></div></div>
 <div class="paragraph"><p>Some examples with file descriptor and process substitution.
 Educational example of file descriptor and process substitution
 The example uses a subshell with input from a here document.
@@ -1231,7 +1241,7 @@ http://www.gnu.org/software/src-highlite -->
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2018-11-28 11:53:13 CET
+ 2018-12-09 23:03:48 CET
 </div>
 </div>
 </body>

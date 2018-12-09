@@ -770,16 +770,16 @@ by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
 <pre><tt><span style="font-style: italic"><span style="color: #9A1900">#!/bin/bash</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># DEBIAN_FRONTEND=noninteractive apt install --yes --no-install-recommends qemu kvmtool bridge-utils util-linux mount btrfs-progs</span></span>
+<span style="color: #009900">DEBIAN_FRONTEND</span><span style="color: #990000">=</span>noninteractive apt install --yes --no-install-recommends qemu kvmtool bridge-utils util-linux mount btrfs-progs qemu-utils at
 
 <span style="font-weight: bold"><span style="color: #0000FF">shopt</span></span> -s nullglob
 
 cd <span style="color: #009900">$(</span>mktemp -d<span style="color: #990000">)</span> <span style="color: #990000">&amp;&amp;</span> cd <span style="color: #990000">..</span>
 
 <span style="font-style: italic"><span style="color: #9A1900"># openSUSE or Devuan</span></span>
-wget --continue --no-check-certificate <span style="color: #990000">\</span>
-        https<span style="color: #990000">:</span>//mirror<span style="color: #990000">.</span>leaseweb<span style="color: #990000">.</span>com/devuan/devuan_ascii/virtual/devuan_ascii_2<span style="color: #990000">.</span><span style="color: #993399">0</span><span style="color: #990000">.</span>0_amd64_qemu<span style="color: #990000">.</span>qcow2<span style="color: #990000">.</span>xz
-<span style="font-style: italic"><span style="color: #9A1900">#       http://download.opensuse.org/distribution/openSUSE-current/jeos/openSUSE-Leap-15.0-JeOS.x86_64-15.0.1-kvm-and-xen-Snapshot20.99.qcow2</span></span>
+<span style="color: #990000">:</span> wget --continue --no-check-certificate <span style="color: #990000">\</span>
+        http<span style="color: #990000">:</span>//download<span style="color: #990000">.</span>opensuse<span style="color: #990000">.</span>org/distribution/openSUSE-current/jeos/openSUSE-Leap-<span style="color: #993399">15.0</span>-JeOS<span style="color: #990000">.</span>x86_64-<span style="color: #993399">15.0</span><span style="color: #990000">.</span><span style="color: #993399">1</span>-kvm-and-xen-Snapshot<span style="color: #993399">20.99</span><span style="color: #990000">.</span>qcow2
+        <span style="font-style: italic"><span style="color: #9A1900"># https://mirror.leaseweb.com/devuan/devuan_ascii/virtual/devuan_ascii_2.0.0_amd64_qemu.qcow2.xz</span></span>
         <span style="font-style: italic"><span style="color: #9A1900"># http://download.opensuse.org/tumbleweed/iso/openSUSE-Tumbleweed-KDE-Live-x86_64-Snapshot20181112-Media.iso || true</span></span>
 
 <span style="color: #990000">[</span> openSUSE<span style="color: #990000">*</span>iso <span style="color: #990000">]</span> <span style="color: #990000">&amp;&amp;</span> {
@@ -814,7 +814,7 @@ losetup --find --show --partscan rootfs<span style="color: #990000">.</span>img 
                         losetup -d <span style="color: #009900">$REPLY</span>
         <span style="font-weight: bold"><span style="color: #0000FF">done</span></span>
 
-at -M NOW<span style="color: #990000">+</span>1min <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'EOF'</span>
+at NOW<span style="color: #990000">+</span>1min <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'EOF'</span>
         sysctl net<span style="color: #990000">.</span>ipv4<span style="color: #990000">.</span><span style="color: #009900">ip_forward</span><span style="color: #990000">=</span><span style="color: #993399">1</span>
         ifconfig tap0 <span style="color: #993399">0</span>
         brctl addif br0 tap0 eth0
