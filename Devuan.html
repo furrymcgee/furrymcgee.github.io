@@ -868,9 +868,9 @@ cd /tmp
         cat <span style="color: #990000">&gt;</span> /etc/apt/sources<span style="color: #990000">.</span>list <span style="color: #990000">&lt;&lt;</span>-EOF
                 <span style="font-style: italic"><span style="color: #9A1900">#deb ftp://localhost/debian ascii main</span></span>
                 <span style="font-style: italic"><span style="color: #9A1900">#deb-src ftp://localhost/debian ascii main</span></span>
-                <span style="font-style: italic"><span style="color: #9A1900">#deb http://deb.devuan.org/merged ascii main</span></span>
+                deb http<span style="color: #990000">:</span>//deb<span style="color: #990000">.</span>devuan<span style="color: #990000">.</span>org/merged ascii main
                 <span style="font-style: italic"><span style="color: #9A1900">#deb-src http://deb.devuan.org/merged ascii main</span></span>
-                deb http<span style="color: #990000">:</span>//deb<span style="color: #990000">.</span>devuan<span style="color: #990000">.</span>org/merged testing main
+                <span style="font-style: italic"><span style="color: #9A1900">#deb http://deb.devuan.org/merged testing main</span></span>
                 <span style="font-style: italic"><span style="color: #9A1900">#deb-src http://deb.devuan.org/merged testing main</span></span>
         EOF
 
@@ -881,16 +881,18 @@ cd /tmp
                 <span style="font-weight: bold"><span style="color: #0000FF">set</span></span> paste
         EOF
 
-        apt-get update <span style="color: #990000">&amp;&amp;</span>
-        apt-get purge --yes --allow-remove-essential sysvinit-core <span style="color: #990000">&amp;&amp;</span>
-        apt-get install --yes runit-init <span style="color: #990000">||</span>
-        <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span> <span style="color: #993399">1</span>
+        apt-get update
+        <span style="color: #990000">:</span> <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'SKIP'</span>
+                apt-get purge --yes --allow-remove-essential sysvinit-core <span style="color: #990000">&amp;&amp;</span>
+                apt-get install --yes runit-init <span style="color: #990000">||</span>
+                <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span> <span style="color: #993399">1</span>
+        SKIP
 
+                <span style="font-style: italic"><span style="color: #9A1900"># --target-release=t \</span></span>
+                <span style="font-style: italic"><span style="color: #9A1900"># --option=APT::Default-Release=ascii</span></span>
         <span style="color: #009900">DEBIAN_FRONTEND</span><span style="color: #990000">=</span>noninteractive <span style="color: #990000">\</span>
         xargs <span style="color: #990000">&lt;&lt;</span>-EOF <span style="color: #990000">\</span>
         apt-get install --yes <span style="color: #990000">\</span>
-                --target-release<span style="color: #990000">=</span>testing <span style="color: #990000">\</span>
-                --option<span style="color: #990000">=</span>APT<span style="color: #990000">::</span>Default-Release<span style="color: #990000">=</span>testing
                 alsa-utils
                 apt-utils
                 binutils
@@ -931,7 +933,6 @@ cd /tmp
                 ntp
                 parted
                 rsync
-                runit-init
                 schroot
                 screen
                 strace
@@ -1312,7 +1313,7 @@ EOF
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2018-12-16 19:41:31 CET
+ 2018-12-17 17:52:25 CET
 </div>
 </div>
 </body>

@@ -21,19 +21,21 @@ wiki/documentation/AsciiDoc.html: wiki/Wiki.256.png
 index.html: README.html \
 	wiki/Wiki.html \
 	wiki/cpp/Cpp.html \
-	wiki/database/SQLite.html \
-	wiki/linux/Debian.html \
-	wiki/linux/Devuan.html \
-	wiki/linux/SUSE.html \
-	wiki/linux/Samba.html \
+	wiki/databases/SQLite.html \
+	wiki/development/Git.html \
+	wiki/development/Jenkins.html \
+	wiki/development/Maven.html \
+	wiki/distribution/Debian.html \
+	wiki/distribution/Devuan.html \
+	wiki/distribution/SUSE.html \
+	wiki/distribution/Samba.html \
 	wiki/documentation/AsciiDoc.html \
 	wiki/documentation/Make.html \
-	wiki/git/Git.html \
 	wiki/java/Java.html \
 	wiki/perl/Perl.html \
-	wiki/qemu/QEMU.html \
-	wiki/qemu/VirtualXPVHD.html \
 	wiki/shell/Bash.html \
+	wiki/virtualization/QEMU.html \
+	wiki/virtualization/VirtualXPVHD.html \
 	wiki/xml/XML.html
 	cp $^ . 2>&- || cp $< index.html
 

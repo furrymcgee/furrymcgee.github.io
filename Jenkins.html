@@ -736,15 +736,14 @@ asciidoc.install();
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="_samba">Samba</h2>
+<h2 id="_jenkins">Jenkins</h2>
 <div class="sectionbody">
-<div class="paragraph"><p>The Samba project provides tools for Linux/Windows interoperability.</p></div>
-<div class="sect2">
-<h3 id="_windows_ad_and_smb_cifs_fileserver_for_unix">Windows AD and SMB/CIFS fileserver for UNIX</h3>
-<div class="paragraph"><p>Samba server with debootstrap and KVM</p></div>
-<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>Jenkins is a build and continious integration tool.
+The build server can be combined with Maven for Java and Samba tools.</p></div>
+<div class="paragraph"><p><a href="./Java.html">Java</a>
+<a href="./Samba.html">Samba</a></p></div>
 <div class="listingblock">
-<div class="title">Samba</div>
+<div class="title">appliance</div>
 <div class="content"><!-- Generator: GNU source-highlight 3.1.8
 by Lorenzo Bettini
 http://www.lorenzobettini.it
@@ -849,7 +848,6 @@ EOT
 
 
 <span style="color: #990000">:</span> /bin/su -l jenkins --shell<span style="color: #990000">=</span>/bin/bash -c <span style="color: #FF0000">'/usr/bin/daemon --name=jenkins --inherit --env=JENKINS_HOME=/var/lib/jenkins --output=/var/log/jenkins/jenkins.log --pidfile=/var/run/jenkins/jenkins.pid -- /bin/java -Djava.awt.headless=true -jar /usr/share/jenkins/jenkins.war --webroot=/var/cache/jenkins/war --httpPort=8080'</span></tt></pre></div></div>
-</div>
 </div>
 </div>
 </div>

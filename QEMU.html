@@ -1171,76 +1171,7 @@ brctl addif br0 tap0 eth0</tt></pre></div></div>
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
-<pre><tt><span style="font-style: italic"><span style="color: #9A1900">#!/bin/sh</span></span>
-<span style="color: #009900">TERM</span><span style="color: #990000">=</span>linux schroot -- bash -e -l -i -x -o vi <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">"EOT"</span>
-        update-alternatives --set editor /usr/bin/vim<span style="color: #990000">.</span>tiny
-        wget -c http<span style="color: #990000">:</span>//deb<span style="color: #990000">.</span>devuan<span style="color: #990000">.</span>org/devuan/pool/main/d/devuan-keyring/devuan-keyring_2017<span style="color: #990000">.</span><span style="color: #993399">10</span><span style="color: #990000">.</span>03_all<span style="color: #990000">.</span>deb
-        dpkg -i devuan-keyring<span style="color: #990000">*</span>
-
-        cat <span style="color: #990000">&gt;</span> /etc/apt/sources<span style="color: #990000">.</span>list <span style="color: #990000">&lt;&lt;</span>-EOF
-                deb http<span style="color: #990000">:</span>//deb<span style="color: #990000">.</span>devuan<span style="color: #990000">.</span>org/merged ascii main
-                deb-src http<span style="color: #990000">:</span>//deb<span style="color: #990000">.</span>devuan<span style="color: #990000">.</span>org/merged ascii main
-                <span style="font-style: italic"><span style="color: #9A1900">#deb http://deb.devuan.org/merged beowulf main</span></span>
-                <span style="font-style: italic"><span style="color: #9A1900">#deb-src http://deb.devuan.org/merged beowulf main</span></span>
-                <span style="font-style: italic"><span style="color: #9A1900">#deb http://deb.devuan.org/merged ceres main</span></span>
-                <span style="font-style: italic"><span style="color: #9A1900">#deb-src http://deb.devuan.org/merged ceres main</span></span>
-        EOF
-
-        apt update
-        apt install --yes supermin kvmtool
-        <span style="color: #009900">DEBIAN_FRONTEND</span><span style="color: #990000">=</span>noninteractive apt install --option<span style="color: #990000">=</span><span style="color: #FF0000">'APT::Get::Download-Only=false'</span> --quiet --assume-yes bash man mount busybox strace ncurses-term ncurses-bin samba smbclient cifs-utils smbldap-tools ldap-utils udhcpc
-
-        bash <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'BASH'</span>
-                supermin --verbose --prepare --use-installed -o supermin<span style="color: #990000">.</span>d busybox mount bash udhcpc strace samba file bsdutils mailutils coreutils tzdata ncurses-bin ncurses-term eudev net-tools hostname elogind smbclient
-                cat <span style="color: #990000">&gt;</span> init <span style="color: #990000">&lt;&lt;</span>EOF
-                <span style="font-style: italic"><span style="color: #9A1900">#!/bin/bash</span></span>
-                <span style="font-style: italic"><span style="color: #9A1900"># users and groups</span></span>
-                groupadd -g <span style="color: #993399">0</span>  root
-                useradd -u <span style="color: #993399">0</span> -g <span style="color: #993399">0</span> -d /root root
-                useradd nobody
-                hostname samba
-                <span style="font-style: italic"><span style="color: #9A1900"># devices</span></span>
-                mknod -m <span style="color: #993399">666</span> /dev/null c <span style="color: #993399">1</span> <span style="color: #993399">3</span>
-                mknod -m <span style="color: #993399">666</span> /dev/zero c <span style="color: #993399">1</span> <span style="color: #993399">5</span>
-                chown root<span style="color: #990000">:</span>root /dev/null /dev/zero
-                mknod -m <span style="color: #993399">666</span> /dev/random c <span style="color: #993399">1</span> <span style="color: #993399">8</span>
-                mknod -m <span style="color: #993399">666</span> /dev/urandom c <span style="color: #993399">1</span> <span style="color: #993399">9</span>
-                chown root<span style="color: #990000">:</span>root /dev/random /dev/urandom
-
-                mount -t proc /proc /proc
-                mount -t sysfs /sys /sys
-                busybox --install -s
-                <span style="font-style: italic"><span style="color: #9A1900"># lo</span></span>
-                ifconfig lo <span style="color: #993399">127.0</span><span style="color: #990000">.</span><span style="color: #993399">0.1</span>
-                ifconfig eth0 up
-                udhcpc eth0
-                ln -sf /usr/share/zoneinfo/UTC /etc/localtime
-                cp /usr/share/samba/smb<span style="color: #990000">.</span>conf /etc/samba/smb<span style="color: #990000">.</span>conf
-                cat <span style="color: #990000">&gt;&gt;</span> /etc/samba/smb<span style="color: #990000">.</span>conf <span style="color: #990000">&lt;&lt;</span><span style="color: #FF0000">'SMB'</span>
-                <span style="color: #990000">[</span>pub<span style="color: #990000">]</span>
-                        comment <span style="color: #990000">=</span> Some useful files
-                        <span style="font-weight: bold"><span style="color: #0000FF">read</span></span> only <span style="color: #990000">=</span> no
-                        path <span style="color: #990000">=</span> /tmp
-                        guest ok <span style="color: #990000">=</span> yes
-                        browsable <span style="color: #990000">=</span> yes
-                        guest account <span style="color: #990000">=</span> nobody
-                        guest only <span style="color: #990000">=</span> yes
-                SMB
-                /etc/init<span style="color: #990000">.</span>d/samba start
-                echo Welcome to supermin<span style="color: #990000">!</span>
-                <span style="font-weight: bold"><span style="color: #0000FF">exec</span></span> bash -i -l -o vi
-                EOF
-
-                chmod <span style="color: #990000">+</span>x init
-                tar zcf supermin<span style="color: #990000">.</span>d/init<span style="color: #990000">.</span>tar<span style="color: #990000">.</span>gz <span style="color: #990000">.</span>/init
-
-                supermin --verbose --build supermin<span style="color: #990000">.</span>d -f ext2 -o appliance<span style="color: #990000">.</span>d
-        BASH
-EOT
-
-<span style="font-weight: bold"><span style="color: #0000FF">exec</span></span> lkvm run -n -k appliance<span style="color: #990000">.</span>d/kernel -i appliance<span style="color: #990000">.</span>d/initrd -d appliance<span style="color: #990000">.</span>d/root -p <span style="color: #FF0000">'root=/dev/vda'</span>
-
-</tt></pre></div></div>
+<pre><tt></tt></pre></div></div>
 <div class="listingblock">
 <div class="title">btrfs</div>
 <div class="content"><!-- Generator: GNU source-highlight 3.1.8
@@ -1328,7 +1259,7 @@ qemu-system-x86_64 --enable-kvm --nographic -cpu host -m <span style="color: #99
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2018-12-16 19:13:47 CET
+ 2018-12-17 17:52:25 CET
 </div>
 </div>
 </body>
