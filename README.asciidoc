@@ -1,6 +1,6 @@
 == Welcome
 
-This is my free developers handbook written in asciidoc.
+This is my free developers handbook written in asciidoc. It started as wiki on GitHub. You find here documentation about my journey through userland of GNU/Linux system. Latest topic is the Devuan based cd image.
 
 .Content
 include::./wiki/_Sidebar.asciidoc[]
