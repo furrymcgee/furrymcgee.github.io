@@ -736,186 +736,186 @@ asciidoc.install();
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="_documentation_with_make">Documentation with Make</h2>
+<h2 id="_apache">Apache</h2>
 <div class="sectionbody">
-<div class="paragraph"><p>Documentation requires conversion of different file formats.
-Asciidoc, Ghostscript and Pandoc are tools to convert documents.
-This is a typical use case for Make tool.</p></div>
-<div class="paragraph"><p>Generation of this Website</p></div>
+<div class="paragraph"><p>Apache is a webserver for git http backend.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="https://www.pitt-pladdy.com/blog/_20160311-131130_0000_Git_on_Smart_HTTP_with_read_write_authentication/">https://www.pitt-pladdy.com/blog/_20160311-131130_0000_Git_on_Smart_HTTP_with_read_write_authentication/</a>
+</p>
+</li>
+</ul></div>
+<div class="sect2">
+<h3 id="_ssl_certificates">SSL Certificates</h3>
+<div class="paragraph"><p>Certificates are used to verify the owner of a website. There are multiple web services for verification. The letsencrypt service is simple to install. Self signed certificates can be used too. Visitors of websites with a self signed certificate get a warning the first time because there is no verification of the certificate. Once the self signed certificate is accepted there is only a warning if the certificate changes. The article on sslshopper has information about self signed certificates.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="https://acme-v01.api.letsencrypt.org">https://acme-v01.api.letsencrypt.org</a>
+</p>
+</li>
+<li>
+<p>
+<a href="https://www.sslshopper.com/article-how-to-create-a-self-signed-certificate.html">https://www.sslshopper.com/article-how-to-create-a-self-signed-certificate.html</a>
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>The following commands can be used to manage ssl certificates on a webserver.
+- <a href="https://certbot.eff.org/lets-encrypt/debianstretch-other">https://certbot.eff.org/lets-encrypt/debianstretch-other</a></p></div>
 <div class="listingblock">
-<div class="title">html</div>
+<div class="title">apache</div>
 <div class="content"><!-- Generator: GNU source-highlight 3.1.8
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
-<pre><tt><span style="color: #990000">%.</span>html<span style="color: #990000">:</span> <span style="color: #990000">%.</span>asciidoc
-        asciidoc -adata-uri -aicondir<span style="color: #990000">=</span><span style="color: #009900">$PWD</span> <span style="color: #009900">$&lt;</span>
+<pre><tt>
+<span style="font-style: italic"><span style="color: #9A1900"># Create a new certificate which overwrites the existing</span></span>
+make-ssl-cert generate-default-snakeoil --force-overwrite
 
-<span style="color: #990000">%.</span>txt<span style="color: #990000">:</span> <span style="color: #990000">%.</span>html
-        w3m <span style="color: #009900">$&lt;</span> <span style="color: #990000">&gt;</span> <span style="color: #009900">$@</span>
+<span style="font-style: italic"><span style="color: #9A1900"># Print contents and fingerprint of certificate</span></span>
+openssl x509 -in /etc/ssl/certs/ssl-cert-snakeoil<span style="color: #990000">.</span>pem -text -noout
+openssl x509 -in /etc/ssl/certs/ssl-cert-snakeoil<span style="color: #990000">.</span>pem -outform der <span style="color: #990000">|</span> openssl dgst -sha<span style="color: #993399">1</span>
 
-<span style="color: #990000">%.</span>png<span style="color: #990000">:</span> <span style="color: #990000">%.</span>html
-        wkhtmltoimage <span style="color: #009900">$&lt;</span> <span style="color: #009900">$@</span>
+<span style="font-style: italic"><span style="color: #9A1900"># disable apache</span></span>
+a2dissite <span style="color: #993399">000</span>-default
 
-<span style="color: #990000">%.</span><span style="color: #993399">256</span><span style="color: #990000">.</span>png<span style="color: #990000">:</span> <span style="color: #990000">%.</span>png
-        convert <span style="color: #009900">$&lt;</span> -scale <span style="color: #993399">256</span> <span style="color: #009900">$@</span>
+<span style="font-style: italic"><span style="color: #9A1900"># Certbot manages certification with letsencrypt</span></span>
+certbot certonly --authenticator standalone --domain <span style="color: #009900">$(hostname)</span>
 
-<span style="color: #990000">.</span>PHONY<span style="color: #990000">:</span> clean
-clean<span style="color: #990000">:</span>
-        find <span style="color: #990000">\(</span> -name <span style="color: #FF0000">'*.html'</span> -o -name <span style="color: #FF0000">'*.png'</span> -o -name <span style="color: #FF0000">'*.txt'</span> <span style="color: #990000">\)</span> -delete
+sed <span style="color: #990000">\</span>
+    -i sites-available/default-ssl<span style="color: #990000">.</span>conf <span style="color: #990000">\</span>
+    -e /ServerAdmin/aServerName<span style="color: #990000">\</span> <span style="color: #009900">$(hostname)</span> <span style="color: #990000">\</span>
+    -e s@/etc/ssl/certs/ssl-cert-snakeoil<span style="color: #990000">.</span>pem@/etc/letsencrypt/live<span style="color: #990000">/</span><span style="color: #009900">$(hostname)</span>/fullchain<span style="color: #990000">.</span>pem@ <span style="color: #990000">\</span>
+    -e s@/etc/ssl/private/ssl-cert-snakeoil<span style="color: #990000">.</span>key@/etc/letsencrypt/live<span style="color: #990000">/</span><span style="color: #009900">$(hostname)</span>/privkey<span style="color: #990000">.</span>pem@ <span style="color: #990000">\</span>
 
-<span style="color: #990000">.</span>DEFAULT_GOAL<span style="color: #990000">:=</span>index<span style="color: #990000">.</span>html
-
-wiki/documentation/AsciiDoc<span style="color: #990000">.</span>html<span style="color: #990000">:</span> wiki/Wiki<span style="color: #990000">.</span><span style="color: #993399">256</span><span style="color: #990000">.</span>png
-
-index<span style="color: #990000">.</span>html<span style="color: #990000">:</span> README<span style="color: #990000">.</span>html <span style="color: #990000">\</span>
-        wiki/Wiki<span style="color: #990000">.</span>html <span style="color: #990000">\</span>
-        wiki/cpp/Cpp<span style="color: #990000">.</span>html <span style="color: #990000">\</span>
-        wiki/databases/SQLite<span style="color: #990000">.</span>html <span style="color: #990000">\</span>
-        wiki/development/Git<span style="color: #990000">.</span>html <span style="color: #990000">\</span>
-        wiki/development/Jenkins<span style="color: #990000">.</span>html <span style="color: #990000">\</span>
-        wiki/development/Maven<span style="color: #990000">.</span>html <span style="color: #990000">\</span>
-        wiki/distribution/Debian<span style="color: #990000">.</span>html <span style="color: #990000">\</span>
-        wiki/distribution/Devuan<span style="color: #990000">.</span>html <span style="color: #990000">\</span>
-        wiki/distribution/SUSE<span style="color: #990000">.</span>html <span style="color: #990000">\</span>
-        wiki/distribution/Samba<span style="color: #990000">.</span>html <span style="color: #990000">\</span>
-        wiki/documentation/AsciiDoc<span style="color: #990000">.</span>html <span style="color: #990000">\</span>
-        wiki/documentation/Make<span style="color: #990000">.</span>html <span style="color: #990000">\</span>
-        wiki/java/Java<span style="color: #990000">.</span>html <span style="color: #990000">\</span>
-        wiki/perl/Perl<span style="color: #990000">.</span>html <span style="color: #990000">\</span>
-        wiki/shell/Bash<span style="color: #990000">.</span>html <span style="color: #990000">\</span>
-        wiki/virtualization/QEMU<span style="color: #990000">.</span>html <span style="color: #990000">\</span>
-        wiki/virtualization/VirtualXPVHD<span style="color: #990000">.</span>html <span style="color: #990000">\</span>
-        wiki/web/Apache<span style="color: #990000">.</span>html <span style="color: #990000">\</span>
-        wiki/xml/XML<span style="color: #990000">.</span>html
-        cp <span style="color: #009900">$^</span> <span style="color: #990000">.</span> <span style="color: #993399">2</span><span style="color: #990000">&gt;&amp;</span>- <span style="color: #990000">||</span> cp <span style="color: #009900">$&lt;</span> index<span style="color: #990000">.</span>html
+a2enmod ssl
+a2enmod authz_groupfile
+a2ensite default-ssl
+systemctl restart apache2
 </tt></pre></div></div>
-<div class="paragraph"><p>Here are some scripts for pdf documents.</p></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_rsa">RSA</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Since RSA developed at MIT in 1977. In the US it was patented until 2000. This requires a pair of private and public keys. A certificate includes the public key and some additional information. SSL is a asynchron encryption implementation of RSA.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="http://www.iusmentis.com/computerprograms/opensourcesoftware/patentrisks/">http://www.iusmentis.com/computerprograms/opensourcesoftware/patentrisks/</a>
+</p>
+</li>
+</ul></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_irc">IRC</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_secure_irc_with_asymmentric_encryption">Secure IRC with asymmentric encryption</h3>
+<div class="paragraph"><p>A secure connection in IRC communicates only to the server.
+Many users connect to same servers without encryption.
+With ngircd its possible to make a personal server.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="file:///usr/share/doc/ngircd/PAM.txt">file:///usr/share/doc/ngircd/PAM.txt</a>
+</p>
+</li>
+<li>
+<p>
+<a href="https://en.wikipedia.org/wiki/RSA_(cryptosystem">https://en.wikipedia.org/wiki/RSA_(cryptosystem</a>)
+</p>
+</li>
+<li>
+<p>
+<a href="https://freenode.net/kb/answer/certfp">https://freenode.net/kb/answer/certfp</a>
+</p>
+</li>
+<li>
+<p>
+<a href="http://lug.oregonstate.edu/blog/irc-and-ssl/">http://lug.oregonstate.edu/blog/irc-and-ssl/</a>
+</p>
+</li>
+<li>
+<p>
+<a href="https://freenode.net/kb/answer/certfp">https://freenode.net/kb/answer/certfp</a>
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.andrews-corner.org/linux/irssi.html">http://www.andrews-corner.org/linux/irssi.html</a>
+</p>
+</li>
+</ul></div>
 <div class="listingblock">
-<div class="title">pandoc</div>
 <div class="content"><!-- Generator: GNU source-highlight 3.1.8
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
-<pre><tt><span style="color: #990000">%.</span>pdf<span style="color: #990000">:</span> <span style="color: #990000">%.</span>md
-        pandoc <span style="color: #009900">$&lt;</span> <span style="color: #990000">\</span>
-                --metadata<span style="color: #990000">=</span><span style="color: #009900">papersize</span><span style="color: #990000">=</span>a4 <span style="color: #990000">\</span>
-                --metadata<span style="color: #990000">=</span><span style="color: #009900">lang</span><span style="color: #990000">=</span>gb <span style="color: #990000">\</span>
-                --metadata<span style="color: #990000">=</span><span style="color: #009900">bookmarks</span><span style="color: #990000">=</span><span style="font-weight: bold"><span style="color: #0000FF">true</span></span> <span style="color: #990000">\</span>
-                --metadata<span style="color: #990000">=</span><span style="color: #009900">colorlinks</span><span style="color: #990000">=</span><span style="font-weight: bold"><span style="color: #0000FF">true</span></span> <span style="color: #990000">\</span>
-                --output <span style="color: #009900">$@</span></tt></pre></div></div>
-<div class="paragraph"><p>This are rules for ps to pdf conversion with gs.</p></div>
+<pre><tt>openssl x509 -in freenode<span style="color: #990000">.</span>pem -outform der <span style="color: #990000">|</span> openssl dgst -sha<span style="color: #993399">256</span>
+openssl req -x<span style="color: #993399">509</span> -new -newkey rsa<span style="color: #990000">:</span><span style="color: #993399">4096</span> -sha<span style="color: #993399">256</span> -days <span style="color: #993399">1000</span> -nodes -out freenode<span style="color: #990000">.</span>pem -keyout freenode<span style="color: #990000">.</span>pem --batch
+/server add -auto -ssl -ssl_cert <span style="color: #990000">~/.</span>irssi/certs/freenode<span style="color: #990000">.</span>pem -network freenode chat<span style="color: #990000">.</span>freenode<span style="color: #990000">.</span>net <span style="color: #993399">6697</span>
+
+<span style="font-style: italic"><span style="color: #9A1900"># Generate private key and a certificate</span></span>
+openssl genrsa -out privkey<span style="color: #990000">.</span>pem <span style="color: #993399">4096</span>
+openssl req -x<span style="color: #993399">509</span> -key <span style="color: #990000">~</span>/privkey<span style="color: #990000">.</span>pem -sha<span style="color: #993399">256</span> -out <span style="color: #990000">~</span>/freenode<span style="color: #990000">.</span>pem -days <span style="color: #993399">7200</span> --batch
+
+<span style="font-style: italic"><span style="color: #9A1900"># Add a new ssl freenode server in irssi.</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># The colon is a shell built in command with no effect.</span></span>
+<span style="color: #990000">:</span> <span style="color: #990000">&lt;&lt;</span>IRSSI
+<span style="font-style: italic"><span style="color: #9A1900"># Replace freenode server with ssl configuration</span></span>
+/SERVER REMOVE chat<span style="color: #990000">.</span>freenode<span style="color: #990000">.</span>net <span style="color: #993399">6667</span> freenode
+/NETWORK REMOVE freenode
+/SERVER ADD -ssl -ssl_verify -ssl_cert <span style="color: #990000">~</span>/freenode<span style="color: #990000">.</span>pem -ssl_pkey <span style="color: #990000">~</span>/privkey<span style="color: #990000">.</span>pem -network freenode chat<span style="color: #990000">.</span>freenode<span style="color: #990000">.</span>net <span style="color: #993399">6697</span>
+/SERVER ADD -ssl -ssl_cert <span style="color: #990000">~</span>/freenode<span style="color: #990000">.</span>pem -ssl_pkey <span style="color: #990000">~</span>/privkey<span style="color: #990000">.</span>pem -network freenode chat<span style="color: #990000">.</span>freenode<span style="color: #990000">.</span>net <span style="color: #993399">6697</span>
+
+<span style="font-style: italic"><span style="color: #9A1900"># The first connection requires registration, identification and certificate</span></span>
+/CONNECT freenode
+/MSG NickServ REGISTER
+/MSG NickServ IDENTIFY
+/MSG NickServ CERT ADD
+IRSSI
+
+<span style="font-style: italic"><span style="color: #9A1900"># Certificate</span></span>
+openssl x509 -in freenode<span style="color: #990000">.</span>pem -text -noout
+
+<span style="font-style: italic"><span style="color: #9A1900"># Fingerprint</span></span>
+openssl x509 -in freenode<span style="color: #990000">.</span>pem -outform der <span style="color: #990000">|</span> openssl dgst -sha<span style="color: #993399">1</span>
+openssl x509 -in freenode<span style="color: #990000">.</span>pem -fingerprint -sha<span style="color: #993399">256</span> -noout
+
+<span style="font-style: italic"><span style="color: #9A1900"># Verify key and certificate</span></span>
+openssl x509 -modulus -noout -in freenode<span style="color: #990000">.</span>pem <span style="color: #990000">|</span> openssl md5
+openssl rsa -modulus -noout -in privkey<span style="color: #990000">.</span>pem <span style="color: #990000">|</span> openssl md5
+
+<span style="font-style: italic"><span style="color: #9A1900"># Fingerprint</span></span>
+openssl x509 -in freenode<span style="color: #990000">.</span>pem -outform der <span style="color: #990000">|</span> sha1sum -b <span style="color: #990000">|</span> cut -d<span style="color: #FF0000">' '</span> -f<span style="color: #993399">1</span>
+
+<span style="font-style: italic"><span style="color: #9A1900"># Private keys and public certificates can be generared in a single step</span></span>
+openssl req -x<span style="color: #993399">509</span> -new -newkey rsa<span style="color: #990000">:</span><span style="color: #993399">4096</span> -sha<span style="color: #993399">256</span> -days <span style="color: #993399">1000</span> -nodes -out freenode<span style="color: #990000">.</span>pem -keyout freenode<span style="color: #990000">.</span>pem --batch</tt></pre></div></div>
+</div>
+<div class="sect2">
+<h3 id="_exim">Exim</h3>
 <div class="listingblock">
-<div class="title">ps2pdf</div>
 <div class="content"><!-- Generator: GNU source-highlight 3.1.8
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
-<pre><tt><span style="font-style: italic"><span style="color: #9A1900"># include this in a makefile to convert documents</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># in ${PS2PDF} variable into a ${.DEFAULT_GOAL}.pdf</span></span>
+<pre><tt><span style="font-style: italic"><span style="color: #9A1900"># Test exim4 ssl and send 'ehlo testing'</span></span>
+openssl s_client -starttls smtp -crlf -connect localhost<span style="color: #990000">:</span><span style="color: #993399">25</span>
+/usr/share/doc/exim<span style="color: #993399">4</span>-base/examples/exim-gencert --batch
 
-<span style="color: #990000">.</span>INTERMEDIATE<span style="color: #990000">:</span> pdfmarks <span style="color: #009900">${PS2PDF}</span>
+- file<span style="color: #990000">:</span>///usr/share/doc/exim<span style="color: #993399">4</span>-base<span style="color: #990000">/</span>
+- file<span style="color: #990000">:</span>///etc/exim<span style="color: #993399">4</span>/conf<span style="color: #990000">.</span>d/auth<span style="color: #990000">/</span>30_exim4-config_examples
 
-ifdef PS2PDF
-<span style="color: #009900">${.DEFAULT_GOAL}</span><span style="color: #990000">.</span>ps<span style="color: #990000">:</span> <span style="color: #009900">${PS2PDF}</span>
-        psmerge <span style="color: #009900">$^</span> <span style="color: #990000">&gt;</span> <span style="color: #009900">$@</span>
-
-<span style="font-style: italic"><span style="color: #9A1900"># gs(1): -q switch, to prevent Ghostscript</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># from writing messages to standard output</span></span>
-<span style="color: #009900">${.DEFAULT_GOAL}</span><span style="color: #990000">.</span>pdf<span style="color: #990000">:</span> pdfmarks <span style="color: #009900">${.DEFAULT_GOAL}</span><span style="color: #990000">.</span>ps
-        gs      -q -sOutputFile<span style="color: #990000">=</span>- -sDEVICE<span style="color: #990000">=</span>pdfwrite <span style="color: #990000">\</span>
-                -dPrinted<span style="color: #990000">=</span><span style="font-weight: bold"><span style="color: #0000FF">false</span></span> -dBATCH -dNOPAUSE <span style="color: #990000">\</span>
-                -dPDFSETTINGS<span style="color: #990000">=</span>/ebook -DSAFER <span style="color: #990000">\</span>
-        <span style="color: #009900">$^</span> <span style="color: #990000">|</span> <span style="color: #990000">.</span>/pdf2md5<span style="color: #990000">.</span>sh <span style="color: #990000">&gt;</span> <span style="color: #009900">$@</span>
-endif
-
-<span style="font-style: italic"><span style="color: #9A1900"># http://milan.kupcevic.net/ghostscript-ps-pdf/</span></span>
-<span style="color: #990000">.</span>ONESHELL<span style="color: #990000">:</span>
-pdfmarks<span style="color: #990000">:</span>
-        cat <span style="color: #990000">&gt;</span> <span style="color: #009900">$@</span> <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'EOF'</span>
-                <span style="color: #990000">[</span> /Title <span style="color: #990000">(</span>Document title<span style="color: #990000">)</span>
-                  /Author <span style="color: #990000">(</span>Author name<span style="color: #990000">)</span>
-                  /Subject <span style="color: #990000">(</span>Subject description<span style="color: #990000">)</span>
-                  /Keywords <span style="color: #990000">(</span>comma<span style="color: #990000">,</span> separated<span style="color: #990000">,</span> keywords<span style="color: #990000">)</span>
-                  /ModDate <span style="color: #990000">(</span>D<span style="color: #990000">:</span><span style="color: #993399">20061204092842</span><span style="color: #990000">)</span>
-                  /CreationDate <span style="color: #990000">(</span>D<span style="color: #990000">:</span><span style="color: #993399">20061204092842</span><span style="color: #990000">)</span>
-                  /Creator <span style="color: #990000">(</span>application name or creator note<span style="color: #990000">)</span>
-                  /Producer <span style="color: #990000">(</span>PDF producer name or note<span style="color: #990000">)</span>
-                  /DOCINFO pdfmark
-        EOF
-
-<span style="color: #990000">%.</span>ps<span style="color: #990000">:</span> <span style="color: #990000">%.</span>pdf
-        <span style="color: #990000">&lt;</span> <span style="color: #009900">$&lt;</span> pdf2ps - - <span style="color: #990000">&gt;</span> <span style="color: #009900">$@</span>
-
-<span style="color: #990000">%.</span>ps<span style="color: #990000">:</span> <span style="color: #990000">%.</span>BMP
-        convert <span style="color: #009900">$&lt;</span> <span style="color: #009900">$@</span>
-
-<span style="color: #990000">%.</span>ps<span style="color: #990000">:</span> <span style="color: #990000">%.</span>tif
-        convert <span style="color: #009900">$&lt;</span> <span style="color: #009900">$@</span>
-</tt></pre></div></div>
-<div class="paragraph"><p>This script writes zeros into uuid.</p></div>
-<div class="listingblock">
-<div class="title">pdf2md5</div>
-<div class="content"><!-- Generator: GNU source-highlight 3.1.8
-by Lorenzo Bettini
-http://www.lorenzobettini.it
-http://www.gnu.org/software/src-highlite -->
-<pre><tt><span style="font-style: italic"><span style="color: #9A1900">#!/bin/sh</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># erase uuid and trailer in a pdf document</span></span>
-bbe -b /uuid<span style="color: #990000">:/:</span><span style="color: #993399">41</span> -e <span style="color: #FF0000">'f 5 </span><span style="color: #CC33CC">\x</span><span style="color: #FF0000">00'</span> <span style="color: #990000">|</span> <span style="color: #990000">\</span>
-tac <span style="color: #990000">|</span> <span style="color: #990000">\</span>
-bbe -e L<span style="color: #990000">\</span> <span style="color: #993399">1</span> -b <span style="color: #FF0000">'/[&lt;/:34'</span> -e <span style="color: #FF0000">'f 2 </span><span style="color: #CC33CC">\x</span><span style="color: #FF0000">00'</span> <span style="color: #990000">|</span> <span style="color: #990000">\</span>
-bbe -e L<span style="color: #990000">\</span> <span style="color: #993399">1</span> -b <span style="color: #FF0000">'/&gt;&lt;/:34'</span> -e <span style="color: #FF0000">'f 2 </span><span style="color: #CC33CC">\x</span><span style="color: #FF0000">00'</span> <span style="color: #990000">|</span> <span style="color: #990000">\</span>
-tac
-</tt></pre></div></div>
-<div class="listingblock">
-<div class="title">ps2pdf</div>
-<div class="content"><!-- Generator: GNU source-highlight 3.1.8
-by Lorenzo Bettini
-http://www.lorenzobettini.it
-http://www.gnu.org/software/src-highlite -->
-<pre><tt><span style="font-style: italic"><span style="color: #9A1900"># include this in a makefile to convert documents</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># in ${PS2PDF} variable into a ${.DEFAULT_GOAL}.pdf</span></span>
-
-<span style="color: #990000">.</span>INTERMEDIATE<span style="color: #990000">:</span> pdfmarks <span style="color: #009900">${PS2PDF}</span>
-
-ifdef PS2PDF
-<span style="color: #009900">${.DEFAULT_GOAL}</span><span style="color: #990000">.</span>ps<span style="color: #990000">:</span> <span style="color: #009900">${PS2PDF}</span>
-        psmerge <span style="color: #009900">$^</span> <span style="color: #990000">&gt;</span> <span style="color: #009900">$@</span>
-
-<span style="font-style: italic"><span style="color: #9A1900"># gs(1): -q switch, to prevent Ghostscript</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># from writing messages to standard output</span></span>
-<span style="color: #009900">${.DEFAULT_GOAL}</span><span style="color: #990000">.</span>pdf<span style="color: #990000">:</span> pdfmarks <span style="color: #009900">${.DEFAULT_GOAL}</span><span style="color: #990000">.</span>ps
-        gs      -q -sOutputFile<span style="color: #990000">=</span>- -sDEVICE<span style="color: #990000">=</span>pdfwrite <span style="color: #990000">\</span>
-                -dPrinted<span style="color: #990000">=</span><span style="font-weight: bold"><span style="color: #0000FF">false</span></span> -dBATCH -dNOPAUSE <span style="color: #990000">\</span>
-                -dPDFSETTINGS<span style="color: #990000">=</span>/ebook -DSAFER <span style="color: #990000">\</span>
-        <span style="color: #009900">$^</span> <span style="color: #990000">|</span> <span style="color: #990000">.</span>/pdf2md5<span style="color: #990000">.</span>sh <span style="color: #990000">&gt;</span> <span style="color: #009900">$@</span>
-endif
-
-<span style="font-style: italic"><span style="color: #9A1900"># http://milan.kupcevic.net/ghostscript-ps-pdf/</span></span>
-<span style="color: #990000">.</span>ONESHELL<span style="color: #990000">:</span>
-pdfmarks<span style="color: #990000">:</span>
-        cat <span style="color: #990000">&gt;</span> <span style="color: #009900">$@</span> <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'EOF'</span>
-                <span style="color: #990000">[</span> /Title <span style="color: #990000">(</span>Document title<span style="color: #990000">)</span>
-                  /Author <span style="color: #990000">(</span>Author name<span style="color: #990000">)</span>
-                  /Subject <span style="color: #990000">(</span>Subject description<span style="color: #990000">)</span>
-                  /Keywords <span style="color: #990000">(</span>comma<span style="color: #990000">,</span> separated<span style="color: #990000">,</span> keywords<span style="color: #990000">)</span>
-                  /ModDate <span style="color: #990000">(</span>D<span style="color: #990000">:</span><span style="color: #993399">20061204092842</span><span style="color: #990000">)</span>
-                  /CreationDate <span style="color: #990000">(</span>D<span style="color: #990000">:</span><span style="color: #993399">20061204092842</span><span style="color: #990000">)</span>
-                  /Creator <span style="color: #990000">(</span>application name or creator note<span style="color: #990000">)</span>
-                  /Producer <span style="color: #990000">(</span>PDF producer name or note<span style="color: #990000">)</span>
-                  /DOCINFO pdfmark
-        EOF
-
-<span style="color: #990000">%.</span>ps<span style="color: #990000">:</span> <span style="color: #990000">%.</span>pdf
-        <span style="color: #990000">&lt;</span> <span style="color: #009900">$&lt;</span> pdf2ps - - <span style="color: #990000">&gt;</span> <span style="color: #009900">$@</span>
-
-<span style="color: #990000">%.</span>ps<span style="color: #990000">:</span> <span style="color: #990000">%.</span>BMP
-        convert <span style="color: #009900">$&lt;</span> <span style="color: #009900">$@</span>
-
-<span style="color: #990000">%.</span>ps<span style="color: #990000">:</span> <span style="color: #990000">%.</span>tif
-        convert <span style="color: #009900">$&lt;</span> <span style="color: #009900">$@</span>
-</tt></pre></div></div>
+cat <span style="color: #990000">&gt;</span> /etc/exim<span style="color: #993399">4</span>/exim<span style="color: #993399">4</span><span style="color: #990000">.</span>conf<span style="color: #990000">.</span>localmacros <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'EOF'</span>
+        <span style="color: #009900">MAIN_TLS_ENABLE</span><span style="color: #990000">=</span><span style="color: #993399">1</span>
+        <span style="font-style: italic"><span style="color: #9A1900"># MAIN_TLS_VERIFY_HOSTS=*</span></span>
+        <span style="color: #009900">MAIN_LOG_SELECTOR</span><span style="color: #990000">=+</span>all -subject -arguments <span style="color: #990000">+</span>tls_cipher
+EOF</tt></pre></div></div>
+</div>
 </div>
 </div>
 </div>
@@ -923,7 +923,7 @@ pdfmarks<span style="color: #990000">:</span>
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2018-12-09 23:03:48 CET
+ 2018-12-26 12:35:56 CET
 </div>
 </div>
 </body>
