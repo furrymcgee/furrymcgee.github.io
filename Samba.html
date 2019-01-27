@@ -749,106 +749,198 @@ asciidoc.install();
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
-<pre><tt><span style="font-style: italic"><span style="color: #9A1900">#!/bin/sh</span></span>
-<span style="color: #009900">TERM</span><span style="color: #990000">=</span>linux schroot -- bash -e -l -i -x -o vi <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">"EOT"</span>
-        update-alternatives --set editor /usr/bin/vim<span style="color: #990000">.</span>tiny
-        <span style="color: #990000">:</span> <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'SKIP'</span>
-        wget -c http<span style="color: #990000">:</span>//deb<span style="color: #990000">.</span>devuan<span style="color: #990000">.</span>org/devuan/pool/main/d/devuan-keyring/devuan-keyring_2017<span style="color: #990000">.</span><span style="color: #993399">10</span><span style="color: #990000">.</span>03_all<span style="color: #990000">.</span>deb
-        dpkg -i devuan-keyring<span style="color: #990000">*</span>
+<pre><tt><span style="font-style: italic"><span style="color: #9A1900">#!/bin/bash</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># Create the appliance in a schroot and</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># configures the shellinabox daemon.</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># Process edits variable SHELLINABOX_ARGS which</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># will be evaluated by the daemon at runtime.</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># File descriptors sorted in reverse order</span></span>
+<span style="color: #993399">0</span><span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'BASH'</span> <span style="color: #990000">\</span>
+<span style="color: #993399">3</span><span style="color: #990000">&lt;&amp;</span><span style="color: #993399">0</span> <span style="color: #990000">\</span>
+<span style="color: #993399">7</span><span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'SED'</span> <span style="color: #990000">\</span>
+<span style="color: #993399">5</span><span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'JENKINS'</span> <span style="color: #990000">\</span>
+<span style="color: #993399">6</span><span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'LKVM'</span> <span style="color: #990000">\</span>
+<span style="color: #993399">8</span><span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'APPLIANCE'</span> <span style="color: #990000">\</span>
+bash -ex
+        bash -x <span style="color: #990000">&lt;&amp;</span><span style="color: #993399">8</span>
 
-        wget -q -O - <span style="color: #990000">\</span>
-                https<span style="color: #990000">:</span>//pkg<span style="color: #990000">.</span>jenkins<span style="color: #990000">.</span>io/debian/jenkins<span style="color: #990000">.</span>io<span style="color: #990000">.</span>key <span style="color: #990000">|</span>
-        apt-key add -
+        <span style="font-style: italic"><span style="color: #9A1900"># Pipe the lkvm run command into sed script</span></span>
+        <span style="font-style: italic"><span style="color: #9A1900"># The command is executed with shellinabox</span></span>
+        bash -esx <span style="color: #990000">&lt;&amp;</span><span style="color: #993399">7</span> <span style="color: #993399">6</span> <span style="color: #990000">|</span>
+        sed -f - -i /etc/default/shellinabox
 
-        cat <span style="color: #990000">&gt;</span> /etc/apt/sources<span style="color: #990000">.</span>list <span style="color: #990000">&lt;&lt;</span>-EOF
-                deb http<span style="color: #990000">:</span>//pkg<span style="color: #990000">.</span>jenkins<span style="color: #990000">.</span>io/debian binary<span style="color: #990000">/</span>
-                deb http<span style="color: #990000">:</span>//deb<span style="color: #990000">.</span>devuan<span style="color: #990000">.</span>org/merged ascii main
-                deb-src http<span style="color: #990000">:</span>//deb<span style="color: #990000">.</span>devuan<span style="color: #990000">.</span>org/merged ascii main
-                <span style="font-style: italic"><span style="color: #9A1900">#deb http://deb.devuan.org/merged beowulf main</span></span>
-                <span style="font-style: italic"><span style="color: #9A1900">#deb-src http://deb.devuan.org/merged beowulf main</span></span>
-                <span style="font-style: italic"><span style="color: #9A1900">#deb http://deb.devuan.org/merged ceres main</span></span>
-                <span style="font-style: italic"><span style="color: #9A1900">#deb-src http://deb.devuan.org/merged ceres main</span></span>
-        EOF
-        SKIP
+        <span style="font-style: italic"><span style="color: #9A1900"># Create a new supermin appliance</span></span>
+        rm -rvf init appliance<span style="color: #990000">.</span>d
+        cat <span style="color: #990000">&gt;</span> init <span style="color: #990000">&lt;&amp;</span><span style="color: #993399">5</span>
+        chmod <span style="color: #990000">+</span>x init
+        tar zcf supermin<span style="color: #990000">.</span>d/init<span style="color: #990000">.</span>tar<span style="color: #990000">.</span>gz init
+        supermin --verbose --build supermin<span style="color: #990000">.</span>d -f ext2 -o appliance<span style="color: #990000">.</span>d
+BASH
+        <span style="font-style: italic"><span style="color: #9A1900"># This example shows how variable is used</span></span>
+        <span style="font-style: italic"><span style="color: #9A1900"># SHELLINABOX_ARGS="--service=/:shellinabox:shellinabox:HOME:bash"</span></span>
+        <span style="font-style: italic"><span style="color: #9A1900"># eval start-stop-daemon --pid 1 --start --exec /bin/bash -- -c "echo $SHELLINABOX_ARGS"</span></span>
+        <span style="color: #990000">&lt;&amp;</span><span style="color: #009900">$1</span> <span style="color: #990000">\</span>
+        sed <span style="color: #FF0000">'s/</span><span style="color: #CC33CC">\\</span><span style="color: #FF0000">/</span><span style="color: #CC33CC">\\\\\\\\\\\\\\\\</span><span style="color: #FF0000">/g'</span><span style="color: #990000">|</span>
+        xargs -<span style="color: #993399">0</span> <span style="font-weight: bold"><span style="color: #0000FF">printf</span></span> <span style="color: #FF0000">'bash</span><span style="color: #CC33CC">\\\\</span><span style="color: #FF0000"> -c</span><span style="color: #CC33CC">\\\\</span><span style="color: #FF0000"> </span><span style="color: #CC33CC">\\\\\\\\\\\\</span><span style="color: #FF0000">"%q</span><span style="color: #CC33CC">\\\\\\\\\\\\</span><span style="color: #FF0000">"'</span><span style="color: #990000">|</span>
+        xargs -<span style="color: #993399">0</span> <span style="font-weight: bold"><span style="color: #0000FF">printf</span></span> <span style="color: #FF0000">"</span><span style="color: #CC33CC">\$</span><span style="color: #FF0000">s_=.*_=</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">--service=/:root:root:HOME:%s</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">_"</span><span style="color: #990000">|</span>
+        sed <span style="color: #FF0000">'s/</span><span style="color: #CC33CC">\\</span><span style="color: #FF0000">n/</span><span style="color: #CC33CC">\\</span><span style="color: #FF0000">&amp;/g'</span>
+SED
+        <span style="font-style: italic"><span style="color: #9A1900">#!/bin/sh</span></span>
+        <span style="font-style: italic"><span style="color: #9A1900"># lkvm init script</span></span>
+        hostname samba
+        hostname <span style="color: #990000">&gt;</span> /etc/hostname
+        cat <span style="color: #990000">&gt;</span> /etc/hostname <span style="color: #990000">&lt;&lt;</span>-HOSTS
+        <span style="color: #993399">127.0</span><span style="color: #990000">.</span><span style="color: #993399">0.1</span>       <span style="color: #009900">$(hostname)</span>
+        HOSTS
 
-        apt-get update
+        <span style="font-style: italic"><span style="color: #9A1900"># users and groups etc</span></span>
+        touch /etc/shadow
+        groupadd --gid<span style="color: #990000">=</span><span style="color: #993399">0</span> root
+        groupadd --gid<span style="color: #990000">=</span><span style="color: #993399">1</span> daemon
+        groupadd adm
+        groupadd tty
+        useradd --gid<span style="color: #990000">=</span><span style="color: #993399">0</span> --uid<span style="color: #990000">=</span><span style="color: #993399">0</span> --home-dir<span style="color: #990000">=</span>/root --shell<span style="color: #990000">=</span>/bin/bash root
+        useradd --gid<span style="color: #990000">=</span><span style="color: #993399">1</span> --uid<span style="color: #990000">=</span><span style="color: #993399">1</span> --home-dir<span style="color: #990000">=</span>/usr/sbin daemon
+        useradd nobody
 
-        apt install --yes supermin kvmtool
-        <span style="color: #009900">DEBIAN_FRONTEND</span><span style="color: #990000">=</span>noninteractive apt install --option<span style="color: #990000">=</span><span style="color: #FF0000">'APT::Get::Download-Only=false'</span> --quiet --assume-yes bash man mount busybox strace ncurses-term ncurses-bin samba smbclient cifs-utils smbldap-tools ldap-utils udhcpc jenkins default-jre stow sysvinit-utils util-linux login libc-bin libpam-runtime libpam0g apache2-utils
+        mkdir /var/ftp
+        mkdir --mode<span style="color: #990000">=</span><span style="color: #993399">555</span> /var/ftp
+        useradd --home-dir<span style="color: #990000">=</span>/var/ftp ftp
 
-                supermin --verbose --prepare --use-installed -o supermin<span style="color: #990000">.</span>d busybox mount bash udhcpc strace samba file bsdutils mailutils coreutils tzdata ncurses-bin ncurses-term eudev net-tools hostname elogind smbclient jenkins default-jre stow sysvinit-utils util-linux login libc-bin libpam-runtime libpam0g apache2-utils
+        <span style="font-style: italic"><span style="color: #9A1900"># devices</span></span>
+        <span style="font-style: italic"><span style="color: #9A1900"># http://www.tldp.org/LDP/lfs/LFS-BOOK-6.1.1-HTML/chapter06/devices.html</span></span>
+        mknod -m <span style="color: #993399">600</span> /dev/console c <span style="color: #993399">5</span> <span style="color: #993399">1</span>
+        mknod -m <span style="color: #993399">666</span> /dev/null c <span style="color: #993399">1</span> <span style="color: #993399">3</span>
+        mknod -m <span style="color: #993399">666</span> /dev/ptmx c <span style="color: #993399">5</span> <span style="color: #993399">2</span>
+        mknod -m <span style="color: #993399">666</span> /dev/random c <span style="color: #993399">1</span> <span style="color: #993399">8</span>
+        mknod -m <span style="color: #993399">666</span> /dev/tty c <span style="color: #993399">5</span> <span style="color: #993399">0</span>
+        mknod -m <span style="color: #993399">666</span> /dev/urandom c <span style="color: #993399">1</span> <span style="color: #993399">9</span>
+        mknod -m <span style="color: #993399">666</span> /dev/zero c <span style="color: #993399">1</span> <span style="color: #993399">5</span>
+        chmod <span style="color: #993399">666</span> /dev/null /dev/zero
+        chown root<span style="color: #990000">:</span>tty /dev/console /dev/ptmx /dev/tty
+        chown root<span style="color: #990000">:</span>root /dev/null /dev/zero
+        chown root<span style="color: #990000">:</span>root /dev/random /dev/urandom
 
-        bash -ex <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'BASH'</span>
-                cat <span style="color: #990000">&gt;</span> init <span style="color: #990000">&lt;&lt;</span>EOF
-                        <span style="font-style: italic"><span style="color: #9A1900">#!/bin/bash</span></span>
-                        hostname samba
+        mkdir -v /dev/pts
+        mkdir -v /dev/shm
+        mount -vt devpts -o <span style="color: #009900">gid</span><span style="color: #990000">=</span><span style="color: #993399">4</span><span style="color: #990000">,</span><span style="color: #009900">mode</span><span style="color: #990000">=</span><span style="color: #993399">620</span> none /dev/pts
+        mount -vt tmpfs none /dev/shm
+        mount -vt proc /proc /proc
+        mount -vt sysfs /sys /sys
 
-                        <span style="font-style: italic"><span style="color: #9A1900"># users and groups</span></span>
-                        touch /etc/shadow
-                        groupadd --gid<span style="color: #990000">=</span><span style="color: #993399">0</span> root
-                        useradd --gid<span style="color: #990000">=</span><span style="color: #993399">0</span> --uid<span style="color: #990000">=</span><span style="color: #993399">0</span> --base-dir<span style="color: #990000">=/</span> --shell<span style="color: #990000">=</span>/bin/bash root
-                        useradd nobody
-                        useradd jenkins --create-home
-                        chown -R jenkins /var<span style="color: #990000">/</span>{cache<span style="color: #990000">,</span>lib<span style="color: #990000">,</span>log}/jenkins
-                        pam-auth-update --package --force
+        <span style="font-style: italic"><span style="color: #9A1900"># init</span></span>
+        haveged <span style="color: #990000">&amp;&amp;</span> sleep <span style="color: #993399">2</span>
+        busybox --install -s
+        stow --dir<span style="color: #990000">=</span>/usr/lib/jvm/default-java --target<span style="color: #990000">=</span>/usr/bin bin
 
-                        <span style="font-style: italic"><span style="color: #9A1900"># http://www.tldp.org/LDP/lfs/LFS-BOOK-6.1.1-HTML/chapter06/devices.html</span></span>
-                        mknod -m <span style="color: #993399">600</span> /dev/console c <span style="color: #993399">5</span> <span style="color: #993399">1</span>
-                        <span style="font-style: italic"><span style="color: #9A1900">#mknod -m 666 /dev/null c 1 3</span></span>
-                        mknod -m <span style="color: #993399">666</span> /dev/ptmx c <span style="color: #993399">5</span> <span style="color: #993399">2</span>
-                        mknod -m <span style="color: #993399">666</span> /dev/random c <span style="color: #993399">1</span> <span style="color: #993399">8</span>
-                        mknod -m <span style="color: #993399">666</span> /dev/tty c <span style="color: #993399">5</span> <span style="color: #993399">0</span>
-                        mknod -m <span style="color: #993399">666</span> /dev/urandom c <span style="color: #993399">1</span> <span style="color: #993399">9</span>
-                        mknod -m <span style="color: #993399">666</span> /dev/zero c <span style="color: #993399">1</span> <span style="color: #993399">5</span>
-                        chmod <span style="color: #993399">666</span> /dev/null /dev/zero
-                        <span style="font-style: italic"><span style="color: #9A1900">#chown root:root /dev/null /dev/zero</span></span>
-                        chown root<span style="color: #990000">:</span>root /dev/random /dev/urandom
+        echo /var/spool/cron/atjobs<span style="color: #990000">/.</span>SEQ <span style="color: #990000">|</span>
+        <span style="font-weight: bold"><span style="color: #0000FF">while</span></span> <span style="font-weight: bold"><span style="color: #0000FF">read</span></span> SEQFILE
+        <span style="font-weight: bold"><span style="color: #0000FF">do</span></span>
+        <span style="font-weight: bold"><span style="color: #0000FF">if</span></span> <span style="color: #990000">[</span> <span style="color: #990000">!</span> -f <span style="color: #009900">$SEQFILE</span> <span style="color: #990000">];</span> <span style="font-weight: bold"><span style="color: #0000FF">then</span></span>
+                echo <span style="color: #993399">0</span> <span style="color: #990000">&gt;</span> <span style="color: #009900">$SEQFILE</span>
+                chmod <span style="color: #993399">600</span> <span style="color: #009900">$SEQFILE</span>
+                chown daemon<span style="color: #990000">:</span>daemon <span style="color: #009900">$SEQFILE</span>
+        <span style="font-weight: bold"><span style="color: #0000FF">fi</span></span>
+        <span style="font-weight: bold"><span style="color: #0000FF">done</span></span>
 
-                        mkdir -v /dev/pts
-                        mkdir -v /dev/shm
-                        mount -vt devpts -o <span style="color: #009900">gid</span><span style="color: #990000">=</span><span style="color: #993399">4</span><span style="color: #990000">,</span><span style="color: #009900">mode</span><span style="color: #990000">=</span><span style="color: #993399">620</span> none /dev/pts
-                        mount -vt tmpfs none /dev/shm
-                        mount -vt proc /proc /proc
-                        mount -vt sysfs /sys /sys
+        ifconfig lo <span style="color: #993399">127.0</span><span style="color: #990000">.</span><span style="color: #993399">0.1</span>
+        ifconfig eth0 up
+        udhcpc eth0
+        ln -sf /usr/share/zoneinfo/UTC /etc/localtime
 
-                        busybox --install -s
-                        stow --dir<span style="color: #990000">=</span>/usr/lib/jvm/default-java --target<span style="color: #990000">=</span>/usr/bin bin
+        cp /usr/share/samba/smb<span style="color: #990000">.</span>conf /etc/samba/smb<span style="color: #990000">.</span>conf -av
+        cat <span style="color: #990000">&gt;&gt;</span> /etc/samba/smb<span style="color: #990000">.</span>conf <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'SMB'</span>
+                <span style="color: #990000">[</span>pub<span style="color: #990000">]</span>
+                        comment <span style="color: #990000">=</span> Some useful files
+                        <span style="font-weight: bold"><span style="color: #0000FF">read</span></span> only <span style="color: #990000">=</span> no
+                        path <span style="color: #990000">=</span> /tmp
+                        guest ok <span style="color: #990000">=</span> yes
+                        browsable <span style="color: #990000">=</span> yes
+                        guest account <span style="color: #990000">=</span> nobody
+                        guest only <span style="color: #990000">=</span> yes
+        SMB
 
-                        <span style="font-style: italic"><span style="color: #9A1900"># lo</span></span>
-                        ifconfig lo <span style="color: #993399">127.0</span><span style="color: #990000">.</span><span style="color: #993399">0.1</span>
-                        ifconfig eth0 up
-                        udhcpc eth0
-                        ln -sf /usr/share/zoneinfo/UTC /etc/localtime
+        useradd jenkins --create-home
+        chown jenkins /var/lib/jenkins /var/cache/jenkins
+        sed -i /etc/init<span style="color: #990000">.</span>d/jenkins <span style="color: #990000">\</span>
+                -e /JAVA_ALLOWED_VERSION/s<span style="color: #990000">/</span>\"<span style="color: #993399">18</span>\"<span style="color: #990000">/</span>\"<span style="color: #993399">110</span><span style="color: #990000">\</span> <span style="color: #993399">2019</span>-<span style="color: #993399">01</span>-<span style="color: #993399">15</span>\"<span style="color: #990000">/</span>
 
-                        cp /usr/share/samba/smb<span style="color: #990000">.</span>conf /etc/samba/smb<span style="color: #990000">.</span>conf -av
-                        cat <span style="color: #990000">&gt;&gt;</span> /etc/samba/smb<span style="color: #990000">.</span>conf <span style="color: #990000">&lt;&lt;</span><span style="color: #FF0000">'SMB'</span>
-                        <span style="color: #990000">[</span>pub<span style="color: #990000">]</span>
-                                comment <span style="color: #990000">=</span> Some useful files
-                                <span style="font-weight: bold"><span style="color: #0000FF">read</span></span> only <span style="color: #990000">=</span> no
-                                path <span style="color: #990000">=</span> /tmp
-                                guest ok <span style="color: #990000">=</span> yes
-                                browsable <span style="color: #990000">=</span> yes
-                                guest account <span style="color: #990000">=</span> nobody
-                                guest only <span style="color: #990000">=</span> yes
-                        SMB
+        sed -i /etc/default/jenkins -f - <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'SED'</span>
+                /enable-future-java/b
+                <span style="color: #990000">/^</span>JENKINS_ARGS/s<span style="color: #990000">/</span><span style="color: #FF0000">"</span><span style="color: #CC33CC">\(</span><span style="color: #FF0000">.*</span><span style="color: #CC33CC">\)</span><span style="color: #FF0000">"</span><span style="color: #990000">/</span><span style="color: #FF0000">"</span><span style="color: #CC33CC">\1</span><span style="color: #FF0000"> --enable-future-java"</span><span style="color: #990000">/</span>
+        SED
 
-                        <span style="font-style: italic"><span style="color: #9A1900">#/etc/init.d/samba start</span></span>
-                        <span style="font-style: italic"><span style="color: #9A1900">#/etc/init.d/jenkins start</span></span>
-                        echo Welcome to supermin<span style="color: #990000">!</span>
-                        <span style="font-weight: bold"><span style="color: #0000FF">exec</span></span> sulogin --force
-                EOF
+        <span style="font-style: italic"><span style="color: #9A1900"># https://busybox.net/FAQ.html#job_control</span></span>
+        cat <span style="color: #990000">&gt;</span> /etc/init<span style="color: #990000">.</span>d/rcS <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'RUN'</span>
+                <span style="color: #009900">DEBIAN_FRONTEND</span><span style="color: #990000">=</span>noninteractive <span style="color: #990000">\</span>
+                pam-auth-update --package --force
+                <span style="font-style: italic"><span style="color: #9A1900"># /etc/init.d/vsftpd start</span></span>
+                <span style="font-style: italic"><span style="color: #9A1900"># /etc/init.d/nmbd start</span></span>
+                <span style="font-style: italic"><span style="color: #9A1900"># /etc/init.d/smbd start</span></span>
+                <span style="font-style: italic"><span style="color: #9A1900"># /etc/init.d/samba-ad-dc start</span></span>
+                <span style="font-style: italic"><span style="color: #9A1900"># /etc/init.d/atd start</span></span>
+                <span style="font-style: italic"><span style="color: #9A1900"># /etc/init.d/jenkins start</span></span>
+                <span style="font-style: italic"><span style="color: #9A1900"># /etc/init.d/atd start</span></span>
+        RUN
 
-                chmod <span style="color: #990000">+</span>x init
-                tar zcf supermin<span style="color: #990000">.</span>d/init<span style="color: #990000">.</span>tar<span style="color: #990000">.</span>gz <span style="color: #990000">.</span>/init
+        chmod <span style="color: #990000">+</span>x /etc/init<span style="color: #990000">.</span>d/rcS
 
-                supermin --verbose --build supermin<span style="color: #990000">.</span>d -f ext2 -o appliance<span style="color: #990000">.</span>d
-        BASH
-EOT
+        cat <span style="color: #990000">&gt;</span> /etc/inittab <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'INITTAB'</span>
+                <span style="font-style: italic"><span style="color: #9A1900"># /etc/inittab init(8) configuration for BusyBox</span></span>
+                <span style="font-style: italic"><span style="color: #9A1900">#</span></span>
+                <span style="font-style: italic"><span style="color: #9A1900"># Copyright (C) 1999-2004 by Erik Andersen &lt;andersen@codepoet.org&gt;</span></span>
 
-<span style="font-weight: bold"><span style="color: #0000FF">exec</span></span> lkvm run -n -k appliance<span style="color: #990000">.</span>d/kernel -i appliance<span style="color: #990000">.</span>d/initrd -d appliance<span style="color: #990000">.</span>d/root -p <span style="color: #FF0000">'root=/dev/vda'</span>
+                <span style="font-style: italic"><span style="color: #9A1900"># Boot-time system configuration/initialization script.</span></span>
+                <span style="font-style: italic"><span style="color: #9A1900"># This is run first except when booting in single-user mode.</span></span>
+                <span style="color: #990000">::</span>sysinit<span style="color: #990000">:</span>/etc/init<span style="color: #990000">.</span>d/rcS
 
+                <span style="font-style: italic"><span style="color: #9A1900"># Note below that we prefix the shell commands with a "-" to indicate to the</span></span>
+                <span style="font-style: italic"><span style="color: #9A1900"># shell that it is supposed to be a login shell.  Normally this is handled by</span></span>
+                <span style="font-style: italic"><span style="color: #9A1900"># login, but since we are bypassing login in this case, BusyBox lets you do</span></span>
+                <span style="font-style: italic"><span style="color: #9A1900"># this yourself...</span></span>
+                <span style="font-style: italic"><span style="color: #9A1900">#</span></span>
+                <span style="font-style: italic"><span style="color: #9A1900"># Start an "askfirst" shell on the console (whatever that may be)</span></span>
+                <span style="font-style: italic"><span style="color: #9A1900">#::askfirst:-/bin/sh</span></span>
+                <span style="color: #990000">::</span>respawn<span style="color: #990000">:</span>-/sbin/sulogin --force --login-shell --timeout<span style="color: #990000">=</span><span style="color: #993399">100</span>
 
-<span style="color: #990000">:</span> /bin/su -l jenkins --shell<span style="color: #990000">=</span>/bin/bash -c <span style="color: #FF0000">'/usr/bin/daemon --name=jenkins --inherit --env=JENKINS_HOME=/var/lib/jenkins --output=/var/log/jenkins/jenkins.log --pidfile=/var/run/jenkins/jenkins.pid -- /bin/java -Djava.awt.headless=true -jar /usr/share/jenkins/jenkins.war --webroot=/var/cache/jenkins/war --httpPort=8080'</span></tt></pre></div></div>
+                <span style="font-style: italic"><span style="color: #9A1900"># Example of how to put a getty on a serial line (for a terminal)</span></span>
+                <span style="font-style: italic"><span style="color: #9A1900">#::respawn:/sbin/getty -L ttyS0 9600 vt100</span></span>
+
+                <span style="font-style: italic"><span style="color: #9A1900"># Stuff to do when restarting the init process</span></span>
+                <span style="color: #990000">::</span>restart<span style="color: #990000">:</span>/sbin/init
+
+                <span style="font-style: italic"><span style="color: #9A1900"># Stuff to do before rebooting</span></span>
+                <span style="color: #990000">::</span>ctrlaltdel<span style="color: #990000">:</span>/sbin/reboot
+                <span style="color: #990000">::</span>shutdown<span style="color: #990000">:</span>/bin/umount -a -r
+                <span style="color: #990000">::</span>shutdown<span style="color: #990000">:</span>/sbin/swapoff -a
+        INITTAB
+
+        echo Welcome to supermin<span style="color: #990000">!</span>
+        <span style="font-weight: bold"><span style="color: #0000FF">exec</span></span> busybox init
+JENKINS
+        <span style="font-weight: bold"><span style="color: #0000FF">while</span></span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span>
+        <span style="font-weight: bold"><span style="color: #0000FF">do</span></span>
+                lkvm run <span style="color: #990000">\</span>
+                        -k appliance<span style="color: #990000">.</span>d/kernel <span style="color: #990000">\</span>
+                        -i appliance<span style="color: #990000">.</span>d/initrd <span style="color: #990000">\</span>
+                        -d appliance<span style="color: #990000">.</span>d/root <span style="color: #990000">\</span>
+                        -p <span style="color: #FF0000">'root=/dev/vda'</span> <span style="color: #990000">\</span>
+                <span style="color: #990000">||</span> <span style="font-weight: bold"><span style="color: #0000FF">break</span></span>
+        <span style="font-weight: bold"><span style="color: #0000FF">done</span></span>
+LKVM
+        <span style="font-style: italic"><span style="color: #9A1900">#!/bin/sh</span></span>
+        apt install --yes supermin kvmtool shellinabox <span style="color: #990000">||</span> <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span> <span style="color: #993399">1</span>
+
+        <span style="color: #009900">DEBIAN_FRONTEND</span><span style="color: #990000">=</span>noninteractive apt install <span style="color: #990000">\</span>
+                --quiet <span style="color: #990000">\</span>
+                --assume-yes <span style="color: #990000">\</span>
+                --option<span style="color: #990000">=</span><span style="color: #FF0000">'Acquire::http::AllowRedirect=true'</span> <span style="color: #990000">\</span>
+                --option<span style="color: #990000">=</span><span style="color: #FF0000">'APT::Get::Download-Only=false'</span> <span style="color: #990000">\</span>
+                at bash dash man mount base-files busybox strace ncurses-term ncurses-bin samba smbclient cifs-utils smbldap-tools ldap-utils udhcpc stow sysvinit-utils util-linux login libc-bin libpam-runtime libpam0g apache2-utils vsftpd sed haveged <span style="color: #009900">jenkins</span><span style="color: #990000">=</span><span style="color: #993399">2.156</span> default-jre <span style="color: #990000">||</span> <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span> <span style="color: #993399">1</span>
+
+        supermin --verbose --prepare --use-installed -o supermin<span style="color: #990000">.</span>d at busybox mount bash dash udhcpc strace samba file base-files bsdutils mailutils coreutils tzdata ncurses-bin ncurses-term eudev net-tools hostname elogind smbclient stow sysvinit-utils util-linux login libc-bin libpam-runtime libpam0g apache2-utils vsftpd sed haveged jenkins default-jre <span style="color: #990000">||</span> <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span> <span style="color: #993399">1</span>
+
+APPLIANCE</tt></pre></div></div>
 </div>
 </div>
 </div>
@@ -857,7 +949,7 @@ EOT
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2018-12-17 17:52:25 CET
+ 2019-01-27 13:58:42 CET
 </div>
 </div>
 </body>

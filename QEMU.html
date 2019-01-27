@@ -1166,112 +1166,6 @@ http://www.gnu.org/software/src-highlite -->
 ifconfig tap0 <span style="color: #993399">0</span>
 brctl addif br0 tap0 eth0</tt></pre></div></div>
 <div class="listingblock">
-<div class="title">supermin</div>
-<div class="content"><!-- Generator: GNU source-highlight 3.1.8
-by Lorenzo Bettini
-http://www.lorenzobettini.it
-http://www.gnu.org/software/src-highlite -->
-<pre><tt><span style="font-style: italic"><span style="color: #9A1900">#!/bin/sh</span></span>
-<span style="color: #009900">TERM</span><span style="color: #990000">=</span>linux schroot -- bash -e -l -i -x -o vi <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">"EOT"</span>
-        update-alternatives --set editor /usr/bin/vim<span style="color: #990000">.</span>tiny
-        <span style="color: #990000">:</span> <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'SKIP'</span>
-        wget -c http<span style="color: #990000">:</span>//deb<span style="color: #990000">.</span>devuan<span style="color: #990000">.</span>org/devuan/pool/main/d/devuan-keyring/devuan-keyring_2017<span style="color: #990000">.</span><span style="color: #993399">10</span><span style="color: #990000">.</span>03_all<span style="color: #990000">.</span>deb
-        dpkg -i devuan-keyring<span style="color: #990000">*</span>
-
-        wget -q -O - <span style="color: #990000">\</span>
-                https<span style="color: #990000">:</span>//pkg<span style="color: #990000">.</span>jenkins<span style="color: #990000">.</span>io/debian/jenkins<span style="color: #990000">.</span>io<span style="color: #990000">.</span>key <span style="color: #990000">|</span>
-        apt-key add -
-
-        cat <span style="color: #990000">&gt;</span> /etc/apt/sources<span style="color: #990000">.</span>list <span style="color: #990000">&lt;&lt;</span>-EOF
-                deb http<span style="color: #990000">:</span>//pkg<span style="color: #990000">.</span>jenkins<span style="color: #990000">.</span>io/debian binary<span style="color: #990000">/</span>
-                deb http<span style="color: #990000">:</span>//deb<span style="color: #990000">.</span>devuan<span style="color: #990000">.</span>org/merged ascii main
-                deb-src http<span style="color: #990000">:</span>//deb<span style="color: #990000">.</span>devuan<span style="color: #990000">.</span>org/merged ascii main
-                <span style="font-style: italic"><span style="color: #9A1900">#deb http://deb.devuan.org/merged beowulf main</span></span>
-                <span style="font-style: italic"><span style="color: #9A1900">#deb-src http://deb.devuan.org/merged beowulf main</span></span>
-                <span style="font-style: italic"><span style="color: #9A1900">#deb http://deb.devuan.org/merged ceres main</span></span>
-                <span style="font-style: italic"><span style="color: #9A1900">#deb-src http://deb.devuan.org/merged ceres main</span></span>
-        EOF
-        SKIP
-
-        apt-get update
-
-        apt install --yes supermin kvmtool
-        <span style="color: #009900">DEBIAN_FRONTEND</span><span style="color: #990000">=</span>noninteractive apt install --option<span style="color: #990000">=</span><span style="color: #FF0000">'APT::Get::Download-Only=false'</span> --quiet --assume-yes bash man mount busybox strace ncurses-term ncurses-bin samba smbclient cifs-utils smbldap-tools ldap-utils udhcpc jenkins default-jre stow sysvinit-utils util-linux login libc-bin libpam-runtime libpam0g apache2-utils
-
-                supermin --verbose --prepare --use-installed -o supermin<span style="color: #990000">.</span>d busybox mount bash udhcpc strace samba file bsdutils mailutils coreutils tzdata ncurses-bin ncurses-term eudev net-tools hostname elogind smbclient jenkins default-jre stow sysvinit-utils util-linux login libc-bin libpam-runtime libpam0g apache2-utils
-
-        bash -ex <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'BASH'</span>
-                cat <span style="color: #990000">&gt;</span> init <span style="color: #990000">&lt;&lt;</span>EOF
-                        <span style="font-style: italic"><span style="color: #9A1900">#!/bin/bash</span></span>
-                        hostname samba
-
-                        <span style="font-style: italic"><span style="color: #9A1900"># users and groups</span></span>
-                        touch /etc/shadow
-                        groupadd --gid<span style="color: #990000">=</span><span style="color: #993399">0</span> root
-                        useradd --gid<span style="color: #990000">=</span><span style="color: #993399">0</span> --uid<span style="color: #990000">=</span><span style="color: #993399">0</span> --base-dir<span style="color: #990000">=/</span> --shell<span style="color: #990000">=</span>/bin/bash root
-                        useradd nobody
-                        useradd jenkins --create-home
-                        chown -R jenkins /var<span style="color: #990000">/</span>{cache<span style="color: #990000">,</span>lib<span style="color: #990000">,</span>log}/jenkins
-                        pam-auth-update --package --force
-
-                        <span style="font-style: italic"><span style="color: #9A1900"># http://www.tldp.org/LDP/lfs/LFS-BOOK-6.1.1-HTML/chapter06/devices.html</span></span>
-                        mknod -m <span style="color: #993399">600</span> /dev/console c <span style="color: #993399">5</span> <span style="color: #993399">1</span>
-                        <span style="font-style: italic"><span style="color: #9A1900">#mknod -m 666 /dev/null c 1 3</span></span>
-                        mknod -m <span style="color: #993399">666</span> /dev/ptmx c <span style="color: #993399">5</span> <span style="color: #993399">2</span>
-                        mknod -m <span style="color: #993399">666</span> /dev/random c <span style="color: #993399">1</span> <span style="color: #993399">8</span>
-                        mknod -m <span style="color: #993399">666</span> /dev/tty c <span style="color: #993399">5</span> <span style="color: #993399">0</span>
-                        mknod -m <span style="color: #993399">666</span> /dev/urandom c <span style="color: #993399">1</span> <span style="color: #993399">9</span>
-                        mknod -m <span style="color: #993399">666</span> /dev/zero c <span style="color: #993399">1</span> <span style="color: #993399">5</span>
-                        chmod <span style="color: #993399">666</span> /dev/null /dev/zero
-                        <span style="font-style: italic"><span style="color: #9A1900">#chown root:root /dev/null /dev/zero</span></span>
-                        chown root<span style="color: #990000">:</span>root /dev/random /dev/urandom
-
-                        mkdir -v /dev/pts
-                        mkdir -v /dev/shm
-                        mount -vt devpts -o <span style="color: #009900">gid</span><span style="color: #990000">=</span><span style="color: #993399">4</span><span style="color: #990000">,</span><span style="color: #009900">mode</span><span style="color: #990000">=</span><span style="color: #993399">620</span> none /dev/pts
-                        mount -vt tmpfs none /dev/shm
-                        mount -vt proc /proc /proc
-                        mount -vt sysfs /sys /sys
-
-                        busybox --install -s
-                        stow --dir<span style="color: #990000">=</span>/usr/lib/jvm/default-java --target<span style="color: #990000">=</span>/usr/bin bin
-
-                        <span style="font-style: italic"><span style="color: #9A1900"># lo</span></span>
-                        ifconfig lo <span style="color: #993399">127.0</span><span style="color: #990000">.</span><span style="color: #993399">0.1</span>
-                        ifconfig eth0 up
-                        udhcpc eth0
-                        ln -sf /usr/share/zoneinfo/UTC /etc/localtime
-
-                        cp /usr/share/samba/smb<span style="color: #990000">.</span>conf /etc/samba/smb<span style="color: #990000">.</span>conf -av
-                        cat <span style="color: #990000">&gt;&gt;</span> /etc/samba/smb<span style="color: #990000">.</span>conf <span style="color: #990000">&lt;&lt;</span><span style="color: #FF0000">'SMB'</span>
-                        <span style="color: #990000">[</span>pub<span style="color: #990000">]</span>
-                                comment <span style="color: #990000">=</span> Some useful files
-                                <span style="font-weight: bold"><span style="color: #0000FF">read</span></span> only <span style="color: #990000">=</span> no
-                                path <span style="color: #990000">=</span> /tmp
-                                guest ok <span style="color: #990000">=</span> yes
-                                browsable <span style="color: #990000">=</span> yes
-                                guest account <span style="color: #990000">=</span> nobody
-                                guest only <span style="color: #990000">=</span> yes
-                        SMB
-
-                        <span style="font-style: italic"><span style="color: #9A1900">#/etc/init.d/samba start</span></span>
-                        <span style="font-style: italic"><span style="color: #9A1900">#/etc/init.d/jenkins start</span></span>
-                        echo Welcome to supermin<span style="color: #990000">!</span>
-                        <span style="font-weight: bold"><span style="color: #0000FF">exec</span></span> sulogin --force
-                EOF
-
-                chmod <span style="color: #990000">+</span>x init
-                tar zcf supermin<span style="color: #990000">.</span>d/init<span style="color: #990000">.</span>tar<span style="color: #990000">.</span>gz <span style="color: #990000">.</span>/init
-
-                supermin --verbose --build supermin<span style="color: #990000">.</span>d -f ext2 -o appliance<span style="color: #990000">.</span>d
-        BASH
-EOT
-
-<span style="font-weight: bold"><span style="color: #0000FF">exec</span></span> lkvm run -n -k appliance<span style="color: #990000">.</span>d/kernel -i appliance<span style="color: #990000">.</span>d/initrd -d appliance<span style="color: #990000">.</span>d/root -p <span style="color: #FF0000">'root=/dev/vda'</span>
-
-
-<span style="color: #990000">:</span> /bin/su -l jenkins --shell<span style="color: #990000">=</span>/bin/bash -c <span style="color: #FF0000">'/usr/bin/daemon --name=jenkins --inherit --env=JENKINS_HOME=/var/lib/jenkins --output=/var/log/jenkins/jenkins.log --pidfile=/var/run/jenkins/jenkins.pid -- /bin/java -Djava.awt.headless=true -jar /usr/share/jenkins/jenkins.war --webroot=/var/cache/jenkins/war --httpPort=8080'</span></tt></pre></div></div>
-<div class="listingblock">
 <div class="title">btrfs</div>
 <div class="content"><!-- Generator: GNU source-highlight 3.1.8
 by Lorenzo Bettini
@@ -1358,7 +1252,7 @@ qemu-system-x86_64 --enable-kvm --nographic -cpu host -m <span style="color: #99
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2018-12-26 12:35:56 CET
+ 2019-01-27 13:58:42 CET
 </div>
 </div>
 </body>

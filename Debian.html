@@ -1112,46 +1112,63 @@ by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
 <pre><tt><span style="font-style: italic"><span style="color: #9A1900">#!/bin/bash</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># debian ftp archive</span></span>
 
-<span style="font-style: italic"><span style="color: #9A1900"># install tools</span></span>
-cat <span style="color: #990000">&gt;</span> /etc/apt/sources<span style="color: #990000">.</span>list <span style="color: #990000">&lt;&lt;</span>-EOF
-        deb http<span style="color: #990000">:</span>//deb<span style="color: #990000">.</span>devuan<span style="color: #990000">.</span>org/merged testing main
-        deb-src http<span style="color: #990000">:</span>//deb<span style="color: #990000">.</span>devuan<span style="color: #990000">.</span>org/merged testing main
-        <span style="font-style: italic"><span style="color: #9A1900">#deb http://deb.devuan.org/devuan sid main</span></span>
-        <span style="font-style: italic"><span style="color: #9A1900">#deb-src http://deb.devuan.org/devuan sid main</span></span>
-EOF
-<span style="color: #990000">:</span> cat <span style="color: #990000">&gt;</span> /etc/apt/apt<span style="color: #990000">.</span>conf<span style="color: #990000">.</span>d/default-release <span style="color: #990000">&lt;&lt;</span>-EOF
-        APT<span style="color: #990000">::</span>Default-Release <span style="color: #FF0000">"testing"</span><span style="color: #990000">;</span>
-EOF
+<span style="font-style: italic"><span style="color: #9A1900"># external files</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">exec</span></span> <span style="color: #993399">20</span><span style="color: #990000">&lt;</span>packages
 
-apt-get update
-apt-get install --yes dpkg-dev fuseiso
-<span style="color: #990000">:</span> apt-get install --yes --allow-downgrades fdisk/testing mount/testing sysvinit-utils/testing util-linux/testing bsdutils/testing libblkid1/testing libfdisk1/testing libmount1/testing libsmartcols1/testing libuuid1/testing
+<span style="font-style: italic"><span style="color: #9A1900"># download packages and create ftparchive</span></span>
+<span style="color: #993399">12</span><span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'APTSOURCES'</span> <span style="color: #990000">\</span>
+<span style="color: #993399">11</span><span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'APTRELEASE'</span> <span style="color: #990000">\</span>
+<span style="color: #993399">10</span><span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'APTSECURITY'</span> <span style="color: #990000">\</span>
+<span style="color: #993399">9</span><span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'APTDOWNLOAD'</span> <span style="color: #990000">\</span>
+<span style="color: #993399">8</span><span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'PACKAGES'</span> <span style="color: #990000">\</span>
+<span style="color: #993399">7</span><span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'SCAN'</span> <span style="color: #990000">\</span>
+<span style="color: #993399">6</span><span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'GPG'</span> <span style="color: #990000">\</span>
+<span style="color: #993399">5</span><span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'SIGN'</span> <span style="color: #990000">\</span>
+<span style="color: #993399">0</span><span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'SCHROOT'</span> <span style="color: #990000">\</span>
+schroot --directory<span style="color: #990000">=</span>/root -- bash <span style="color: #990000">||</span> <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span> <span style="color: #993399">2</span>
+        deb <span style="color: #990000">[</span><span style="color: #009900">trusted</span><span style="color: #990000">=</span>yes<span style="color: #990000">]</span> http<span style="color: #990000">:</span>//deb<span style="color: #990000">.</span>devuan<span style="color: #990000">.</span>org/merged testing main
+        deb-src <span style="color: #990000">[</span><span style="color: #009900">trusted</span><span style="color: #990000">=</span>yes<span style="color: #990000">]</span> http<span style="color: #990000">:</span>//deb<span style="color: #990000">.</span>devuan<span style="color: #990000">.</span>org/merged testing main
+        deb <span style="color: #990000">[</span><span style="color: #009900">trusted</span><span style="color: #990000">=</span>yes<span style="color: #990000">]</span> http<span style="color: #990000">:</span>//deb<span style="color: #990000">.</span>devuan<span style="color: #990000">.</span>org/devuan unstable main
+        deb-src <span style="color: #990000">[</span><span style="color: #009900">trusted</span><span style="color: #990000">=</span>yes<span style="color: #990000">]</span> http<span style="color: #990000">:</span>//deb<span style="color: #990000">.</span>devuan<span style="color: #990000">.</span>org/devuan unstable main
+APTSOURCES
 
+        APT<span style="color: #990000">::</span>Default-Release <span style="color: #FF0000">"unstable"</span><span style="color: #990000">;</span>
+APTRELEASE
 
-<span style="font-style: italic"><span style="color: #9A1900"># download release</span></span>
-wget --continue --no-check-certificate --directory-prefix<span style="color: #990000">=</span>/tmp <span style="color: #990000">\</span>
-        ftp<span style="color: #990000">:</span>//ftp<span style="color: #990000">.</span>nluug<span style="color: #990000">.</span>nl/pub/os/Linux/distr/devuan/devuan_ascii/installer-iso/devuan_ascii_2<span style="color: #990000">.</span><span style="color: #993399">0</span><span style="color: #990000">.</span>0_amd64_cd-<span style="color: #993399">1</span><span style="color: #990000">.</span>iso <span style="color: #990000">\</span>
-        <span style="font-style: italic"><span style="color: #9A1900">#https://cdimage.debian.org/cdimage/weekly-builds/amd64/iso-cd/debian-testing-amd64-netinst.iso</span></span>
+        <span style="font-style: italic"><span style="color: #9A1900"># disable some protection by default and ensure we still do the verification</span></span>
+        <span style="font-style: italic"><span style="color: #9A1900"># correctly</span></span>
+        Acquire<span style="color: #990000">::</span>AllowInsecureRepositories <span style="color: #FF0000">"1"</span><span style="color: #990000">;</span>
+        Acquire<span style="color: #990000">::</span>AllowDowngradeToInsecureRepositories <span style="color: #FF0000">"1"</span><span style="color: #990000">;</span>
+APTSECURITY
 
-<span style="font-style: italic"><span style="color: #9A1900"># apt-get download required packages</span></span>
+        <span style="font-style: italic"><span style="color: #9A1900"># install tools</span></span>
+        cat <span style="color: #990000">&gt;</span> /etc/apt/sources<span style="color: #990000">.</span>list <span style="color: #990000">&lt;&amp;</span><span style="color: #993399">12</span>
+        cat <span style="color: #990000">&gt;</span> /etc/apt/apt<span style="color: #990000">.</span>conf<span style="color: #990000">.</span>d/default-release <span style="color: #990000">&lt;&amp;</span><span style="color: #993399">11</span>
+        cat <span style="color: #990000">&gt;</span> /etc/apt/apt<span style="color: #990000">.</span>conf<span style="color: #990000">.</span>d/weaken-security <span style="color: #990000">&lt;&amp;</span><span style="color: #993399">10</span>
 
-<span style="color: #990000">[[</span> -d debian <span style="color: #990000">]]</span> <span style="color: #990000">||</span>
-mkdir work debian{<span style="color: #990000">,</span>/doc<span style="color: #990000">,</span>/pool} <span style="color: #990000">&amp;&amp;</span>
-touch debian/doc/README
+        apt-get update
+        <span style="color: #990000">:</span> apt-get -o<span style="color: #FF0000">'Acquire::AllowInsecureRepositories="yes";'</span> update
+        apt-get install --yes dpkg-dev fuseiso
+        <span style="color: #990000">:</span> apt-get install --yes fdisk/testing mount/testing sysvinit-utils/testing util-linux/testing bsdutils/testing libblkid1/testing libfdisk1/testing libmount1/testing libsmartcols1/testing libuuid1/testing
 
-<span style="color: #990000">:</span> fuseiso -p /tmp/de<span style="color: #990000">*.</span>iso iso
-<span style="color: #990000">:</span> mount overlay debian/pool <span style="color: #990000">\</span>
-        -t overlay <span style="color: #990000">\</span>
-        -o <span style="color: #009900">lowerdir</span><span style="color: #990000">=</span>iso/debian/pool <span style="color: #990000">\</span>
-        -o <span style="color: #009900">upperdir</span><span style="color: #990000">=</span>debian/pool <span style="color: #990000">\</span>
-        -o <span style="color: #009900">workdir</span><span style="color: #990000">=</span>work
+        <span style="font-style: italic"><span style="color: #9A1900"># download release</span></span>
+        wget --continue --no-check-certificate --directory-prefix<span style="color: #990000">=</span>/tmp <span style="color: #990000">\</span>
+                ftp<span style="color: #990000">:</span>//ftp<span style="color: #990000">.</span>nluug<span style="color: #990000">.</span>nl/pub/os/Linux/distr/devuan/devuan_ascii/installer-iso/devuan_ascii_2<span style="color: #990000">.</span><span style="color: #993399">0</span><span style="color: #990000">.</span>0_amd64_cd-<span style="color: #993399">1</span><span style="color: #990000">.</span>iso <span style="color: #990000">\</span>
+                <span style="font-style: italic"><span style="color: #9A1900">#https://cdimage.debian.org/cdimage/weekly-builds/amd64/iso-cd/debian-testing-amd64-netinst.iso</span></span>
 
-cd debian <span style="color: #990000">||</span> <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span> <span style="color: #993399">1</span>
-bash -e <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'EOF'</span>
-        <span style="font-style: italic"><span style="color: #9A1900"># read packages with filename</span></span>
-        <span style="color: #990000">&lt;</span> /var/lib/apt/lists/deb<span style="color: #990000">.</span>devuan<span style="color: #990000">.</span>org_merged_dists_testing_main_binary-amd64_Packages <span style="color: #990000">\</span>
+        <span style="font-style: italic"><span style="color: #9A1900"># apt-get download required packages</span></span>
+        mkdir work debian{<span style="color: #990000">,</span>/doc<span style="color: #990000">,</span>/pool} <span style="color: #990000">&amp;&amp;</span>
+        touch debian/doc/README
+
+        <span style="color: #990000">:</span> fuseiso -p /tmp/de<span style="color: #990000">*.</span>iso iso
+        <span style="color: #990000">:</span> mount overlay debian/pool <span style="color: #990000">\</span>
+                -t overlay <span style="color: #990000">\</span>
+                -o <span style="color: #009900">lowerdir</span><span style="color: #990000">=</span>iso/debian/pool <span style="color: #990000">\</span>
+                -o <span style="color: #009900">upperdir</span><span style="color: #990000">=</span>debian/pool <span style="color: #990000">\</span>
+                -o <span style="color: #009900">workdir</span><span style="color: #990000">=</span>work
+APTDOWNLOAD
+
         grep <span style="color: #990000">^</span>Package<span style="color: #990000">\\\|^</span>Priority<span style="color: #990000">\\\|^</span>Filename <span style="color: #990000">|</span>
         paste - - - <span style="color: #990000">|</span>
         sort <span style="color: #990000">|</span>
@@ -1170,7 +1187,7 @@ bash -e <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000
                 sort -k<span style="color: #993399">3</span> <span style="color: #990000">|</span>
                 join -<span style="color: #993399">13</span> - <span style="color: #990000">&lt;(</span>
                         <span style="font-style: italic"><span style="color: #9A1900"># append packages and dependencies</span></span>
-                        <span style="color: #990000">&lt;&amp;</span><span style="color: #993399">3</span> tee <span style="color: #990000">&gt;(</span>
+                        tee <span style="color: #990000">&lt;&amp;</span><span style="color: #993399">20</span> <span style="color: #990000">&gt;(</span>
                                 xargs apt-cache depends <span style="color: #990000">\</span>
                                         --recurse <span style="color: #990000">\</span>
                                         --installed <span style="color: #990000">\</span>
@@ -1225,54 +1242,9 @@ bash -e <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000
                 s<span style="color: #990000">/^\</span>s<span style="color: #990000">*\([[:</span>graph<span style="color: #990000">:]]*\)\</span>s<span style="color: #990000">*\(.*\)</span><span style="color: #009900">$/</span><span style="color: #990000">\</span>
                 mkdir -p <span style="color: #990000">\</span><span style="color: #993399">1</span> <span style="color: #990000">\&amp;\&amp;</span> cd <span style="color: #990000">\</span><span style="color: #993399">1</span> <span style="color: #990000">\&amp;\&amp;</span> apt-get download <span style="color: #990000">\</span><span style="color: #993399">2</span><span style="color: #990000">/</span>
         SED
-        <span style="color: #990000">)</span> <span style="color: #990000">|</span>
+        <span style="color: #990000">)</span>
+PACKAGES
 
-        <span style="font-style: italic"><span style="color: #9A1900"># execute parallel apt-get</span></span>
-        xargs --replace<span style="color: #990000">=</span>@ --max-procs<span style="color: #990000">=</span><span style="color: #009900">$(nproc)</span> sh -c <span style="color: #FF0000">'@'</span>
-
-        <span style="font-style: italic"><span style="color: #9A1900"># rename packages with epochs version</span></span>
-        find -name <span style="color: #FF0000">'*%*'</span> -exec dpkg-name -o {} <span style="color: #990000">+</span>
-
-        <span style="font-style: italic"><span style="color: #9A1900"># transition</span></span>
-        <span style="font-style: italic"><span style="color: #9A1900"># find -name libcomerr2_1.43.4-2_amd64.deb -delete</span></span>
-
-        <span style="font-style: italic"><span style="color: #9A1900">#cat &amp;&amp; exit 1</span></span>
-
-        mkdir -p pool/main/d
-        bash -e <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'BASH'</span>
-                cd pool/main/d
-                xargs apt-get <span style="font-weight: bold"><span style="color: #0000FF">source</span></span> --download-only <span style="color: #990000">&lt;&lt;</span>-XARGS
-                        debian-installer
-                        debian-keyring
-                        debootstrap
-                        devuan-baseconf
-                        devuan-keyring
-                XARGS
-        BASH
-
-        <span style="font-style: italic"><span style="color: #9A1900"># download debian installer in debian/dists</span></span>
-        <span style="color: #990000">:</span> wget --continue <span style="color: #990000">\</span>
-                http<span style="color: #990000">:</span>//deb<span style="color: #990000">.</span>devuan<span style="color: #990000">.</span>org/devuan/pool/main/d/debian-installer/debian-installer_20180717<span style="color: #990000">+</span>devuan1{<span style="color: #990000">.</span>dsc<span style="color: #990000">,.</span>tar<span style="color: #990000">.</span>gz<span style="color: #990000">,</span>_amd64<span style="color: #990000">.</span>deb}
-        <span style="color: #990000">:</span> xargs -L<span style="color: #993399">1</span> wget -c -r -l<span style="color: #993399">6</span> -nv -nc -np -nH --cut-dirs<span style="color: #990000">=</span><span style="color: #993399">3</span> -P <span style="color: #990000">\</span>
-                debian/dists/ascii <span style="color: #990000">&lt;&lt;</span>-DI
-                http<span style="color: #990000">:</span>//deb<span style="color: #990000">.</span>devuan<span style="color: #990000">.</span>org/devuan/dists/ascii/main/debian-installer/binary-amd<span style="color: #993399">64</span><span style="color: #990000">/</span>
-                http<span style="color: #990000">:</span>//deb<span style="color: #990000">.</span>devuan<span style="color: #990000">.</span>org/devuan/dists/ascii/main/installer-amd<span style="color: #993399">64</span>/current/images<span style="color: #990000">/</span>
-        DI
-EOF
-
-<span style="font-style: italic"><span style="color: #9A1900"># cleanup</span></span>
-cd -
-<span style="color: #990000">:</span> umount debian/pool
-<span style="color: #990000">:</span> umount iso
-
-<span style="font-style: italic"><span style="color: #9A1900"># scan packages</span></span>
-<span style="color: #990000">:</span> fuseiso -p /tmp/de<span style="color: #990000">*.</span>iso iso
-<span style="color: #990000">:</span> mount overlay debian/pool <span style="color: #990000">\</span>
-        -t overlay <span style="color: #990000">\</span>
-        -o <span style="color: #009900">lowerdir</span><span style="color: #990000">=</span>iso/debian/pool <span style="color: #990000">\</span>
-        -o <span style="color: #009900">upperdir</span><span style="color: #990000">=</span>debian/pool <span style="color: #990000">\</span>
-        -o <span style="color: #009900">workdir</span><span style="color: #990000">=</span>work
-bash -ex <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'SCAN'</span>
         <span style="font-weight: bold"><span style="color: #0000FF">while</span></span> <span style="font-weight: bold"><span style="color: #0000FF">read</span></span><span style="color: #990000">;</span> <span style="font-weight: bold"><span style="color: #0000FF">do</span></span>
                 mkdir -p debian/dists/testing/main<span style="color: #990000">/</span><span style="color: #009900">$REPLY</span>
                 tee debian/dists/testing/main<span style="color: #990000">/</span><span style="color: #009900">$REPLY</span>/Release <span style="color: #990000">&lt;&lt;</span>-EOF
@@ -1296,10 +1268,8 @@ bash -ex <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF000
 
         dpkg-scansources debian/pool <span style="color: #990000">|</span>
         tee debian/dists/testing/main/source/Sources <span style="color: #990000">|</span>
-        tee <span style="color: #990000">&gt;(</span>
-                xz -z <span style="color: #990000">&gt;</span> <span style="color: #990000">\</span>
-                        debian/dists/testing/main/source/Sources<span style="color: #990000">.</span>xz
-        <span style="color: #990000">)</span>
+        xz -z <span style="color: #990000">\</span>
+        <span style="color: #990000">&gt;</span> debian/dists/testing/main/source/Sources<span style="color: #990000">.</span>xz
 
         apt-ftparchive release debian/dists/testing <span style="color: #990000">\</span>
                 -o APT<span style="color: #990000">::</span>FTPArchive<span style="color: #990000">::</span>Release<span style="color: #990000">::</span><span style="color: #009900">Origin</span><span style="color: #990000">=</span><span style="color: #FF0000">"Debian"</span> <span style="color: #990000">\</span>
@@ -1310,16 +1280,9 @@ bash -ex <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF000
                 -o APT<span style="color: #990000">::</span>FTPArchive<span style="color: #990000">::</span>Release<span style="color: #990000">::</span><span style="color: #009900">Architectures</span><span style="color: #990000">=</span><span style="color: #FF0000">"amd64 source"</span> <span style="color: #990000">\</span>
                 -o APT<span style="color: #990000">::</span>FTPArchive<span style="color: #990000">::</span>Release<span style="color: #990000">::</span><span style="color: #009900">Components</span><span style="color: #990000">=</span><span style="color: #FF0000">"main"</span> <span style="color: #990000">\</span>
                 -o APT<span style="color: #990000">::</span>FTPArchive<span style="color: #990000">::</span>Release<span style="color: #990000">::</span><span style="color: #009900">Description</span><span style="color: #990000">=</span><span style="color: #FF0000">"Description: Experimental packages - not released use at your own risk."</span> <span style="color: #990000">\</span>
-        <span style="color: #990000">|</span> tee <span style="color: #990000">\</span>
-                debian/dists/testing/Release
-
+        <span style="color: #990000">&gt;</span> debian/dists/testing/Release
 SCAN
 
-<span style="color: #990000">:</span> umount debian/pool
-<span style="color: #990000">:</span> umount iso
-pwd
-
-<span style="color: #990000">:</span> <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'GPG'</span>
         <span style="font-style: italic"><span style="color: #9A1900"># Sign files</span></span>
         gpg --yes -abs -o dists/sid/Release<span style="color: #990000">.</span>gpg dists/sid/Release
         gpg --clearsign -o dists/sid/InRelease dists/sid/Release
@@ -1329,28 +1292,78 @@ pwd
         gpg --list-sigs
         gpg --export 0123456789ABCDEF <span style="color: #990000">&gt;</span> /usr/share/keyrings/archive-keyring<span style="color: #990000">.</span>gpg
 
-        cat <span style="color: #990000">&gt;&gt;</span> /etc/apt/sources<span style="color: #990000">.</span>list <span style="color: #990000">&lt;&lt;</span>APT
-                deb <span style="color: #990000">[</span>signed-by<span style="color: #990000">=</span>/usr/share/keyrings/archive-keyring<span style="color: #990000">.</span>gpg<span style="color: #990000">]</span> ftp<span style="color: #990000">:</span>//localhost/debian sid main
-                deb-src <span style="color: #990000">[</span>signed-by<span style="color: #990000">=</span>/usr/share/keyrings/archive-keyring<span style="color: #990000">.</span>gpg<span style="color: #990000">]</span> ftp<span style="color: #990000">:</span>//localhost/debian sid main
-
-                <span style="font-style: italic"><span style="color: #9A1900">#deb file:/var/www/html/packages/amd64/ /</span></span>
-                <span style="font-style: italic"><span style="color: #9A1900">#deb-src file:/var/www/html/packages/amd64/ /</span></span>
-
-                <span style="font-style: italic"><span style="color: #9A1900">#deb [signed-by=/usr/share/keyrings/archive-keyring.gpg] file:/srv/reprepro/debian /</span></span>
-                <span style="font-style: italic"><span style="color: #9A1900">#deb-src [signed-by=/usr/share/keyrings/archive-keyring.gpg] file:/srv/reprepro/debian /</span></span>
-        APT
 GPG
+        deb <span style="color: #990000">[</span><span style="color: #009900">trusted</span><span style="color: #990000">=</span>yes signed-by<span style="color: #990000">=</span>/usr/share/keyrings/archive-keyring<span style="color: #990000">.</span>gpg<span style="color: #990000">]</span> ftp<span style="color: #990000">:</span>//localhost/debian sid main
+        deb-src <span style="color: #990000">[</span><span style="color: #009900">trusted</span><span style="color: #990000">=</span>yes signed-by<span style="color: #990000">=</span>/usr/share/keyrings/archive-keyring<span style="color: #990000">.</span>gpg<span style="color: #990000">]</span> ftp<span style="color: #990000">:</span>//localhost/debian sid main
 
-<span style="color: #990000">:</span> <span style="color: #990000">&lt;&lt;</span>SKIP
-<span style="font-style: italic"><span style="color: #9A1900"># disable some protection by default and ensure we still do the verification</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># correctly</span></span>
-cat <span style="color: #990000">&gt;</span> /etc/apt/apt<span style="color: #990000">.</span>conf<span style="color: #990000">.</span>d/weaken-security <span style="color: #990000">&lt;&lt;</span>EOF
-Acquire<span style="color: #990000">::</span>AllowInsecureRepositories <span style="color: #FF0000">"1"</span><span style="color: #990000">;</span>
-Acquire<span style="color: #990000">::</span>AllowDowngradeToInsecureRepositories <span style="color: #FF0000">"1"</span><span style="color: #990000">;</span>
-EOF
-apt-get -o<span style="color: #FF0000">'Acquire::AllowInsecureRepositories="yes";'</span> update
-SKIP
-</tt></pre></div></div>
+        <span style="font-style: italic"><span style="color: #9A1900">#deb file:/var/www/html/packages/amd64/ /</span></span>
+        <span style="font-style: italic"><span style="color: #9A1900">#deb-src file:/var/www/html/packages/amd64/ /</span></span>
+        <span style="font-style: italic"><span style="color: #9A1900">#deb [signed-by=/usr/share/keyrings/archive-keyring.gpg] file:/srv/reprepro/debian /</span></span>
+        <span style="font-style: italic"><span style="color: #9A1900">#deb-src [signed-by=/usr/share/keyrings/archive-keyring.gpg] file:/srv/reprepro/debian /</span></span>
+SIGN
+
+        <span style="font-style: italic"><span style="color: #9A1900"># apt download</span></span>
+        <span style="color: #990000">[</span> -d debian <span style="color: #990000">]</span> <span style="color: #990000">||</span> {
+                bash -x <span style="color: #990000">&lt;&amp;</span><span style="color: #993399">10</span>
+
+                <span style="font-style: italic"><span style="color: #9A1900"># read packages with filename</span></span>
+                <span style="color: #990000">&lt;</span> /var/lib/apt/lists/deb<span style="color: #990000">.</span>devuan<span style="color: #990000">.</span>org_merged_dists_testing_main_binary-amd64_Packages <span style="color: #990000">\</span>
+                bash -e <span style="color: #990000">&lt;(</span>cat <span style="color: #990000">&lt;&amp;</span><span style="color: #993399">8</span><span style="color: #990000">)</span> <span style="color: #990000">|</span>
+
+                <span style="font-style: italic"><span style="color: #9A1900"># execute parallel apt-get</span></span>
+                xargs --replace<span style="color: #990000">=</span>@ --max-procs<span style="color: #990000">=</span><span style="color: #009900">$(nproc)</span> sh -c <span style="color: #FF0000">'@'</span>
+
+                <span style="font-style: italic"><span style="color: #9A1900"># rename packages with epochs version</span></span>
+                find -name <span style="color: #FF0000">'*%*'</span> -exec dpkg-name -o {} <span style="color: #990000">+</span>
+        }
+
+        <span style="font-style: italic"><span style="color: #9A1900"># debian sources</span></span>
+        <span style="color: #990000">[</span> -d pool/main/d <span style="color: #990000">]</span> <span style="color: #990000">||</span> {
+                mkdir pool/main
+                mkdir pool/main/d
+                bash -e <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'BASH'</span>
+                        cd pool/main/d
+                        xargs apt-get <span style="font-weight: bold"><span style="color: #0000FF">source</span></span> --download-only <span style="color: #990000">&lt;&lt;</span>-DEBSRC
+                                debian-installer
+                                debootstrap
+                                devuan-baseconf
+                                devuan-keyring
+                        DEBSRC
+                BASH
+
+                <span style="font-style: italic"><span style="color: #9A1900"># debian installer</span></span>
+                <span style="color: #990000">:</span> wget --continue <span style="color: #990000">\</span>
+                        http<span style="color: #990000">:</span>//deb<span style="color: #990000">.</span>devuan<span style="color: #990000">.</span>org/devuan/pool/main/d/debian-installer/debian-installer_20180717<span style="color: #990000">+</span>devuan1{<span style="color: #990000">.</span>dsc<span style="color: #990000">,.</span>tar<span style="color: #990000">.</span>gz<span style="color: #990000">,</span>_amd64<span style="color: #990000">.</span>deb}
+                <span style="color: #990000">:</span> xargs -L<span style="color: #993399">1</span> wget -c -r -l<span style="color: #993399">6</span> -nv -nc -np -nH --cut-dirs<span style="color: #990000">=</span><span style="color: #993399">3</span> -P <span style="color: #990000">\</span>
+                        debian/dists/ascii <span style="color: #990000">&lt;&lt;</span>-DI
+                        http<span style="color: #990000">:</span>//deb<span style="color: #990000">.</span>devuan<span style="color: #990000">.</span>org/devuan/dists/ascii/main/debian-installer/binary-amd<span style="color: #993399">64</span><span style="color: #990000">/</span>
+                        http<span style="color: #990000">:</span>//deb<span style="color: #990000">.</span>devuan<span style="color: #990000">.</span>org/devuan/dists/ascii/main/installer-amd<span style="color: #993399">64</span>/current/images<span style="color: #990000">/</span>
+                DI
+        }
+
+        <span style="font-style: italic"><span style="color: #9A1900"># scan packages</span></span>
+        bash -ex <span style="color: #990000">&lt;&amp;</span><span style="color: #993399">7</span>
+
+        <span style="font-style: italic"><span style="color: #9A1900"># sign repository</span></span>
+        <span style="color: #990000">:</span> bash -ex <span style="color: #990000">&lt;&amp;</span><span style="color: #993399">6</span>
+
+        <span style="color: #990000">:</span> cat <span style="color: #990000">&gt;&gt;</span> /etc/apt/sources<span style="color: #990000">.</span>list  <span style="color: #990000">&lt;&amp;</span><span style="color: #993399">5</span>
+
+        <span style="font-style: italic"><span style="color: #9A1900"># cleanup</span></span>
+        <span style="color: #990000">:</span> umount debian/pool
+        <span style="color: #990000">:</span> umount iso
+
+        <span style="font-style: italic"><span style="color: #9A1900"># scan packages</span></span>
+        <span style="color: #990000">:</span> fuseiso -p /tmp/de<span style="color: #990000">*.</span>iso iso
+        <span style="color: #990000">:</span> mount overlay debian/pool <span style="color: #990000">\</span>
+                -t overlay <span style="color: #990000">\</span>
+                -o <span style="color: #009900">lowerdir</span><span style="color: #990000">=</span>iso/debian/pool <span style="color: #990000">\</span>
+                -o <span style="color: #009900">upperdir</span><span style="color: #990000">=</span>debian/pool <span style="color: #990000">\</span>
+                -o <span style="color: #009900">workdir</span><span style="color: #990000">=</span>work
+
+        <span style="color: #990000">:</span> umount debian/pool
+        <span style="color: #990000">:</span> umount iso
+SCHROOT</tt></pre></div></div>
 <div class="sect2">
 <h3 id="_netboot">Netboot</h3>
 <div class="listingblock">
@@ -1570,7 +1583,7 @@ BASH</tt></pre></div></div>
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2018-12-17 17:52:25 CET
+ 2019-01-27 13:58:42 CET
 </div>
 </div>
 </body>

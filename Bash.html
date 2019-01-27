@@ -812,21 +812,22 @@ http://www.gnu.org/software/src-highlite -->
       v                 ^
       -----&gt; pipe &gt;----</tt></pre></div></div>
 <div class="paragraph"><p>In the next example two dd process connected with each other.
-It is a quite useless but working example in the shell.</p></div>
+It is a quite useless but working example in the shell.
+The commands are included in a here document as standard input of bash.</p></div>
 <div class="listingblock">
 <div class="content"><!-- Generator: GNU source-highlight 3.1.8
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
 <pre><tt>bash <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'EOF'</span>
-        mkfifo
+        mkfifo fifo
         <span style="color: #990000">&lt;</span>fifo dd <span style="color: #990000">|</span> dd <span style="color: #990000">&gt;</span>fifo
 EOF</tt></pre></div></div>
 <div class="paragraph"><p>Another example is on <a href="http://en.wikipedia.org/wiki/Netcat">http://en.wikipedia.org/wiki/Netcat</a>.
 Two netcat processes redirect data from a webserver to localhost.
 One process listens on localhost:12345 and sends data to webserver:80.
 The other process receives data from the webserver.</p></div>
-<div class="paragraph"><p>Besides pipe and fifo there are other ways to connect output with input filedescriptors. Bash coproc can replace fifo and in yash shell there is operator &gt;&gt;| for pipeline redirection. Another shell can be invoked from bash with input from a here document.</p></div>
+<div class="paragraph"><p>Besides fifo there are other ways to connect output with input filedescriptors. Bash coproc can replace fifo and in yash shell there is operator &gt;&gt;| for pipeline redirection. Another shell can be invoked from bash with input from a here document.</p></div>
 <div class="listingblock">
 <div class="content"><!-- Generator: GNU source-highlight 3.1.8
 by Lorenzo Bettini
@@ -839,27 +840,39 @@ EOF</tt></pre></div></div>
 </div>
 </div>
 <div class="sect1">
+<h2 id="_here_documents">Here documents</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Here documents can create file descriptors in a script.</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="color: #993399">0</span><span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'BASH'</span> <span style="color: #990000">\</span>
+<span style="color: #993399">3</span><span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'CAT'</span> <span style="color: #990000">\</span>
+<span style="color: #993399">4</span><span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'TEXT'</span> <span style="color: #990000">\</span>
+bash
+        bash -s <span style="color: #990000">&lt;&amp;</span><span style="color: #993399">3</span> <span style="color: #993399">4</span>
+BASH
+        <span style="font-weight: bold"><span style="color: #0000FF">exec</span></span> <span style="color: #990000">&lt;&amp;</span><span style="color: #009900">$1</span>
+        cat
+CAT
+        text
+TEXT</tt></pre></div></div>
+<div class="paragraph"><p>This chapter is about Bash only features.</p></div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_process_substitution">Process substitution</h2>
 <div class="sectionbody">
-<div class="paragraph"><p>In Bash redirection can be used together with process substitution.
-Some examples that uses file descriptor and process substitution.
-Example: File descriptor and process substitution</p></div>
+<div class="paragraph"><p>Process substitution is a convenient feature in bash.
+The previous example with process substitution.</p></div>
 <div class="listingblock">
 <div class="content"><!-- Generator: GNU source-highlight 3.1.8
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
-<pre><tt><span style="color: #990000">(</span> { <span style="font-weight: bold"><span style="color: #0000FF">exec</span></span> <span style="color: #993399">0</span><span style="color: #990000">&gt;&amp;</span>-  <span style="color: #993399">3</span><span style="color: #990000">&lt;</span> <span style="color: #990000">&lt;(</span>seq <span style="color: #993399">6</span><span style="color: #990000">)</span> <span style="color: #993399">4</span><span style="color: #990000">&gt;&amp;</span><span style="color: #993399">1</span>- <span style="color: #990000">;</span> } <span style="color: #990000">;</span> {  <span style="color: #993399">0</span><span style="color: #990000">&gt;&amp;</span><span style="color: #993399">3</span>- pv -qL <span style="color: #993399">2</span> <span style="color: #990000">&gt;&amp;</span><span style="color: #993399">4</span>- <span style="color: #990000">;</span> } <span style="color: #990000">;</span> <span style="font-weight: bold"><span style="color: #0000FF">exec</span></span> <span style="color: #990000">&gt;&amp;</span><span style="color: #993399">3</span>-  <span style="color: #990000">;</span> ls /proc<span style="color: #990000">/</span><span style="color: #009900">$BASHPID</span>/fd <span style="color: #990000">&gt;&amp;</span><span style="color: #993399">4</span>-  <span style="color: #990000">)</span></tt></pre></div></div>
-<div class="paragraph"><p>File descriptors are closed in sudo by default.
-This can be changed with sudo --close-from=64 after
-modifying /etc/sudoers configuration.
-./etc/sudoers.d/override</p></div>
-<div class="listingblock">
-<div class="content"><!-- Generator: GNU source-highlight 3.1.8
-by Lorenzo Bettini
-http://www.lorenzobettini.it
-http://www.gnu.org/software/src-highlite -->
-<pre><tt>Defaults closefrom_override</tt></pre></div></div>
+<pre><tt>bash <span style="color: #990000">&lt;(</span>echo cat<span style="color: #990000">)</span> <span style="color: #990000">&lt;&lt;&lt;</span>text</tt></pre></div></div>
 <div class="paragraph"><p>Some examples with file descriptor and process substitution.
 Educational example of file descriptor and process substitution
 The example uses a subshell with input from a here document.
@@ -882,7 +895,7 @@ http://www.gnu.org/software/src-highlite -->
                 <span style="color: #990000">&lt;(</span>cat <span style="color: #990000">&lt;&amp;</span><span style="color: #993399">5</span><span style="color: #990000">)</span> <span style="color: #990000">\</span>
                 <span style="color: #990000">|</span> tee <span style="color: #990000">&gt;(</span>cat <span style="color: #990000">&gt;&amp;</span><span style="color: #993399">3</span><span style="color: #990000">)</span> <span style="color: #990000">&gt;&amp;</span><span style="color: #993399">3</span>
 <span style="color: #990000">)</span></tt></pre></div></div>
-<div class="paragraph"><p>This example insert commands into a build environment with file descriptors.</p></div>
+<div class="paragraph"><p>There are examples to insert commands into a build environment with file descriptors.</p></div>
 <div class="ulist"><ul>
 <li>
 <p>
@@ -893,113 +906,8 @@ http://www.gnu.org/software/src-highlite -->
 </div>
 </div>
 <div class="sect1">
-<h2 id="_coreutils">Coreutils</h2>
-<div class="sectionbody">
-<div class="quoteblock">
-<div class="content"><em>
- This package contains the basic file, shell and text manipulation
- utilities which are expected to exist on every operating system.
-</em></div>
-<div class="attribution">
-&#8212; Debian
-</div></div>
-<div class="paragraph"><p>Many commands in coreutils are a tools for text processing.  All together they
-are like the SQL of shell programming. The join command is one of the most
-important commands in SQL and coreutils. There is no self join in coreutils.
-In coreutils the joined columns is moved to the left. Empty values are equal!</p></div>
-<div class="listingblock">
-<div class="title">join</div>
-<div class="content"><!-- Generator: GNU source-highlight 3.1.8
-by Lorenzo Bettini
-http://www.lorenzobettini.it
-http://www.gnu.org/software/src-highlite -->
-<pre><tt><span style="font-style: italic"><span style="color: #9A1900"># Column with two rows</span></span>
-seq <span style="color: #993399">2</span>
-
-<span style="font-style: italic"><span style="color: #9A1900"># Additional column with two rows</span></span>
-seq <span style="color: #993399">2</span> <span style="color: #990000">|</span> nl
-
-<span style="font-style: italic"><span style="color: #9A1900"># Inner join with three rows</span></span>
-seq <span style="color: #993399">2</span> <span style="color: #990000">|</span> nl <span style="color: #990000">|</span> join - <span style="color: #990000">&lt;(</span>seq <span style="color: #993399">3</span><span style="color: #990000">)</span>
-
-<span style="font-style: italic"><span style="color: #9A1900"># Outer join with three rows</span></span>
-seq <span style="color: #993399">2</span> <span style="color: #990000">|</span> nl <span style="color: #990000">|</span> join - <span style="color: #990000">&lt;(</span>seq <span style="color: #993399">3</span><span style="color: #990000">)</span> -a<span style="color: #993399">2</span>
-
-<span style="font-style: italic"><span style="color: #9A1900"># Cross join with the empty columns</span></span>
-seq <span style="color: #993399">2</span> <span style="color: #990000">|</span> nl <span style="color: #990000">|</span> join - <span style="color: #990000">&lt;(</span>seq <span style="color: #993399">3</span><span style="color: #990000">)</span> -j<span style="color: #993399">3</span>
-
-<span style="font-style: italic"><span style="color: #9A1900"># Additional column with a cross join of a single row</span></span>
-seq <span style="color: #993399">2</span> <span style="color: #990000">|</span> nl <span style="color: #990000">|</span> join - <span style="color: #990000">&lt;(</span>seq <span style="color: #993399">1</span><span style="color: #990000">)</span> -j<span style="color: #993399">3</span></tt></pre></div></div>
-<div class="paragraph"><p>A additonal key column can be added before ordering with the join program.
-.join</p></div>
-<div class="listingblock">
-<div class="content"><!-- Generator: GNU source-highlight 3.1.8
-by Lorenzo Bettini
-http://www.lorenzobettini.it
-http://www.gnu.org/software/src-highlite -->
-<pre><tt>seq <span style="color: #993399">6</span> <span style="color: #990000">|</span> sed s<span style="color: #990000">/^/\\\\</span>x4<span style="color: #990000">/</span> <span style="color: #990000">|</span> xargs -<span style="color: #993399">0</span> <span style="font-weight: bold"><span style="color: #0000FF">printf</span></span> <span style="color: #990000">%</span>b <span style="color: #990000">|</span> nl <span style="color: #990000">\</span>
-        <span style="color: #990000">|</span> tee <span style="color: #990000">\</span>
-                <span style="color: #990000">&gt;(</span>head -n<span style="color: #993399">4</span> <span style="color: #990000">|</span> join -j<span style="color: #993399">3</span> <span style="color: #990000">&lt;(</span>seq <span style="color: #993399">1</span><span style="color: #990000">)</span> -<span style="color: #990000">)</span> <span style="color: #990000">\</span>
-                        <span style="color: #990000">&gt;</span> <span style="color: #990000">\</span>
-                <span style="color: #990000">&gt;(</span>tail -n<span style="color: #993399">4</span> <span style="color: #990000">|</span> join -j<span style="color: #993399">3</span> <span style="color: #990000">&lt;(</span>seq <span style="color: #993399">2</span> <span style="color: #993399">2</span><span style="color: #990000">)</span> -<span style="color: #990000">)</span> <span style="color: #990000">\</span>
-        <span style="color: #990000">|</span> sort -k<span style="color: #993399">2</span> <span style="color: #990000">|</span> join -<span style="color: #993399">11</span> -<span style="color: #993399">22</span> <span style="color: #990000">&lt;(</span>seq <span style="color: #993399">3</span> <span style="color: #993399">4</span><span style="color: #990000">)</span> -</tt></pre></div></div>
-<div class="paragraph"><p>The join command moves the key column to the left. There is no easy way to
-reorder columns with coreutils. With cut the order remains in the same order
-that is read. This is where awk becomes a useful tool.
-- <a href="https://lists.gnu.org/archive/html/bug-coreutils/2012-12/msg00117.html">https://lists.gnu.org/archive/html/bug-coreutils/2012-12/msg00117.html</a></p></div>
-<div class="paragraph"><p>This example from IRC:
-Nov 12 14:08 &lt; sruli&gt; i have 2 columns with numbers, i need to replace the
-numbers in column 2 with a "0" where column 1 != "0" how do i go about that</p></div>
-<div class="listingblock">
-<div class="content"><!-- Generator: GNU source-highlight 3.1.8
-by Lorenzo Bettini
-http://www.lorenzobettini.it
-http://www.gnu.org/software/src-highlite -->
-<pre><tt>bash <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'EOF'</span>
-        paste <span style="color: #990000">&lt;(</span>
-                echo $<span style="color: #FF0000">'a</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">0</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">b</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">0</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">c'</span>
-        <span style="color: #990000">)</span> <span style="color: #990000">&lt;(</span>
-                seq -<span style="color: #993399">5</span> -<span style="color: #993399">1</span>
-        <span style="color: #990000">)</span> <span style="color: #990000">|</span> awk <span style="color: #FF0000">'{if($1) print $1,0; else print $1,$2} '</span>
-EOF</tt></pre></div></div>
-<div class="paragraph"><p>The same example with grep and coreutils to sort the stdout of subprocesses.</p></div>
-<div class="listingblock">
-<div class="content"><!-- Generator: GNU source-highlight 3.1.8
-by Lorenzo Bettini
-http://www.lorenzobettini.it
-http://www.gnu.org/software/src-highlite -->
-<pre><tt>bash <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'EOF'</span>
-        join <span style="color: #990000">&lt;(</span>
-                join <span style="color: #990000">&lt;(</span>
-                        paste <span style="color: #990000">&lt;(</span>
-                                echo $<span style="color: #FF0000">'a</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">0</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">b</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">0</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">c'</span>
-                        <span style="color: #990000">)</span> <span style="color: #990000">&lt;(</span>
-                                seq -<span style="color: #993399">5</span> -<span style="color: #993399">1</span>
-                        <span style="color: #990000">)</span> <span style="color: #990000">|</span> nl <span style="color: #990000">|</span> sort -k<span style="color: #993399">2</span>
-                        <span style="color: #990000">)</span> <span style="color: #990000">&lt;(</span>
-                                seq <span style="color: #993399">0</span> <span style="color: #993399">0</span> <span style="color: #990000">|</span> nl
-                        <span style="color: #990000">)</span> -j<span style="color: #993399">2</span> -a<span style="color: #993399">1</span> <span style="color: #990000">|</span> sort -k<span style="color: #993399">4</span>
-                <span style="color: #990000">)</span> <span style="color: #990000">&lt;(</span>
-                        seq <span style="color: #993399">0</span> <span style="color: #993399">1</span>
-                <span style="color: #990000">)</span> -e<span style="color: #993399">0</span> -<span style="color: #993399">21</span> -<span style="color: #993399">14</span> -a<span style="color: #993399">1</span> <span style="color: #990000">|</span> sort -k<span style="color: #993399">3</span> <span style="color: #990000">|</span> nl -nln <span style="color: #990000">|</span> tee <span style="color: #990000">&gt;(</span>
-                        grep -P <span style="color: #990000">\\</span>t0 <span style="color: #990000">|</span> cut -d<span style="color: #990000">\</span>  -f<span style="color: #993399">1</span>- <span style="color: #990000">|</span> join - <span style="color: #990000">&lt;(</span>
-                                seq <span style="color: #993399">0</span> <span style="color: #993399">0</span>
-                        <span style="color: #990000">)</span> -j<span style="color: #993399">3</span> -a<span style="color: #993399">1</span> <span style="color: #990000">|</span> cut -d<span style="color: #990000">\</span>  -f<span style="color: #993399">1</span>-<span style="color: #993399">3</span>
-                <span style="color: #990000">)</span> <span style="color: #990000">&gt;</span> <span style="color: #990000">&gt;(</span>
-                        grep -P <span style="color: #990000">\\</span>t1 <span style="color: #990000">|</span> cut -d<span style="color: #990000">\</span>  -f<span style="color: #993399">1</span>- <span style="color: #990000">|</span> join - <span style="color: #990000">&lt;(</span>
-                                seq <span style="color: #993399">0</span> <span style="color: #993399">0</span>
-                        <span style="color: #990000">)</span> -j<span style="color: #993399">3</span> -a<span style="color: #993399">1</span> <span style="color: #990000">|</span> cut -d<span style="color: #990000">\</span>  -f<span style="color: #993399">1</span><span style="color: #990000">,</span><span style="color: #993399">2</span><span style="color: #990000">,</span><span style="color: #993399">5</span>
-                <span style="color: #990000">)</span> <span style="color: #990000">|</span> sort -k<span style="color: #993399">2</span> <span style="color: #990000">|</span> cut -d<span style="color: #990000">\</span>  -f<span style="color: #993399">1</span><span style="color: #990000">,</span><span style="color: #993399">3</span>
-EOF</tt></pre></div></div>
-</div>
-</div>
-<div class="sect1">
 <h2 id="_coprocess">Coprocess</h2>
 <div class="sectionbody">
-<div class="paragraph"><p>A problem with bash and coreutils is how to do a self join with data from
-standard input. This requires a coproc.  As mentioned earlier coproc is a
-method for pipeline redirection. This is not required by the Posix standard. A
-coproc can join two streams.</p></div>
 <div class="paragraph"><p>In Bash coproc returns a pair file descriptors for input and output
 Similar to named pipes coproc command can be used to redirect data streams.
 A coproc returns a pair of file descriptors for input and output.
@@ -1058,15 +966,9 @@ http://www.gnu.org/software/src-highlite -->
         date <span style="color: #990000">|</span> tee <span style="color: #990000">&gt;&amp;</span><span style="color: #993399">4</span>
         <span style="font-weight: bold"><span style="color: #0000FF">exec</span></span> <span style="color: #993399">4</span><span style="color: #990000">&gt;&amp;</span>-
 EOF</tt></pre></div></div>
-<div class="paragraph"><p>A second coproc is necessary to join two streams.
-At some point the input must be closed before reading the output.
-This is a good example for self join.</p></div>
-<div class="paragraph"><p>But there is a warning about multiple coproc in Bash version 4.4.
-<a href="https://unix.stackexchange.com/questions/86270/how-do-you-use-the-command-coproc-in-various-shells">https://unix.stackexchange.com/questions/86270/how-do-you-use-the-command-coproc-in-various-shells</a>
-This example uses file descriptors of coproc
-But there is a warning about multiple coproc in Bash version 4.4.
-A coproc returns a pair file descriptors for input and output
-In Bash coproc returns a pair file descriptors for input and output</p></div>
+<div class="paragraph"><p>A problem with bash and coreutils is how to do a self join with data from
+standard input. As mentioned earlier coproc is a method for pipeline redirection. This is not required by the Posix standard. A coproc can join two streams.
+This requires coproc. At some point the input must be closed before reading the output. A second coproc is necessary to join two streams.</p></div>
 <div class="listingblock">
 <div class="content"><!-- Generator: GNU source-highlight 3.1.8
 by Lorenzo Bettini
@@ -1146,29 +1048,161 @@ http://www.gnu.org/software/src-highlite -->
 </div>
 </div>
 <div class="sect1">
+<h2 id="_coreutils">Coreutils</h2>
+<div class="sectionbody">
+<div class="quoteblock">
+<div class="content"><em>
+ This package contains the basic file, shell and text manipulation
+ utilities which are expected to exist on every operating system.
+</em></div>
+<div class="attribution">
+&#8212; Debian
+</div></div>
+<div class="paragraph"><p>Many commands in coreutils are a tools for text processing.  All together they
+are like the SQL of shell programming. The join command is one of the most
+important commands in SQL and coreutils. There is no self join in coreutils.
+In coreutils the joined columns is moved to the left. Empty values are equal.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="https://www.gnu.org/software/coreutils/">https://www.gnu.org/software/coreutils/</a>
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.maizure.org/projects/decoded-gnu-coreutils/">http://www.maizure.org/projects/decoded-gnu-coreutils/</a>
+</p>
+</li>
+</ul></div>
+<div class="listingblock">
+<div class="title">join</div>
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-style: italic"><span style="color: #9A1900"># Column with two rows</span></span>
+seq <span style="color: #993399">2</span>
+
+<span style="font-style: italic"><span style="color: #9A1900"># Additional column with two rows</span></span>
+seq <span style="color: #993399">2</span> <span style="color: #990000">|</span> nl
+
+<span style="font-style: italic"><span style="color: #9A1900"># Inner join with three rows</span></span>
+seq <span style="color: #993399">2</span> <span style="color: #990000">|</span> nl <span style="color: #990000">|</span> join - <span style="color: #990000">&lt;(</span>seq <span style="color: #993399">3</span><span style="color: #990000">)</span>
+
+<span style="font-style: italic"><span style="color: #9A1900"># Outer join with three rows</span></span>
+seq <span style="color: #993399">2</span> <span style="color: #990000">|</span> nl <span style="color: #990000">|</span> join - <span style="color: #990000">&lt;(</span>seq <span style="color: #993399">3</span><span style="color: #990000">)</span> -a<span style="color: #993399">2</span>
+
+<span style="font-style: italic"><span style="color: #9A1900"># Cross join with the empty columns</span></span>
+seq <span style="color: #993399">2</span> <span style="color: #990000">|</span> nl <span style="color: #990000">|</span> join - <span style="color: #990000">&lt;(</span>seq <span style="color: #993399">3</span><span style="color: #990000">)</span> -j<span style="color: #993399">3</span>
+
+<span style="font-style: italic"><span style="color: #9A1900"># Additional column with a cross join of a single row</span></span>
+seq <span style="color: #993399">2</span> <span style="color: #990000">|</span> nl <span style="color: #990000">|</span> join - <span style="color: #990000">&lt;(</span>seq <span style="color: #993399">1</span><span style="color: #990000">)</span> -j<span style="color: #993399">3</span></tt></pre></div></div>
+<div class="paragraph"><p>A additonal key column can be added before ordering with the join program. In the example the key is used to sort the output of the tee process.
+.join</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>seq <span style="color: #993399">6</span> <span style="color: #990000">|</span> sed s<span style="color: #990000">/^/\\\\</span>x4<span style="color: #990000">/</span> <span style="color: #990000">|</span> xargs -<span style="color: #993399">0</span> <span style="font-weight: bold"><span style="color: #0000FF">printf</span></span> <span style="color: #990000">%</span>b <span style="color: #990000">|</span> nl <span style="color: #990000">\</span>
+        <span style="color: #990000">|</span> tee <span style="color: #990000">\</span>
+                <span style="color: #990000">&gt;(</span>head -n<span style="color: #993399">4</span> <span style="color: #990000">|</span> join -j<span style="color: #993399">3</span> <span style="color: #990000">&lt;(</span>seq <span style="color: #993399">1</span><span style="color: #990000">)</span> -<span style="color: #990000">)</span> <span style="color: #990000">\</span>
+                        <span style="color: #990000">&gt;</span> <span style="color: #990000">\</span>
+                <span style="color: #990000">&gt;(</span>tail -n<span style="color: #993399">4</span> <span style="color: #990000">|</span> join -j<span style="color: #993399">3</span> <span style="color: #990000">&lt;(</span>seq <span style="color: #993399">2</span> <span style="color: #993399">2</span><span style="color: #990000">)</span> -<span style="color: #990000">)</span> <span style="color: #990000">\</span>
+        <span style="color: #990000">|</span> sort -k<span style="color: #993399">2</span> <span style="color: #990000">|</span> join -<span style="color: #993399">11</span> -<span style="color: #993399">22</span> <span style="color: #990000">&lt;(</span>seq <span style="color: #993399">3</span> <span style="color: #993399">4</span><span style="color: #990000">)</span> -</tt></pre></div></div>
+<div class="paragraph"><p>The join command moves the key column to the left. There is no easy way to
+reorder columns with coreutils. With cut the order remains in the same order
+that is read. This is where awk becomes a useful tool.
+- <a href="https://lists.gnu.org/archive/html/bug-coreutils/2012-12/msg00117.html">https://lists.gnu.org/archive/html/bug-coreutils/2012-12/msg00117.html</a></p></div>
+<div class="paragraph"><p>This example replaces column 2 with 0 where column 1 is not 0.</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>bash <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'EOF'</span>
+        paste <span style="color: #990000">&lt;(</span>
+                echo $<span style="color: #FF0000">'a</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">0</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">b</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">0</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">c'</span>
+        <span style="color: #990000">)</span> <span style="color: #990000">&lt;(</span>
+                seq -<span style="color: #993399">5</span> -<span style="color: #993399">1</span>
+        <span style="color: #990000">)</span> <span style="color: #990000">|</span> awk <span style="color: #FF0000">'{if($1) print $1,0; else print $1,$2} '</span>
+EOF</tt></pre></div></div>
+<div class="paragraph"><p>Typescript records the in and output of a terminal.
+After recording the file can be replayed with scriptreplay.
+The input from keybourd is wrong with a different file descriptor.
+Please see man script | less +/^BUGS about issues with input redirection</p></div>
+<div class="listingblock">
+<div class="title">typescript</div>
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>script <span style="color: #993399">3</span><span style="color: #990000">&lt;&amp;</span><span style="color: #993399">0</span> <span style="color: #993399">0</span><span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'SCRIPT'</span> -c <span style="color: #FF0000">"</span>
+<span style="color: #FF0000">                exec bash &lt;&amp;0</span>
+<span style="color: #FF0000">        "</span>
+        date
+        <span style="font-weight: bold"><span style="color: #0000FF">exec</span></span> bash <span style="color: #993399">0</span><span style="color: #990000">&lt;&amp;</span><span style="color: #993399">3</span>
+SCRIPT</tt></pre></div></div>
+<div class="paragraph"><p>The same example with grep and coreutils to sort the stdout of subprocesses.</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>bash <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'EOF'</span>
+        join <span style="color: #990000">&lt;(</span>
+                join <span style="color: #990000">&lt;(</span>
+                        paste <span style="color: #990000">&lt;(</span>
+                                echo $<span style="color: #FF0000">'a</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">0</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">b</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">0</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">c'</span>
+                        <span style="color: #990000">)</span> <span style="color: #990000">&lt;(</span>
+                                seq -<span style="color: #993399">5</span> -<span style="color: #993399">1</span>
+                        <span style="color: #990000">)</span> <span style="color: #990000">|</span> nl <span style="color: #990000">|</span> sort -k<span style="color: #993399">2</span>
+                        <span style="color: #990000">)</span> <span style="color: #990000">&lt;(</span>
+                                seq <span style="color: #993399">0</span> <span style="color: #993399">0</span> <span style="color: #990000">|</span> nl
+                        <span style="color: #990000">)</span> -j<span style="color: #993399">2</span> -a<span style="color: #993399">1</span> <span style="color: #990000">|</span> sort -k<span style="color: #993399">4</span>
+                <span style="color: #990000">)</span> <span style="color: #990000">&lt;(</span>
+                        seq <span style="color: #993399">0</span> <span style="color: #993399">1</span>
+                <span style="color: #990000">)</span> -e<span style="color: #993399">0</span> -<span style="color: #993399">21</span> -<span style="color: #993399">14</span> -a<span style="color: #993399">1</span> <span style="color: #990000">|</span> sort -k<span style="color: #993399">3</span> <span style="color: #990000">|</span> nl -nln <span style="color: #990000">|</span> tee <span style="color: #990000">&gt;(</span>
+                        grep -P <span style="color: #990000">\\</span>t0 <span style="color: #990000">|</span> cut -d<span style="color: #990000">\</span>  -f<span style="color: #993399">1</span>- <span style="color: #990000">|</span> join - <span style="color: #990000">&lt;(</span>
+                                seq <span style="color: #993399">0</span> <span style="color: #993399">0</span>
+                        <span style="color: #990000">)</span> -j<span style="color: #993399">3</span> -a<span style="color: #993399">1</span> <span style="color: #990000">|</span> cut -d<span style="color: #990000">\</span>  -f<span style="color: #993399">1</span>-<span style="color: #993399">3</span>
+                <span style="color: #990000">)</span> <span style="color: #990000">&gt;</span> <span style="color: #990000">&gt;(</span>
+                        grep -P <span style="color: #990000">\\</span>t1 <span style="color: #990000">|</span> cut -d<span style="color: #990000">\</span>  -f<span style="color: #993399">1</span>- <span style="color: #990000">|</span> join - <span style="color: #990000">&lt;(</span>
+                                seq <span style="color: #993399">0</span> <span style="color: #993399">0</span>
+                        <span style="color: #990000">)</span> -j<span style="color: #993399">3</span> -a<span style="color: #993399">1</span> <span style="color: #990000">|</span> cut -d<span style="color: #990000">\</span>  -f<span style="color: #993399">1</span><span style="color: #990000">,</span><span style="color: #993399">2</span><span style="color: #990000">,</span><span style="color: #993399">5</span>
+                <span style="color: #990000">)</span> <span style="color: #990000">|</span> sort -k<span style="color: #993399">2</span> <span style="color: #990000">|</span> cut -d<span style="color: #990000">\</span>  -f<span style="color: #993399">1</span><span style="color: #990000">,</span><span style="color: #993399">3</span>
+EOF</tt></pre></div></div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_stream_editor_sed">Stream editor sed</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>Streams can be manipulated with the sed command.
-It is one of the simple but powerful commands.</p></div>
+It is one of the simple but powerful commands.
+info sed --index-search=<em>evaluate</em></p></div>
 <div class="listingblock">
 <div class="title">sed</div>
 <div class="content"><!-- Generator: GNU source-highlight 3.1.8
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
-<pre><tt>info sed --index-search<span style="color: #990000">=</span><span style="color: #FF0000">'evaluate'</span>dd
-
-<span style="font-style: italic"><span style="color: #9A1900"># Pattern space and hold space, branches and evaluate.</span></span>
+<pre><tt><span style="font-style: italic"><span style="color: #9A1900"># Pattern space and hold space, branches and evaluate.</span></span>
 <span style="font-style: italic"><span style="color: #9A1900"># The exmple swaps every other line of the input.</span></span>
 <span style="font-style: italic"><span style="color: #9A1900"># There are GNU specific commands like evaluate.</span></span>
 <span style="font-style: italic"><span style="color: #9A1900"># It is not documented in the man page.</span></span>
-seq <span style="color: #993399">8</span> <span style="color: #990000">|</span> sed <span style="color: #FF0000">'1~2{h;d};0~2{G}'</span>
-seq <span style="color: #993399">6</span>  <span style="color: #990000">|</span> sed -e<span style="color: #FF0000">'s/^/seq /'</span> -e <span style="color: #FF0000">'s/$/ | paste -s/e'</span>
+seq <span style="color: #993399">8</span> <span style="color: #990000">|</span>
+sed <span style="color: #FF0000">'1~2{h;d};0~2{G}'</span>
+seq <span style="color: #993399">6</span>  <span style="color: #990000">|</span>
+sed -e<span style="color: #FF0000">'s/^/seq /'</span> -e <span style="color: #FF0000">'s/$/ |</span>
+<span style="color: #FF0000">paste -s/e'</span>
 <span style="font-weight: bold"><span style="color: #0000FF">printf</span></span> <span style="color: #FF0000">' 1</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000"> 2</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000"> 3</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">4</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">5</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000"> 6</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000"> 7</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">'</span> <span style="color: #990000">|</span> sed <span style="color: #FF0000">'1s/^ //;:a;$!N;s/</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000"> / /;ta;P;D;'</span>
 
 <span style="font-style: italic"><span style="color: #9A1900"># With sed monitor file and execute commands with sed</span></span>
 stdbuf -o<span style="color: #993399">0</span> bash <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'EOF'</span>
-        tail -F fifo <span style="color: #990000">|</span> xxd -p -c<span style="color: #993399">1</span> <span style="color: #990000">|</span> sed s<span style="color: #990000">/.*</span>/date/e <span style="color: #990000">|</span> xargs -I@ <span style="font-weight: bold"><span style="color: #0000FF">printf</span></span> <span style="color: #990000">%</span>q<span style="color: #990000">\\</span>n @</tt></pre></div></div>
+        tail -F fifo <span style="color: #990000">|</span> xxd -p -c<span style="color: #993399">1</span> <span style="color: #990000">|</span> sed s<span style="color: #990000">/.*</span>/date/e <span style="color: #990000">|</span> xargs -I@ <span style="font-weight: bold"><span style="color: #0000FF">printf</span></span> <span style="color: #990000">%</span>q<span style="color: #990000">\\</span>n @
+
+<span style="font-style: italic"><span style="color: #9A1900"># info sed shows additional documentation</span></span>
+info sed --index-search<span style="color: #990000">=</span><span style="color: #FF0000">'evaluate'</span></tt></pre></div></div>
 <div class="listingblock">
 <div class="content"><!-- Generator: GNU source-highlight 3.1.8
 by Lorenzo Bettini
@@ -1176,16 +1210,16 @@ http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
 <pre><tt><span style="font-style: italic"><span style="color: #9A1900"># A process pipeline that greps upgrades from debian package log file:</span></span>
 bash <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'EOF'</span>
-        cat /var/log/dpkg<span style="color: #990000">.</span>log{<span style="color: #990000">.</span><span style="color: #993399">1</span><span style="color: #990000">,</span>} <span style="color: #990000">|</span> <span style="color: #990000">\</span>
-        grep -P <span style="color: #FF0000">'.{20}upgrade'</span> <span style="color: #990000">|</span> <span style="color: #990000">\</span>
-        cut -d<span style="color: #FF0000">' '</span> -f<span style="color: #993399">4</span><span style="color: #990000">,</span><span style="color: #993399">5</span><span style="color: #990000">,</span><span style="color: #993399">7</span> <span style="color: #990000">|</span> <span style="color: #990000">\</span>
-        sed <span style="color: #FF0000">'s/:/ /'</span> <span style="color: #990000">|</span> <span style="color: #990000">\</span>
-        grep -o <span style="color: #FF0000">'[^[:space:]]*'</span> <span style="color: #990000">|</span> <span style="color: #990000">\</span>
-        sed  -n -e <span style="color: #FF0000">'p;n;x;n;p;x;p;'</span> <span style="color: #990000">|</span> <span style="color: #990000">\</span>
-        grep xserver -A<span style="color: #990000">+</span><span style="color: #993399">2</span> <span style="color: #990000">|</span> <span style="color: #990000">\</span>
-        paste - - - -d_ <span style="color: #990000">|</span> <span style="color: #990000">\</span>
-        xargs urlencode <span style="color: #990000">|</span> <span style="color: #990000">\</span>
-        tr <span style="color: #FF0000">'[[:upper:]]'</span> <span style="color: #FF0000">'[[:lower:]]'</span> <span style="color: #990000">|</span> <span style="color: #990000">\</span>
+        cat /var/log/dpkg<span style="color: #990000">.</span>log{<span style="color: #990000">.</span><span style="color: #993399">1</span><span style="color: #990000">,</span>} <span style="color: #990000">|</span>
+        grep -P <span style="color: #FF0000">'.{20}upgrade'</span> <span style="color: #990000">|</span>
+        cut -d<span style="color: #FF0000">' '</span> -f<span style="color: #993399">4</span><span style="color: #990000">,</span><span style="color: #993399">5</span><span style="color: #990000">,</span><span style="color: #993399">7</span> <span style="color: #990000">|</span>
+        sed <span style="color: #FF0000">'s/:/ /'</span> <span style="color: #990000">|</span>
+        grep -o <span style="color: #FF0000">'[^[:space:]]*'</span> <span style="color: #990000">|</span>
+        sed  -n -e <span style="color: #FF0000">'p;n;x;n;p;x;p;'</span> <span style="color: #990000">|</span>
+        grep xserver -A<span style="color: #990000">+</span><span style="color: #993399">2</span> <span style="color: #990000">|</span>
+        paste - - - -d_ <span style="color: #990000">|</span>
+        xargs urlencode <span style="color: #990000">|</span>
+        tr <span style="color: #FF0000">'[[:upper:]]'</span> <span style="color: #FF0000">'[[:lower:]]'</span> <span style="color: #990000">|</span>
         sed <span style="color: #FF0000">'s/$/.deb/'</span>
 EOF</tt></pre></div></div>
 <div class="listingblock">
@@ -1207,8 +1241,7 @@ seq <span style="color: #993399">8</span> <span style="color: #990000">|</span> 
 
 sed P<span style="color: #990000">;</span>D commands
 seq <span style="color: #993399">6</span>  <span style="color: #990000">|</span> sed <span style="color: #FF0000">'l;N;P;D'</span>
-<span style="font-weight: bold"><span style="color: #0000FF">printf</span></span> <span style="color: #FF0000">' 1</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000"> 2</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000"> 3</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">4</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">5</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000"> 6</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000"> 7</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">'</span> <span style="color: #990000">|</span> sed <span style="color: #FF0000">'1s/^ //;:a;$!N;s/</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000"> / /;ta;P;D;'</span> --posix
-</tt></pre></div></div>
+<span style="font-weight: bold"><span style="color: #0000FF">printf</span></span> <span style="color: #FF0000">' 1</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000"> 2</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000"> 3</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">4</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">5</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000"> 6</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000"> 7</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">'</span> <span style="color: #990000">|</span> sed <span style="color: #FF0000">'1s/^ //;:a;$!N;s/</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000"> / /;ta;P;D;'</span></tt></pre></div></div>
 </div>
 </div>
 <div class="sect1">
@@ -1249,7 +1282,7 @@ http://www.gnu.org/software/src-highlite -->
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2018-12-26 12:35:56 CET
+ 2019-01-27 13:58:42 CET
 </div>
 </div>
 </body>
