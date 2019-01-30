@@ -37,6 +37,7 @@ index.html: README.html \
 	wiki/qemu/QEMU.html \
 	wiki/qemu/VirtualXPVHD.html \
 	wiki/web/Apache.html \
+	wiki/web/Mojolicious.html \
 	wiki/web/XML.html
 	cp $^ . 2>&- || cp $< index.html
 
