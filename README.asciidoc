@@ -4,13 +4,6 @@
 
 This is the documentation of my journey through GNU/Linux userland
 
-=== News
-
-The lates commits are some build scripts for chroot and kvm applications. There is a Devuan based cd image build script and the Jenkins build server. All scripts try to be posix compatible. The source and scriptreplay of the build process are linked below. Next step is to integrate the cdimage buil into jenkins.
-
-- link:{http}/cgi-bin/cdimage[cdimage], link:{http}/cgi-bin/jenkins[jenkins]
-- link:{source}/Makefile[source], link:{http}/scriptreplay[log]
-
 .Content
 include::./wiki/_Sidebar.asciidoc[]
 

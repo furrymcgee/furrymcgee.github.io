@@ -738,7 +738,34 @@ asciidoc.install();
 <div class="sect1">
 <h2 id="_mojolicious">Mojolicious</h2>
 <div class="sectionbody">
-<div class="paragraph"><p>Mojolicious is a modern perl web framework available on different platforms.</p></div>
+<div class="paragraph"><p>Mojolicious is a modern perl web framework available on different platforms.
+A mojolicious controller uses renderer, routes, templates to generate a view of dynamic web sites.</p></div>
+<div class="sect2">
+<h3 id="_templates">Templates</h3>
+<div class="paragraph"><p>Mojolicious templates are files, heredocs or data sections written in the embedded perl ep template language. The ep language uses static html markup and embedded perl code. The syntax is described on the Mojolicious Homepage. The man page Mojolicious::Guides::Growing has an overview how to start a application.</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-style: italic"><span style="color: #9A1900"># man Mojolicious Mojo::Template</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># man Mojolicious::Guides::Growing Mojolicious::Guides::Cookbook</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">use</span></span> Mojolicious<span style="color: #990000">::</span>Lite<span style="color: #990000">;</span>
+
+get <span style="color: #FF0000">'/hello'</span><span style="color: #990000">;</span>
+
+<span style="font-style: italic"><span style="color: #9A1900"># Minimal "Hello World" application with template for profiling</span></span>
+app<span style="color: #990000">-&gt;</span>start<span style="color: #990000">;</span>
+
+<span style="font-style: italic"><span style="color: #9A1900"># man data Mojo::Loader</span></span>
+__DATA__
+
+@@ hello<span style="color: #990000">.</span>html<span style="color: #990000">.</span>ep
+Hello World<span style="color: #990000">!</span></tt></pre></div></div>
+</div>
+<div class="sect2">
+<h3 id="_examples">Examples</h3>
+<div class="paragraph"><p>There are more examples on ynon pereks webpage.</p></div>
 <div class="ulist"><ul>
 <li>
 <p>
@@ -749,11 +776,12 @@ asciidoc.install();
 </div>
 </div>
 </div>
+</div>
 <div id="footnotes"><hr /></div>
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2019-01-30 00:03:57 CET
+ 2019-02-02 19:02:55 CET
 </div>
 </div>
 </body>
