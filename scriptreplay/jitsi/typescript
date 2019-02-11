@@ -1,0 +1,153 @@
+Script started on 2019-02-06 19:36:00+01:00 [<not executed on terminal>]
++ exec bash -ex
++ schroot -d/root -- true
++ schroot -d/root -- bash -s 5
++ bash -ex
++ update-alternatives --set editor /usr/bin/vim.tiny
++ wget --continue http://pkgmaster.devuan.org/devuan/pool/main/d/devuan-keyring/devuan-keyring_2017.10.03_all.deb
+--2019-02-06 18:36:01--  http://pkgmaster.devuan.org/devuan/pool/main/d/devuan-keyring/devuan-keyring_2017.10.03_all.deb
+Resolving pkgmaster.devuan.org (pkgmaster.devuan.org)... 5.196.38.18
+Connecting to pkgmaster.devuan.org (pkgmaster.devuan.org)|5.196.38.18|:80... connected.
+HTTP request sent, awaiting response... 416 Requested Range Not Satisfiable
+
+    The file is already fully retrieved; nothing to do.
+
++ getent passwd cockpit-ws
++ dpkg-reconfigure cockpit-ws
+Adding system user `cockpit-ws' (UID 127) ...
+Adding new group `cockpit-ws' (GID 149) ...
+Adding new user `cockpit-ws' (UID 127) with group `cockpit-ws' ...
+Not creating home directory `/'.
++ dpkg --install devuan-keyring_2017.10.03_all.deb
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 32824 files and directories currently installed.)
+Preparing to unpack devuan-keyring_2017.10.03_all.deb ...
+Unpacking devuan-keyring (2017.10.03) over (2017.10.03) ...
+Setting up devuan-keyring (2017.10.03) ...
++ cat
++ apt-get update
+0% [Working]            Hit:1 http://pkgmaster.devuan.org/merged testing InRelease
+0% [Connected to packages.credativ.com (93.94.130.77)] [Connected to download.j                                                                               Hit:2 https://packages.credativ.com/public/postgresql stretch-test InRelease
+                                                                               0% [Connected to download.jitsi.org (130.79.200.22)] [Waiting for headers]                                                                          Hit:3 http://apt.postgresql.org/pub/repos/apt buster-pgdg InRelease
+                                                                          0% [Waiting for headers]                        Hit:4 https://download.jitsi.org stable/ InRelease
+                        0% [Working]0% [Working]0% [Working]0% [Working]20% [Working]             Reading package lists... 0%Reading package lists... 0%Reading package lists... 0%Reading package lists... 70%Reading package lists... 94%Reading package lists... 94%Reading package lists... 95%Reading package lists... 95%Reading package lists... 97%Reading package lists... 97%Reading package lists... 97%Reading package lists... 97%Reading package lists... 99%Reading package lists... 99%Reading package lists... Done
++ cat
++ apt-get purge --yes --allow-remove-essential sysvinit-core
+Reading package lists... 0%Reading package lists... 100%Reading package lists... Done
+Building dependency tree... 0%Building dependency tree... 0%Building dependency tree... 50%Building dependency tree... 50%Building dependency tree       
+Reading state information... 0%Reading state information... 0%Reading state information... Done
+Package 'sysvinit-core' is not installed, so not removed
+0 upgraded, 0 newly installed, 0 to remove and 137 not upgraded.
++ apt-get install --yes runit-init
+Reading package lists... 0%Reading package lists... 100%Reading package lists... Done
+Building dependency tree... 0%Building dependency tree... 0%Building dependency tree... 50%Building dependency tree... 50%Building dependency tree       
+Reading state information... 0%Reading state information... 0%Reading state information... Done
+runit-init is already the newest version (2.1.2-22).
+0 upgraded, 0 newly installed, 0 to remove and 137 not upgraded.
++ update-alternatives --install /sbin/systemctl systemctl /usr/sbin/update-rc.d 50
++ DEBIAN_FRONTEND=noninteractive
++ xargs apt-get install --yes --quiet
+Reading package lists...
+Building dependency tree...
+Reading state information...
+alsa-utils is already the newest version (1.1.7-1).
+apache2 is already the newest version (2.4.38-2).
+apt-utils is already the newest version (1.8.0~beta1).
+binutils is already the newest version (2.31.1-11).
+btrfs-progs is already the newest version (4.20.1-1).
+busybox is already the newest version (1:1.27.2-3).
+ca-certificates is already the newest version (20190110).
+cgpt is already the newest version (0~R63-10032.B-3).
+cockpit-ws is already the newest version (186-1).
+console-common is already the newest version (0.7.90).
+curl is already the newest version (7.63.0-1).
+debhelper is already the newest version (12).
+debian-installer is already the newest version (20181207+devuan1).
+debian-keyring is already the newest version (2018.12.24).
+debootstrap is already the newest version (1.0.110+devuan1).
+devuan-baseconf is already the newest version (0.6.4+devuan2).
+devuan-keyring is already the newest version (2017.10.03).
+dhcpcd5 is already the newest version (7.0.8-2).
+dialog is already the newest version (1.3-20181022-1).
+dpkg-dev is already the newest version (1.19.2).
+e2fsprogs is already the newest version (1.44.5-1).
+fake-hwclock is already the newest version (0.11).
+fakeroot is already the newest version (1.23-1).
+fbterm is already the newest version (1.7-4+b1).
+fuseiso is already the newest version (20070708-3.2+b1).
+gcc is already the newest version (4:8.2.0-2).
+git is already the newest version (1:2.20.1-2).
+gnupg2 is already the newest version (2.2.12-1).
+htop is already the newest version (2.2.0-1+b1).
+iftop is already the newest version (1.0~pre4-6).
+initramfs-tools is already the newest version (0.132).
+iotop is already the newest version (0.6-24-g733f3f8-1).
+joe is already the newest version (4.6-1+b1).
+kpartx is already the newest version (0.7.9-2).
+locales is already the newest version (2.28-5).
+lynx is already the newest version (2.8.9rel.1-3).
+makedev is already the newest version (2.3.1-94).
+man-db is already the newest version (2.8.5-1).
+mlocate is already the newest version (0.26-3).
+ntp is already the newest version (1:4.2.8p12+dfsg-3).
+parted is already the newest version (3.2-24).
+rsync is already the newest version (3.1.3-5).
+schroot is already the newest version (1.6.10-6+b1).
+screen is already the newest version (4.6.2-3).
+shellinabox is already the newest version (2.21).
+strace is already the newest version (4.26-0.2).
+tmux is already the newest version (2.8-2).
+u-boot-tools is already the newest version (2019.01+dfsg-1).
+usbutils is already the newest version (1:007-4+b1).
+vifm is already the newest version (0.10-1).
+vim-nox is already the newest version (2:8.1.0693-2).
+vsftpd is already the newest version (3.0.3-11).
+wavemon is already the newest version (0.8.2-1+b1).
+wget is already the newest version (1.20.1-1).
+zsh is already the newest version (5.7-2).
+0 upgraded, 0 newly installed, 0 to remove and 137 not upgraded.
++ '[' -d /var/ftp ']'
++ chmod 555 /var/ftp
++ sed -i /etc/vsftpd.conf -f -
++ '[' -d work ']'
++ sed -f - -i /etc/apache2/ports.conf
++ sed -f - -i /etc/apache2/sites-available/000-default.conf
++ sed -f - -i /etc/apache2/envvars
++ bash -esx 7
++ '[' -d /var/lib/shellinabox ']'
++ : cat
++ read
++++ basename postgres
+++ printf %q postgres
++ bash -sx postgres
++ '[' -d /var/www/html/postgres ']'
++ read
++ schroot -d/root
+OK
+0% [Working]            Hit:1 http://apt.postgresql.org/pub/repos/apt buster-pgdg InRelease
+0% [Connected to packages.credativ.com (93.94.130.77)] [Connected to download.j                                                                               Hit:2 https://packages.credativ.com/public/postgresql stretch-test InRelease
+                                                                               0% [Waiting for headers]                        Hit:3 https://download.jitsi.org stable/ InRelease
+                        0% [Working]0% [Working]0% [Working]0% [Working]0% [Working]0% [Working]0% [Working]0% [Working]0% [Working]0% [Working]0% [Working]0% [Working]0% [Working]0% [Working]0% [Working]0% [Working]0% [Working]0% [Working]0% [Working]0% [Working]0% [Working]0% [Connecting to pkgmaster.devuan.org (5.196.38.18)]                                                     Hit:4 http://pkgmaster.devuan.org/merged testing InRelease
+                                                     0% [Working]20% [Working]             Reading package lists... 0%Reading package lists... 0%Reading package lists... 0%Reading package lists... 93%Reading package lists... 94%Reading package lists... 94%Reading package lists... 95%Reading package lists... 95%Reading package lists... 97%Reading package lists... 97%Reading package lists... 97%Reading package lists... 97%Reading package lists... 99%Reading package lists... 99%Reading package lists... Done
+Reading package lists... 0%Reading package lists... 100%Reading package lists... Done
+Building dependency tree... 0%Building dependency tree... 0%Building dependency tree... 50%Building dependency tree... 50%Building dependency tree       
+Reading state information... 0%Reading state information... 0%Reading state information... Done
+Some packages could not be installed. This may mean that you have
+requested an impossible situation or if you are using the unstable
+distribution that some required packages have not yet been created
+or been moved out of Incoming.
+The following information may help to resolve the situation:
+
+The following packages have unmet dependencies:
+ jitsi-meet : Depends: jitsi-videobridge (= 1104-1) but it is not going to be installed
+E: Unable to correct problems, you have held broken packages.
++ exec schroot -d/root
+Module cgid already enabled
+Conf serve-cgi-bin already enabled
+Starting Apache httpd web server: apache2.
+Press Enter for maintenance
+(or press Control-D to continue): 
+sulogin: Timed out
+
+
+
+Script done on 2019-02-06 19:36:31+01:00 [COMMAND_EXIT_CODE="0"]

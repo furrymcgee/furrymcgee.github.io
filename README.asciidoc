@@ -1,8 +1,7 @@
 :http: ../../../..
 :source: {http}/cgit/www/wiki/tree
 == Welcome
-
-This is the documentation of my journey through GNU/Linux userland
+This is my free developers handbook of GNU, Linux and more
 
 .Content
 include::./wiki/_Sidebar.asciidoc[]
