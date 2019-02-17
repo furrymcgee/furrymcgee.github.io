@@ -735,76 +735,188 @@ asciidoc.install();
 <div id="header">
 </div>
 <div id="content">
-<div class="tableblock">
-<table rules="all"
-width="100%"
-frame="border"
-cellspacing="0" cellpadding="4">
-<caption class="title">Table 1. Wiki</caption>
-<col width="37%" />
-<col width="62%" />
-<tbody>
-<tr>
-<td align="left" valign="top"><p class="table">Command Interpreter</p></td>
-<td align="left" valign="top"><div><div class="paragraph"><p><a href="https://github.com/furrymcgee/Bash.html">Bash</a>, <a href="https://github.com/furrymcgee/Perl.html">Perl</a></p></div></div></td>
-</tr>
-<tr>
-<td align="left" valign="top"><p class="table">High Level Programming Languages</p></td>
-<td align="left" valign="top"><div><div class="paragraph"><p><a href="https://github.com/furrymcgee/Cpp.html">C++</a>, <a href="https://github.com/furrymcgee/Java.html">Java</a></p></div></div></td>
-</tr>
-<tr>
-<td align="left" valign="top"><p class="table">Markup Languages and Text Processors</p></td>
-<td align="left" valign="top"><div><div class="paragraph"><p><a href="https://github.com/furrymcgee/AsciiDoc.html">AsciiDoc</a>, <a href="https://github.com/furrymcgee/XML.html">XML</a>, <a href="https://github.com/furrymcgee/Make.html">PDF</a></p></div></div></td>
-</tr>
-<tr>
-<td align="left" valign="top"><p class="table">Databases and Filesystems</p></td>
-<td align="left" valign="top"><div><div class="paragraph"><p><a href="https://github.com/furrymcgee/SQLite.html">SQLite</a>, <a href="https://github.com/furrymcgee/Samba.html">Samba</a></p></div></div></td>
-</tr>
-<tr>
-<td align="left" valign="top"><p class="table">Operating Systems and Virtualization</p></td>
-<td align="left" valign="top"><div><div class="paragraph"><p><a href="https://github.com/furrymcgee/Debian.html">Debian</a>, <a href="https://github.com/furrymcgee/Devuan.html">Devuan</a>, <a href="https://github.com/furrymcgee/SUSE.html">openSUSE</a>, <a href="https://github.com/furrymcgee/QEMU.html">QEMU</a></p></div></div></td>
-</tr>
-<tr>
-<td align="left" valign="top"><p class="table">Software Development Tools</p></td>
-<td align="left" valign="top"><div><div class="paragraph"><p><a href="https://github.com/furrymcgee/Make.html">Make</a>, <a href="https://github.com/furrymcgee/Git.html">Git</a></p></div></div></td>
-</tr>
-<tr>
-<td align="left" valign="top"><p class="table">Web Frontends</p></td>
-<td align="left" valign="top"><div><div class="paragraph"><p><a href="https://github.com/furrymcgee/Apache.html">Apache</a>, <a href="https://github.com/furrymcgee/Mojolicious.html">Mojolicious</a>, <a href="https://github.com/furrymcgee/Typo3.html">Typo3</a></p></div></div></td>
-</tr>
-</tbody>
-</table>
+<div class="sect1">
+<h2 id="_typo3">TYPO3</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>TYPO3 is a PHP web framework available on different platforms. It provides a backend interface for users and administrators.</p></div>
+<div class="sect2">
+<h3 id="_installation">Installation</h3>
+<div class="paragraph"><p>This script installs Typo3 with composer with two different methods.
+After online installation from Packagist repository it creates
+a local repository and installs typo agein for comparison.
+The installation can be reviewed with the link.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+link:./typo3
+</p>
+</li>
+<li>
+<p>
+link:./cgit/www/typo3
+</p>
+</li>
+</ul></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-style: italic"><span style="color: #9A1900">#!/bin/sh</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># Create typo3 website in chroot</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># sudo TERM=linux schroot -d/root -- bash -ex &lt; debian/typo.sh</span></span>
+
+<span style="font-style: italic"><span style="color: #9A1900"># Setup</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># Configuration in /etc/php/7.3/apache2/php.ini</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># Create FIRST_INSTALL in www root</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># Add TypoScript template with plus icon in list module</span></span>
+
+<span style="font-style: italic"><span style="color: #9A1900"># Composer</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># https://getcomposer.org/doc/articles/handling-private-packages-with-satis.md</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># https://code.tutsplus.com/tutorials/setting-up-a-local-mirror-for-composer-packages-with-satis--net-36726</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># https://getcomposer.org/doc/03-cli.md#archive</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># https://tech.m6web.fr/composer-installation-without-github.html</span></span>
+
+<span style="font-style: italic"><span style="color: #9A1900"># Basic Fluid templates</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># https://docs.typo3.org/typo3cms/TemplatingTutorial/BasicFluidTemplates/Index.html</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># https://wiki.typo3.org/Fluid</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># https://wiki.typo3.org/T3Doc/Fluidtemplate_by_example</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># https://docs.typo3.org/typo3cms/extensions/dce/Index.html</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">exec</span></span> bash <span style="color: #990000">-</span>ex <span style="color: #990000">\</span>
+<span style="color: #993399">3</span><span style="color: #990000">&lt;&amp;</span><span style="color: #993399">0</span> <span style="color: #990000">\</span>
+<span style="color: #993399">6</span><span style="color: #990000">&lt;</span>debian<span style="color: #990000">/</span>debootstrap<span style="color: #990000">.</span>sh <span style="color: #990000">\</span>
+<span style="color: #993399">7</span><span style="color: #990000">&lt;</span>debian<span style="color: #990000">/</span>apache<span style="color: #990000">.</span>sh <span style="color: #990000">\</span>
+<span style="color: #993399">8</span><span style="color: #990000">&lt;</span>tools<span style="color: #990000">/</span>typo3<span style="color: #990000">.</span>sh <span style="color: #990000">\</span>
+<span style="color: #993399">9</span><span style="color: #990000">&lt;&lt;-</span><span style="color: #FF0000">'SULOGIN'</span> <span style="color: #990000">\</span>
+<span style="color: #993399">0</span><span style="color: #990000">&lt;&lt;-</span><span style="color: #FF0000">'DEBOOTSTRAP'</span> <span style="color: #990000">\</span>
+<span style="color: #993399">5</span><span style="color: #990000">&lt;&lt;-</span><span style="color: #FF0000">'CGI-BIN'</span>
+        a2enmod cgid
+        a2enconf serve<span style="color: #990000">-</span>cgi<span style="color: #990000">-</span>bin
+        service vsftpd start
+        service apache2 start
+        <span style="font-weight: bold"><span style="color: #0000FF">exec</span></span> sulogin <span style="color: #990000">--</span>login<span style="color: #990000">-</span>shell <span style="color: #990000">--</span>timeout <span style="color: #993399">3</span> <span style="color: #990000">&lt;&amp;</span><span style="color: #993399">3</span>
+SULOGIN
+        <span style="font-style: italic"><span style="color: #9A1900"># create schroot</span></span>
+        schroot <span style="color: #990000">-</span>d<span style="color: #FF0000">/root -- true &amp;&gt; /dev/</span>null <span style="color: #990000">||</span>
+        bash <span style="color: #990000">-</span><span style="font-weight: bold"><span style="color: #0000FF">x</span></span> <span style="color: #990000">&lt;&amp;</span><span style="color: #993399">6</span>
+
+        <span style="font-style: italic"><span style="color: #9A1900"># install packages</span></span>
+        schroot <span style="color: #990000">-</span>d<span style="color: #990000">/</span>root <span style="color: #990000">&lt;&amp;</span><span style="color: #993399">7</span> <span style="color: #990000">--</span> bash <span style="color: #990000">-</span><span style="font-weight: bold"><span style="color: #0000FF">s</span></span> <span style="color: #993399">5</span>
+
+        <span style="font-style: italic"><span style="color: #9A1900"># install busybox</span></span>
+        schroot <span style="color: #990000">-</span>d<span style="color: #990000">/</span>root <span style="color: #990000">&lt;&amp;</span><span style="color: #993399">8</span>
+
+        <span style="font-style: italic"><span style="color: #9A1900"># start</span></span>
+        <span style="font-weight: bold"><span style="color: #0000FF">exec</span></span> schroot <span style="color: #990000">-</span>d<span style="color: #990000">/</span>root <span style="color: #990000">&lt;&amp;</span><span style="color: #993399">9</span>
+
+DEBOOTSTRAP
+        typo3
+CGI<span style="color: #990000">-</span>BIN</tt></pre></div></div>
 </div>
-<div class="tableblock">
-<table rules="all"
-width="100%"
-frame="border"
-cellspacing="0" cellpadding="4">
-<caption class="title">Table 2. Web</caption>
-<col width="37%" />
-<col width="62%" />
-<tbody>
-<tr>
-<td align="left" valign="top"><p class="table">Git Repository</p></td>
-<td align="left" valign="top"><div><div class="paragraph"><p><a href="https://github.com/furrymcgee/cgit">Git</a></p></div></div></td>
-</tr>
-<tr>
-<td align="left" valign="top"><p class="table">TYPO3 Example</p></td>
-<td align="left" valign="top"><div><div class="paragraph"><p><a href="https://github.com/furrymcgee/typo3">Typo3</a>, <a href="https://github.com/furrymcgee/cgit/www/typo3">source</a></p></div></div></td>
-</tr>
-<tr>
-<td align="left" valign="top"><p class="table">Shellinabox Demos</p></td>
-<td align="left" valign="top"><div><div class="paragraph"><p><a href="https://github.com/furrymcgee/cgi-bin/cdimage">CD Image</a>, <a href="https://github.com/furrymcgee/cgi-bin/jenkins">Jenkins</a>, <a href="https://github.com/furrymcgee/cgi-bin/postgres">Postgresql</a>, <a href="https://github.com/furrymcgee/cgi-bin/typo3">Typo3</a></p></div></div></td>
-</tr>
-</tbody>
-</table>
+<div class="sect2">
+<h3 id="_configuration">Configuration</h3>
+<div class="paragraph"><p>This typo3 configuration uses backend interface and config files.</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Touch FIRST_INSTALL in web
+</p>
+</li>
+<li>
+<p>
+Copy files to public/typo3conf/ext
+</p>
+</li>
+<li>
+<p>
+Start typo3 backend in browser
+</p>
+</li>
+<li>
+<p>
+Open List module menu
+</p>
+</li>
+<li>
+<p>
+Add Home template page
+</p>
+</li>
+<li>
+<p>
+Include template file in setup
+</p>
+</li>
+<li>
+<p>
+Add more template pages inside home
+</p>
+</li>
+<li>
+<p>
+Define page constants
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="https://docs.typo3.org/typo3cms/InstallationGuide/In-depth/ThePackageInDetail/Index.html?highlight=fileadmin">https://docs.typo3.org/typo3cms/InstallationGuide/In-depth/ThePackageInDetail/Index.html?highlight=fileadmin</a>
+</p>
+</li>
+<li>
+<p>
+<a href="https://docs.typo3.org/typo3cms/TemplatingTutorial/SharingAndSwitching/Index.html">https://docs.typo3.org/typo3cms/TemplatingTutorial/SharingAndSwitching/Index.html</a>
+</p>
+</li>
+</ul></div>
+</li>
+</ol></div>
+<div class="listingblock">
+<div class="title">Setup</div>
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-style: italic"><span style="color: #9A1900"># Constant definition</span></span>
+src<span style="color: #990000">=</span><span style="color: #FF0000">"https://lippydanger.jumpingcrab.com/cgi-bin/typo3"</span>
+
+<span style="font-style: italic"><span style="color: #9A1900"># Include TypoScript in setup</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># https://stackoverflow.com/questions/43592397/include-external-setup-files-in-setup-txt-typo3</span></span>
+<span style="color: #FF0000">&lt;INCLUDE_TYPOSCRIPT: source="FILE:typo3conf/ext/menu.txt"&gt;</span></tt></pre></div></div>
+</div>
+<div class="sect2">
+<h3 id="_fluid_templating">Fluid Templating</h3>
+<div class="paragraph"><p>Fluid Template have additional variables "{data.title}" for example. This can be used to generate more dynamic templates.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="https://docs.typo3.org/typo3cms/TemplatingTutorial/BasicFluidTemplates/Index.html#prepare-typoscript">https://docs.typo3.org/typo3cms/TemplatingTutorial/BasicFluidTemplates/Index.html#prepare-typoscript</a>
+</p>
+</li>
+</ul></div>
+<div class="listingblock">
+<div class="title">Fluid</div>
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>page.1 = FLUIDTEMPLATE
+page.1 {
+   templateName = ForLayouts
+   templateRootPaths.1 = typo3conf/ext
+   layoutRootPath = typo3conf/ext
+   variables {
+          contentNormal &lt; styles.content.get
+   }
+}</tt></pre></div></div>
+</div>
+</div>
 </div>
 </div>
 <div id="footnotes"><hr /></div>
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2018-12-17 17:38:36 CET
+ 2019-02-22 12:49:39 CET
 </div>
 </div>
 </body>

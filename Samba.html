@@ -860,16 +860,6 @@ SED
                         guest only <span style="color: #990000">=</span> yes
         SMB
 
-        useradd jenkins --create-home
-        chown jenkins /var/lib/jenkins /var/cache/jenkins
-        sed -i /etc/init<span style="color: #990000">.</span>d/jenkins <span style="color: #990000">\</span>
-                -e /JAVA_ALLOWED_VERSION/s<span style="color: #990000">/</span>\"<span style="color: #993399">18</span>\"<span style="color: #990000">/</span>\"<span style="color: #993399">110</span><span style="color: #990000">\</span> <span style="color: #993399">2019</span>-<span style="color: #993399">01</span>-<span style="color: #993399">15</span>\"<span style="color: #990000">/</span>
-
-        sed -i /etc/default/jenkins -f - <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'SED'</span>
-                /enable-future-java/b
-                <span style="color: #990000">/^</span>JENKINS_ARGS/s<span style="color: #990000">/</span><span style="color: #FF0000">"</span><span style="color: #CC33CC">\(</span><span style="color: #FF0000">.*</span><span style="color: #CC33CC">\)</span><span style="color: #FF0000">"</span><span style="color: #990000">/</span><span style="color: #FF0000">"</span><span style="color: #CC33CC">\1</span><span style="color: #FF0000"> --enable-future-java"</span><span style="color: #990000">/</span>
-        SED
-
         <span style="font-style: italic"><span style="color: #9A1900"># https://busybox.net/FAQ.html#job_control</span></span>
         cat <span style="color: #990000">&gt;</span> /etc/init<span style="color: #990000">.</span>d/rcS <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'RUN'</span>
                 <span style="color: #009900">DEBIAN_FRONTEND</span><span style="color: #990000">=</span>noninteractive <span style="color: #990000">\</span>
@@ -936,9 +926,9 @@ LKVM
                 --assume-yes <span style="color: #990000">\</span>
                 --option<span style="color: #990000">=</span><span style="color: #FF0000">'Acquire::http::AllowRedirect=true'</span> <span style="color: #990000">\</span>
                 --option<span style="color: #990000">=</span><span style="color: #FF0000">'APT::Get::Download-Only=false'</span> <span style="color: #990000">\</span>
-                at bash dash man mount base-files busybox strace ncurses-term ncurses-bin samba smbclient cifs-utils smbldap-tools ldap-utils udhcpc stow sysvinit-utils util-linux login libc-bin libpam-runtime libpam0g apache2-utils vsftpd sed haveged <span style="color: #009900">jenkins</span><span style="color: #990000">=</span><span style="color: #993399">2.156</span> default-jre <span style="color: #990000">||</span> <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span> <span style="color: #993399">1</span>
+                at bash dash man mount base-files busybox strace ncurses-term ncurses-bin samba smbclient cifs-utils smbldap-tools ldap-utils udhcpc stow sysvinit-utils util-linux login libc-bin libpam-runtime libpam0g apache2-utils vsftpd sed haveged <span style="color: #990000">||</span> <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span> <span style="color: #993399">1</span>
 
-        supermin --verbose --prepare --use-installed -o supermin<span style="color: #990000">.</span>d at busybox mount bash dash udhcpc strace samba file base-files bsdutils mailutils coreutils tzdata ncurses-bin ncurses-term eudev net-tools hostname elogind smbclient stow sysvinit-utils util-linux login libc-bin libpam-runtime libpam0g apache2-utils vsftpd sed haveged jenkins default-jre <span style="color: #990000">||</span> <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span> <span style="color: #993399">1</span>
+        supermin --verbose --prepare --use-installed -o supermin<span style="color: #990000">.</span>d at busybox mount bash dash udhcpc strace samba file base-files bsdutils mailutils coreutils tzdata ncurses-bin ncurses-term eudev net-tools hostname elogind smbclient stow sysvinit-utils util-linux login libc-bin libpam-runtime libpam0g apache2-utils vsftpd sed haveged <span style="color: #990000">||</span> <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span> <span style="color: #993399">1</span>
 
 APPLIANCE</tt></pre></div></div>
 </div>

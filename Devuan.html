@@ -824,6 +824,7 @@ http://www.gnu.org/software/src-highlite -->
 <pre><tt><span style="font-style: italic"><span style="color: #9A1900">#!/bin/bash</span></span>
 <span style="font-style: italic"><span style="color: #9A1900"># Devuan debootstrap and schroot</span></span>
 
+<span style="font-weight: bold"><span style="color: #0000FF">test</span></span> -d <span style="color: #009900">$TMPDIR</span> <span style="color: #990000">||</span> <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span> <span style="color: #993399">1</span>
 cd <span style="color: #009900">$(</span>mktemp -d<span style="color: #990000">)</span>
 
 apt-get install --yes debootstrap schroot fuseiso
