@@ -747,6 +747,33 @@ asciidoc.install();
 </li>
 </ul></div>
 <div class="sect2">
+<h3 id="_basic_authentication">Basic Authentication</h3>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>cat <span style="color: #990000">&gt;</span> /etc/apache<span style="color: #993399">2</span>/sites-available <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'EOF'</span>
+<span style="color: #990000">&lt;</span>VirtualHost <span style="color: #990000">*:</span><span style="color: #993399">80</span><span style="color: #990000">&gt;</span>
+        ServerName zanymumbler<span style="color: #990000">.</span>chickenkiller<span style="color: #990000">.</span>com
+        ServerAdmin webmaster@localhost
+        DocumentRoot /var/www<span style="color: #990000">/</span>
+        <span style="color: #990000">&lt;</span>Directory html<span style="color: #990000">&gt;</span>
+                        Options Indexes FollowSymLinks
+                        AllowOverride None
+                        Require all granted
+        <span style="color: #990000">&lt;</span>/Directory<span style="color: #990000">&gt;</span>
+        <span style="color: #990000">&lt;</span>Directory web<span style="color: #990000">&gt;</span>
+                SSLRequireSSL
+                AuthType Basic
+                AuthName <span style="color: #FF0000">"Restricted Content"</span>
+                AuthUserFile /etc/htpasswd
+                Require valid-user
+        <span style="color: #990000">&lt;</span>/Directory<span style="color: #990000">&gt;</span>
+<span style="color: #990000">&lt;</span>/VirtualHost<span style="color: #990000">&gt;</span>
+EOF</tt></pre></div></div>
+</div>
+<div class="sect2">
 <h3 id="_ssl_certificates">SSL Certificates</h3>
 <div class="paragraph"><p>Certificates are used to verify the owner of a website. There are multiple web services for verification. The letsencrypt service is simple to install. Self signed certificates can be used too. Visitors of websites with a self signed certificate get a warning the first time because there is no verification of the certificate. Once the self signed certificate is accepted there is only a warning if the certificate changes. The article on sslshopper has information about self signed certificates.</p></div>
 <div class="ulist"><ul>
@@ -917,6 +944,71 @@ cat <span style="color: #990000">&gt;</span> /etc/exim<span style="color: #99339
         <span style="color: #009900">MAIN_LOG_SELECTOR</span><span style="color: #990000">=+</span>all -subject -arguments <span style="color: #990000">+</span>tls_cipher
 EOF</tt></pre></div></div>
 </div>
+<div class="sect2">
+<h3 id="_pam_pluggable_authentication_modules_library">PAM Pluggable Authentication Modules Library</h3>
+<div class="paragraph"><p>A user can be mapped to another user in the database.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="https://mariadb.com/kb/en/library/authentication-plugin-pam/">https://mariadb.com/kb/en/library/authentication-plugin-pam/</a>
+</p>
+</li>
+<li>
+<p>
+<a href="https://mariadb.com/kb/en/library/user-and-group-mapping-with-pam/">https://mariadb.com/kb/en/library/user-and-group-mapping-with-pam/</a>
+</p>
+</li>
+<li>
+<p>
+<a href="https://mariadb.com/resources/blog/configuring-pam-authentication-and-user-mapping-with-mariadb/">https://mariadb.com/resources/blog/configuring-pam-authentication-and-user-mapping-with-mariadb/</a>
+</p>
+</li>
+<li>
+<p>
+<a href="https://mariadb.com/kb/en/library/configuring-pam-authentication-and-user-mapping-with-unix-authentication/#configuring-the-pam_user_map-pam-module">https://mariadb.com/kb/en/library/configuring-pam-authentication-and-user-mapping-with-unix-authentication/#configuring-the-pam_user_map-pam-module</a>
+</p>
+</li>
+</ul></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-style: italic"><span style="color: #9A1900">#!/bin/sh</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># This example maps a mysql user to a  mariadb user</span></span>
+apt-get install mariadb-server
+apt-source mariadb-server
+gcc mariadb-<span style="color: #990000">*</span>-<span style="color: #990000">*</span>/plugin/auth_pam/mapper/pam_user_map<span style="color: #990000">.</span>c -shared -lpam -fPIC -o pam_user_map<span style="color: #990000">.</span>so
+install --mode<span style="color: #990000">=</span><span style="color: #993399">0755</span> pam_user_map<span style="color: #990000">.</span>so /lib<span style="color: #993399">64</span>/security<span style="color: #990000">/</span>
+
+cat <span style="color: #990000">&gt;</span> /etc/security/user_map<span style="color: #990000">.</span>conf <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'EOF'</span>
+        <span style="font-style: italic"><span style="color: #9A1900">#comments and empty lines are ignored</span></span>
+        john<span style="color: #990000">:</span> jack
+        bob<span style="color: #990000">:</span>  admin
+        top<span style="color: #990000">:</span>  accounting
+        foo<span style="color: #990000">:</span>  bar
+        @group_ro<span style="color: #990000">:</span> <span style="font-weight: bold"><span style="color: #0000FF">readonly</span></span>
+EOF
+
+cat /etc/pam<span style="color: #990000">.</span>d/mysql <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'EOF'</span>
+        auth required pam_unix<span style="color: #990000">.</span>so audit
+        account required pam_unix<span style="color: #990000">.</span>so audit
+        auth required pam_user_map<span style="color: #990000">.</span>so
+EOF
+
+mysql <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'SQL'</span>
+        INSTALL SONAME <span style="color: #FF0000">'auth_pam'</span><span style="color: #990000">;</span>
+
+        CREATE USER <span style="color: #FF0000">'bar'</span>@<span style="color: #FF0000">'%'</span> IDENTIFIED via pam USING <span style="color: #FF0000">'mysql'</span><span style="color: #990000">;</span>
+        GRANT ALL PRIVILEGES ON <span style="color: #990000">*.*</span> TO <span style="color: #FF0000">'bar'</span>@<span style="color: #FF0000">'%'</span> <span style="color: #990000">;</span>
+
+        CREATE USER <span style="color: #FF0000">''</span>@<span style="color: #FF0000">'%'</span> IDENTIFIED VIA pam USING <span style="color: #FF0000">'mariadb'</span><span style="color: #990000">;</span>
+        GRANT PROXY ON <span style="color: #FF0000">'bar'</span>@<span style="color: #FF0000">'%'</span> TO <span style="color: #FF0000">''</span>@<span style="color: #FF0000">'%'</span><span style="color: #990000">;</span>
+        FLUSH PRIVILEGES<span style="color: #990000">;</span>
+        -- Verify
+        SELECT <span style="font-weight: bold"><span style="color: #000000">USER()</span></span><span style="color: #990000">,</span> <span style="font-weight: bold"><span style="color: #000000">CURRENT_USER()</span></span><span style="color: #990000">;</span>
+SQL</tt></pre></div></div>
+</div>
 </div>
 </div>
 </div>
@@ -924,7 +1016,7 @@ EOF</tt></pre></div></div>
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2019-02-10 20:30:38 CET
+ 2019-03-01 16:09:35 CET
 </div>
 </div>
 </body>

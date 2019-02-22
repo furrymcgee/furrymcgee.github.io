@@ -741,6 +741,11 @@ asciidoc.install();
 <div class="paragraph"><p>TYPO3 is a PHP web framework available on different platforms. It provides a backend interface for users and administrators.</p></div>
 <div class="sect2">
 <h3 id="_installation">Installation</h3>
+<div class="paragraph"><p># Composer
+# <a href="https://getcomposer.org/doc/articles/handling-private-packages-with-satis.md">https://getcomposer.org/doc/articles/handling-private-packages-with-satis.md</a>
+# <a href="https://code.tutsplus.com/tutorials/setting-up-a-local-mirror-for-composer-packages-with-satis&#8212;net-36726">https://code.tutsplus.com/tutorials/setting-up-a-local-mirror-for-composer-packages-with-satis&#8212;net-36726</a>
+# <a href="https://getcomposer.org/doc/03-cli.md#archive">https://getcomposer.org/doc/03-cli.md#archive</a>
+# <a href="https://tech.m6web.fr/composer-installation-without-github.html">https://tech.m6web.fr/composer-installation-without-github.html</a></p></div>
 <div class="paragraph"><p>This script installs Typo3 with composer with two different methods.
 After online installation from Packagist repository it creates
 a local repository and installs typo agein for comparison.
@@ -763,58 +768,256 @@ by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
 <pre><tt><span style="font-style: italic"><span style="color: #9A1900">#!/bin/sh</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># Create typo3 website in chroot</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># sudo TERM=linux schroot -d/root -- bash -ex &lt; debian/typo.sh</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># This installs TYPO3 Content Management System</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># https://docs.typo3.org/typo3cms/InstallationGuide/In-depth/ThePackageInDetail/Index.html</span></span>
 
-<span style="font-style: italic"><span style="color: #9A1900"># Setup</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># Configuration in /etc/php/7.3/apache2/php.ini</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># Create FIRST_INSTALL in www root</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># Add TypoScript template with plus icon in list module</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># TYPO3 8.7</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># This version of TYPO3 CMS is suited for PHP 7.0</span></span>
 
-<span style="font-style: italic"><span style="color: #9A1900"># Composer</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># https://getcomposer.org/doc/articles/handling-private-packages-with-satis.md</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># https://code.tutsplus.com/tutorials/setting-up-a-local-mirror-for-composer-packages-with-satis--net-36726</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># https://getcomposer.org/doc/03-cli.md#archive</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># https://tech.m6web.fr/composer-installation-without-github.html</span></span>
-
-<span style="font-style: italic"><span style="color: #9A1900"># Basic Fluid templates</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># https://docs.typo3.org/typo3cms/TemplatingTutorial/BasicFluidTemplates/Index.html</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># https://wiki.typo3.org/Fluid</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># https://wiki.typo3.org/T3Doc/Fluidtemplate_by_example</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># https://docs.typo3.org/typo3cms/extensions/dce/Index.html</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># TYPO3 9.5</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># This version of TYPO3 CMS requires PHP 7.2 or above</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># Fluid templates are not required in a minimal install</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># "typo3/cms-tstemplate": "9.5.*@dev",</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># "typo3/cms-fluid-styled-content": "9.5.*@dev"</span></span>
 <span style="font-weight: bold"><span style="color: #0000FF">exec</span></span> bash <span style="color: #990000">-</span>ex <span style="color: #990000">\</span>
-<span style="color: #993399">3</span><span style="color: #990000">&lt;&amp;</span><span style="color: #993399">0</span> <span style="color: #990000">\</span>
-<span style="color: #993399">6</span><span style="color: #990000">&lt;</span>debian<span style="color: #990000">/</span>debootstrap<span style="color: #990000">.</span>sh <span style="color: #990000">\</span>
-<span style="color: #993399">7</span><span style="color: #990000">&lt;</span>debian<span style="color: #990000">/</span>apache<span style="color: #990000">.</span>sh <span style="color: #990000">\</span>
-<span style="color: #993399">8</span><span style="color: #990000">&lt;</span>tools<span style="color: #990000">/</span>typo3<span style="color: #990000">.</span>sh <span style="color: #990000">\</span>
-<span style="color: #993399">9</span><span style="color: #990000">&lt;&lt;-</span><span style="color: #FF0000">'SULOGIN'</span> <span style="color: #990000">\</span>
-<span style="color: #993399">0</span><span style="color: #990000">&lt;&lt;-</span><span style="color: #FF0000">'DEBOOTSTRAP'</span> <span style="color: #990000">\</span>
-<span style="color: #993399">5</span><span style="color: #990000">&lt;&lt;-</span><span style="color: #FF0000">'CGI-BIN'</span>
-        a2enmod cgid
-        a2enconf serve<span style="color: #990000">-</span>cgi<span style="color: #990000">-</span>bin
-        service vsftpd start
-        service apache2 start
-        <span style="font-weight: bold"><span style="color: #0000FF">exec</span></span> sulogin <span style="color: #990000">--</span>login<span style="color: #990000">-</span>shell <span style="color: #990000">--</span>timeout <span style="color: #993399">3</span> <span style="color: #990000">&lt;&amp;</span><span style="color: #993399">3</span>
-SULOGIN
-        <span style="font-style: italic"><span style="color: #9A1900"># create schroot</span></span>
-        schroot <span style="color: #990000">-</span>d<span style="color: #FF0000">/root -- true &amp;&gt; /dev/</span>null <span style="color: #990000">||</span>
-        bash <span style="color: #990000">-</span><span style="font-weight: bold"><span style="color: #0000FF">x</span></span> <span style="color: #990000">&lt;&amp;</span><span style="color: #993399">6</span>
+<span style="color: #993399">0</span><span style="color: #990000">&lt;&lt;-</span><span style="color: #FF0000">'BASH'</span> <span style="color: #990000">\</span>
+<span style="color: #993399">5</span><span style="color: #990000">&lt;&lt;-</span><span style="color: #FF0000">'MYREPO'</span> <span style="color: #990000">\</span>
+<span style="color: #993399">6</span><span style="color: #990000">&lt;&lt;-</span><span style="color: #FF0000">'CMS8'</span> <span style="color: #990000">\</span>
+<span style="color: #993399">7</span><span style="color: #990000">&lt;&lt;-</span><span style="color: #FF0000">'CMS9'</span> <span style="color: #990000">\</span>
 
-        <span style="font-style: italic"><span style="color: #9A1900"># install packages</span></span>
-        schroot <span style="color: #990000">-</span>d<span style="color: #990000">/</span>root <span style="color: #990000">&lt;&amp;</span><span style="color: #993399">7</span> <span style="color: #990000">--</span> bash <span style="color: #990000">-</span><span style="font-weight: bold"><span style="color: #0000FF">s</span></span> <span style="color: #993399">5</span>
+        <span style="font-style: italic"><span style="color: #9A1900"># composer</span></span>
+        mysql <span style="color: #990000">--</span>version <span style="color: #990000">||</span>
+        apt<span style="color: #990000">-</span>get <span style="color: #990000">--</span>yes install mariadb<span style="color: #990000">-</span>server jq moreutils
 
-        <span style="font-style: italic"><span style="color: #9A1900"># install busybox</span></span>
-        schroot <span style="color: #990000">-</span>d<span style="color: #990000">/</span>root <span style="color: #990000">&lt;&amp;</span><span style="color: #993399">8</span>
+        composer <span style="color: #990000">--</span>version <span style="color: #990000">--</span>no<span style="color: #990000">-</span>ansi <span style="color: #990000">||</span>
+        DEBIAN_FRONTEND<span style="color: #990000">=</span>noninteractive apt install <span style="color: #990000">\</span>
+                <span style="color: #990000">-</span>t stable <span style="color: #990000">\</span>
+                <span style="color: #990000">--</span>quiet <span style="color: #990000">\</span>
+                <span style="color: #990000">--</span>assume<span style="color: #990000">-</span>yes <span style="color: #990000">\</span>
+                <span style="color: #990000">--</span>option<span style="color: #990000">=</span><span style="color: #FF0000">'Acquire::http::AllowRedirect=true'</span> <span style="color: #990000">\</span>
+                <span style="color: #990000">--</span>option<span style="color: #990000">=</span><span style="color: #FF0000">'APT::Get::Download-Only=false'</span> <span style="color: #990000">\</span>
+        composer php<span style="color: #990000">-</span>xml libapache2<span style="color: #990000">-</span>mod<span style="color: #990000">-</span>php <span style="color: #990000">\</span>
+        php<span style="color: #990000">-</span>gd php<span style="color: #990000">-</span>zip php<span style="color: #990000">-</span>mysql php<span style="color: #990000">-</span>intl php<span style="color: #990000">-</span>sqlite3
 
-        <span style="font-style: italic"><span style="color: #9A1900"># start</span></span>
-        <span style="font-weight: bold"><span style="color: #0000FF">exec</span></span> schroot <span style="color: #990000">-</span>d<span style="color: #990000">/</span>root <span style="color: #990000">&lt;&amp;</span><span style="color: #993399">9</span>
+        sed <span style="color: #990000">-</span>f <span style="color: #990000">-</span> <span style="color: #990000">-</span><span style="font-weight: bold"><span style="color: #0000FF">i</span></span> <span style="color: #FF0000">/etc/apache2/sites-available/</span><span style="color: #993399">000</span><span style="color: #990000">-</span>default<span style="color: #990000">.</span>conf <span style="color: #990000">&lt;&lt;-</span><span style="color: #FF0000">'EOF'</span>
+                <span style="color: #FF0000">/DocumentRoot/s%/var/www.*%/var/</span>www<span style="color: #990000">%</span>
+        EOF
 
-DEBOOTSTRAP
-        typo3
-CGI<span style="color: #990000">-</span>BIN</tt></pre></div></div>
+        cat <span style="color: #990000">&gt;</span> <span style="color: #FF0000">/etc/apache2/conf-available/</span>satis<span style="color: #990000">.</span>conf <span style="color: #990000">&lt;&lt;-</span><span style="color: #FF0000">'EOF'</span>
+                RedirectMatch <span style="color: #990000">^</span><span style="color: #FF0000">/satis$ /satis/</span>
+                Alias <span style="color: #FF0000">/satis/ /var/www/satis/</span>
+                Alias <span style="color: #FF0000">/dist/ /var/www/satis/dist/</span>
+                <span style="color: #FF0000">&lt;Directory /var/www/satis&gt;</span>
+                        DirectoryIndex <span style="font-weight: bold"><span style="color: #0000FF">index</span></span><span style="color: #990000">.</span>html
+                        Options Indexes FollowSymLinks
+                        AllowOverride None
+                        Require all granted
+                <span style="color: #FF0000">&lt;/Directory&gt;</span>
+        EOF
+        cat <span style="color: #990000">&gt;</span> <span style="color: #FF0000">/etc/apache2/conf-available/</span>cms<span style="color: #990000">.</span>conf <span style="color: #990000">&lt;&lt;-</span><span style="color: #FF0000">'EOF'</span>
+                RedirectMatch <span style="color: #990000">^</span><span style="color: #FF0000">/cms$ /cms/</span>
+                Alias <span style="color: #FF0000">/cms/ /var/www/cms/</span>
+                <span style="color: #FF0000">&lt;Directory /var/www/cms&gt;</span>
+                        DirectoryIndex <span style="font-weight: bold"><span style="color: #0000FF">index</span></span><span style="color: #990000">.</span>php
+                        Options Indexes FollowSymLinks
+                        AllowOverride None
+                        Require all granted
+                <span style="color: #FF0000">&lt;/Directory&gt;</span>
+        EOF
+
+        a2enconf satis
+        a2enconf cms
+
+        xargs <span style="color: #990000">-</span>I@ service @ restart <span style="color: #990000">\</span>
+        <span style="color: #990000">&lt;&lt;-</span><span style="color: #FF0000">'SERVICE'</span>
+                apache2
+                mysql
+        SERVICE
+
+        <span style="font-style: italic"><span style="color: #9A1900"># www-data</span></span>
+        usermod www<span style="color: #990000">-</span>data <span style="color: #990000">--</span>shell<span style="color: #990000">=</span>
+        getent passwd www<span style="color: #990000">-</span>data <span style="color: #990000">|</span>
+        cut <span style="color: #990000">-</span>d<span style="color: #990000">:</span> <span style="color: #990000">-</span>f6 <span style="color: #990000">|</span>
+        xargs <span style="font-weight: bold"><span style="color: #0000FF">chown</span></span> www<span style="color: #990000">-</span>data <span style="color: #990000">-</span>R
+        su www<span style="color: #990000">-</span>data <span style="color: #990000">-</span>c bash<span style="color: #990000">\</span> <span style="color: #990000">-</span>ex <span style="color: #990000">&lt;&lt;-</span><span style="color: #FF0000">'WWW-DATA'</span>
+                cd <span style="color: #990000">&amp;&amp;</span> rm <span style="color: #990000">-</span>rf cms satis php typo3 <span style="color: #990000">||</span> <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span> <span style="color: #993399">1</span>
+
+                <span style="font-style: italic"><span style="color: #9A1900"># composer create-project typo3/cms-base-distribution . 8.7.2</span></span>
+                <span style="color: #990000">[</span> <span style="color: #990000">-</span>d typo3 <span style="color: #990000">]</span> <span style="color: #990000">||</span> bash <span style="color: #990000">-</span>ex <span style="color: #990000">&lt;&lt;-</span><span style="color: #FF0000">'TYPO3'</span>
+                        <span style="font-weight: bold"><span style="color: #0000FF">mkdir</span></span> typo3 <span style="color: #990000">||</span> <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span> <span style="color: #993399">2</span>
+                        git clone https<span style="color: #990000">:</span><span style="color: #FF0000">//github.com/TYPO3/</span>minimal <span style="color: #990000">--</span>branch <span style="color: #993399">8.0</span> typo3
+                        composer update <span style="color: #990000">--</span>prefer<span style="color: #990000">-</span>dist <span style="color: #990000">--</span>no<span style="color: #990000">-</span>ansi <span style="color: #990000">--</span>working<span style="color: #990000">-</span>dir<span style="color: #990000">=</span>typo3
+                TYPO3
+                <span style="color: #990000">[</span> <span style="color: #990000">-</span>d php <span style="color: #990000">]</span> <span style="color: #990000">||</span> bash <span style="color: #990000">-</span>ex <span style="color: #990000">&lt;&lt;-</span><span style="color: #FF0000">'SATIS'</span>
+                        <span style="font-weight: bold"><span style="color: #0000FF">mkdir</span></span> php <span style="color: #990000">||</span> <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span> <span style="color: #993399">3</span>
+                        git clone https<span style="color: #990000">:</span><span style="color: #FF0000">//github.com/composer/</span>satis php
+                        jq <span style="color: #FF0000">'del(.["require-dev"])'</span> <span style="color: #990000">\</span>
+                        <span style="color: #990000">&lt;</span> php<span style="color: #990000">/</span>composer<span style="color: #990000">.</span>json <span style="color: #990000">|</span>
+                        sponge php<span style="color: #990000">/</span>composer<span style="color: #990000">.</span>json
+                        composer update <span style="color: #990000">\</span>
+                                <span style="color: #990000">--</span>prefer<span style="color: #990000">-</span>dist <span style="color: #990000">\</span>
+                                <span style="color: #990000">--</span>no<span style="color: #990000">-</span>ansi <span style="color: #990000">\</span>
+                                <span style="color: #990000">--</span>no<span style="color: #990000">-</span>dev <span style="color: #990000">\</span>
+                                <span style="color: #990000">--</span>working<span style="color: #990000">-</span>dir<span style="color: #990000">=</span>php
+                SATIS
+                <span style="color: #990000">[</span> <span style="color: #990000">-</span>d satis <span style="color: #990000">]</span> <span style="color: #990000">||</span> bash <span style="color: #990000">-</span>ex <span style="color: #990000">&lt;&lt;-</span><span style="color: #FF0000">'HTML'</span>
+                        <span style="font-weight: bold"><span style="color: #0000FF">mkdir</span></span> satis <span style="color: #990000">||</span> <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span> <span style="color: #993399">4</span>
+                        cat <span style="color: #990000">&gt;</span> satis<span style="color: #990000">/</span>satis<span style="color: #990000">.</span>json <span style="color: #990000">&lt;&amp;</span><span style="color: #993399">5</span>
+                        php php<span style="color: #FF0000">/bin/satis build satis/</span>satis<span style="color: #990000">.</span>json satis <span style="color: #990000">--</span>no<span style="color: #990000">-</span>ansi
+                HTML
+                <span style="color: #990000">[</span> <span style="color: #990000">-</span>d cms <span style="color: #990000">]</span> <span style="color: #990000">||</span> bash <span style="color: #990000">-</span>ex <span style="color: #990000">&lt;&lt;-</span><span style="color: #FF0000">'TYPO3'</span>
+                        <span style="font-weight: bold"><span style="color: #0000FF">mkdir</span></span> cms <span style="color: #990000">||</span> <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span> <span style="color: #993399">6</span>
+
+                        <span style="font-style: italic"><span style="color: #9A1900"># local satis repo requires version field</span></span>
+                        <span style="color: #990000">&lt;&amp;</span><span style="color: #993399">6</span> <span style="color: #990000">\</span>
+                        sed <span style="font-weight: bold"><span style="color: #0000FF">s</span></span><span style="color: #FF0000">/\\\^8.7.9/8.7.24/</span> <span style="color: #990000">|</span>
+                        <span style="color: #993399">3</span><span style="color: #990000">&lt;&lt;-</span><span style="color: #FF0000">'FILTER'</span> <span style="color: #990000">\</span>
+                        <span style="color: #993399">4</span><span style="color: #990000">&lt;&lt;-</span><span style="color: #FF0000">'JSON'</span> <span style="color: #990000">\</span>
+                        jq <span style="color: #990000">--</span>slurp <span style="color: #990000">--</span>from<span style="color: #990000">-</span>file <span style="color: #FF0000">/dev/fd/3 /dev/fd/</span><span style="color: #993399">4</span> <span style="color: #990000">-</span> <span style="color: #990000">\</span>
+                        <span style="color: #990000">&gt;</span> cms<span style="color: #990000">/</span>composer<span style="color: #990000">.</span>json
+                                <span style="color: #990000">.[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> <span style="color: #990000">.[</span><span style="color: #993399">0</span><span style="color: #990000">]</span>
+                        FILTER
+                                <span style="color: #FF0000">{</span>
+                                  <span style="color: #FF0000">"version"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"8"</span><span style="color: #990000">,</span>
+                                  <span style="color: #FF0000">"repositories"</span><span style="color: #990000">:</span> <span style="color: #990000">[</span>
+                                        <span style="color: #FF0000">{</span>
+                                          <span style="color: #FF0000">"packagist"</span><span style="color: #990000">:</span> false
+                                        <span style="color: #FF0000">}</span><span style="color: #990000">,</span>
+                                        <span style="color: #FF0000">{</span>
+                                          <span style="color: #FF0000">"type"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"composer"</span><span style="color: #990000">,</span>
+                                          <span style="color: #FF0000">"url"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"http://127.0.0.1:8001/satis"</span>
+                                        <span style="color: #FF0000">}</span>
+                                  <span style="color: #990000">],</span>
+                                  <span style="color: #FF0000">"config"</span><span style="color: #990000">:</span> <span style="color: #FF0000">{</span>
+                                        <span style="color: #FF0000">"secure-http"</span><span style="color: #990000">:</span> false
+                                  <span style="color: #FF0000">}</span>
+                                <span style="color: #FF0000">}</span>
+                        JSON
+                        composer install <span style="color: #990000">\</span>
+                                <span style="color: #990000">--</span>prefer<span style="color: #990000">-</span>dist <span style="color: #990000">\</span>
+                                <span style="color: #990000">--</span>no<span style="color: #990000">-</span>ansi <span style="color: #990000">\</span>
+                                <span style="color: #990000">--</span>verbose <span style="color: #990000">\</span>
+                                <span style="color: #990000">--</span>working<span style="color: #990000">-</span>dir<span style="color: #990000">=</span>cms
+
+                TYPO3
+        WWW<span style="color: #990000">-</span>DATA
+BASH
+        <span style="color: #FF0000">{</span>
+          <span style="color: #FF0000">"name"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"lippydanger/jumpingcrab"</span><span style="color: #990000">,</span>
+          <span style="color: #FF0000">"homepage"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"http://127.0.0.1:8001"</span><span style="color: #990000">,</span>
+          <span style="color: #FF0000">"repositories"</span><span style="color: #990000">:</span> <span style="color: #990000">[</span>
+                <span style="color: #FF0000">{</span>
+                  <span style="color: #FF0000">"packagist"</span><span style="color: #990000">:</span> false
+                <span style="color: #FF0000">}</span><span style="color: #990000">,</span>
+                <span style="color: #FF0000">{</span>
+                  <span style="color: #FF0000">"type"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"composer"</span><span style="color: #990000">,</span>
+                  <span style="color: #FF0000">"url"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"https://packagist.org/"</span>
+                <span style="color: #FF0000">}</span>
+          <span style="color: #990000">],</span>
+          <span style="color: #FF0000">"archive"</span><span style="color: #990000">:</span> <span style="color: #FF0000">{</span>
+                <span style="color: #FF0000">"directory"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"dist"</span><span style="color: #990000">,</span>
+                <span style="color: #FF0000">"format"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"zip"</span><span style="color: #990000">,</span>
+                <span style="color: #FF0000">"skip-dev"</span><span style="color: #990000">:</span> true
+          <span style="color: #FF0000">}</span><span style="color: #990000">,</span>
+          <span style="color: #FF0000">"require-all"</span><span style="color: #990000">:</span> false<span style="color: #990000">,</span>
+          <span style="color: #FF0000">"require-dependencies"</span><span style="color: #990000">:</span> true<span style="color: #990000">,</span>
+          <span style="color: #FF0000">"require-dev-dependencies"</span><span style="color: #990000">:</span> false<span style="color: #990000">,</span>
+  <span style="color: #FF0000">"require"</span><span style="color: #990000">:</span> <span style="color: #FF0000">{</span>
+                        <span style="color: #FF0000">"typo3/cms-backend"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"8.7.24"</span><span style="color: #990000">,</span>
+                        <span style="color: #FF0000">"typo3/cms-core"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"8.7.24"</span><span style="color: #990000">,</span>
+                        <span style="color: #FF0000">"typo3/cms-cshmanual"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"8.7.24"</span><span style="color: #990000">,</span>
+                        <span style="color: #FF0000">"typo3/cms-extbase"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"8.7.24"</span><span style="color: #990000">,</span>
+                        <span style="color: #FF0000">"typo3/cms-extensionmanager"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"8.7.24"</span><span style="color: #990000">,</span>
+                        <span style="color: #FF0000">"typo3/cms-filelist"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"8.7.24"</span><span style="color: #990000">,</span>
+                        <span style="color: #FF0000">"typo3/cms-fluid"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"8.7.24"</span><span style="color: #990000">,</span>
+                        <span style="color: #FF0000">"typo3/cms-frontend"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"8.7.24"</span><span style="color: #990000">,</span>
+                        <span style="color: #FF0000">"typo3/cms-install"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"8.7.24"</span><span style="color: #990000">,</span>
+                        <span style="color: #FF0000">"typo3/cms-lang"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"8.7.24"</span><span style="color: #990000">,</span>
+                        <span style="color: #FF0000">"typo3/cms-recordlist"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"8.7.24"</span><span style="color: #990000">,</span>
+                        <span style="color: #FF0000">"typo3/cms-saltedpasswords"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"8.7.24"</span><span style="color: #990000">,</span>
+                        <span style="color: #FF0000">"typo3/cms-sv"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"8.7.24"</span>
+  <span style="color: #FF0000">}</span>
+        <span style="color: #FF0000">}</span>
+MYREPO
+        <span style="color: #FF0000">{</span>
+                <span style="color: #FF0000">"name"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"typo3/minimal"</span><span style="color: #990000">,</span>
+                <span style="color: #FF0000">"type"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"metapackage"</span><span style="color: #990000">,</span>
+                <span style="color: #FF0000">"description"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"Minimal required set of TYPO3 extensions"</span><span style="color: #990000">,</span>
+                <span style="color: #FF0000">"license"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"GPL-2.0-or-later"</span><span style="color: #990000">,</span>
+                <span style="color: #FF0000">"authors"</span><span style="color: #990000">:</span> <span style="color: #990000">[</span>
+                        <span style="color: #FF0000">{</span>
+                                <span style="color: #FF0000">"name"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"TYPO3 CMS Core Team"</span><span style="color: #990000">,</span>
+                                <span style="color: #FF0000">"role"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"Developer"</span><span style="color: #990000">,</span>
+                                <span style="color: #FF0000">"homepage"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"https://forge.typo3.org/projects/typo3cms-core"</span>
+                        <span style="color: #FF0000">}</span><span style="color: #990000">,</span>
+                        <span style="color: #FF0000">{</span>
+                                <span style="color: #FF0000">"name"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"The TYPO3 Community"</span><span style="color: #990000">,</span>
+                                <span style="color: #FF0000">"role"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"Contributor"</span><span style="color: #990000">,</span>
+                                <span style="color: #FF0000">"homepage"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"https://typo3.org/community/"</span>
+                        <span style="color: #FF0000">}</span>
+                <span style="color: #990000">],</span>
+                <span style="color: #FF0000">"support"</span><span style="color: #990000">:</span> <span style="color: #FF0000">{</span>
+                        <span style="color: #FF0000">"general"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"https://typo3.org/support/"</span><span style="color: #990000">,</span>
+                        <span style="color: #FF0000">"issues"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"https://forge.typo3.org"</span><span style="color: #990000">,</span>
+                        <span style="color: #FF0000">"irc"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"irc://irc.freenode.net/#typo3-cms"</span><span style="color: #990000">,</span>
+                        <span style="color: #FF0000">"news"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"nntp://lists.typo3.org"</span>
+                <span style="color: #FF0000">}</span><span style="color: #990000">,</span>
+                <span style="color: #FF0000">"require"</span><span style="color: #990000">:</span> <span style="color: #FF0000">{</span>
+                        <span style="color: #FF0000">"typo3/cms-backend"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"^8.7.9"</span><span style="color: #990000">,</span>
+                        <span style="color: #FF0000">"typo3/cms-core"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"^8.7.9"</span><span style="color: #990000">,</span>
+                        <span style="color: #FF0000">"typo3/cms-cshmanual"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"^8.7.9"</span><span style="color: #990000">,</span>
+                        <span style="color: #FF0000">"typo3/cms-extbase"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"^8.7.9"</span><span style="color: #990000">,</span>
+                        <span style="color: #FF0000">"typo3/cms-extensionmanager"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"^8.7.9"</span><span style="color: #990000">,</span>
+                        <span style="color: #FF0000">"typo3/cms-filelist"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"^8.7.9"</span><span style="color: #990000">,</span>
+                        <span style="color: #FF0000">"typo3/cms-fluid"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"^8.7.9"</span><span style="color: #990000">,</span>
+                        <span style="color: #FF0000">"typo3/cms-frontend"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"^8.7.9"</span><span style="color: #990000">,</span>
+                        <span style="color: #FF0000">"typo3/cms-install"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"^8.7.9"</span><span style="color: #990000">,</span>
+                        <span style="color: #FF0000">"typo3/cms-lang"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"^8.7.9"</span><span style="color: #990000">,</span>
+                        <span style="color: #FF0000">"typo3/cms-recordlist"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"^8.7.9"</span><span style="color: #990000">,</span>
+                        <span style="color: #FF0000">"typo3/cms-saltedpasswords"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"^8.7.9"</span><span style="color: #990000">,</span>
+                        <span style="color: #FF0000">"typo3/cms-sv"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"^8.7.9"</span>
+                <span style="color: #FF0000">}</span>
+        <span style="color: #FF0000">}</span>
+CMS8
+        <span style="color: #FF0000">{</span>
+                <span style="color: #FF0000">"name"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"typo3/minimal"</span><span style="color: #990000">,</span>
+                <span style="color: #FF0000">"type"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"metapackage"</span><span style="color: #990000">,</span>
+                <span style="color: #FF0000">"description"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"Minimal required set of TYPO3 extensions"</span><span style="color: #990000">,</span>
+                <span style="color: #FF0000">"license"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"GPL-2.0-or-later"</span><span style="color: #990000">,</span>
+                <span style="color: #FF0000">"authors"</span><span style="color: #990000">:</span> <span style="color: #990000">[</span>
+                        <span style="color: #FF0000">{</span>
+                                <span style="color: #FF0000">"name"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"TYPO3 CMS Core Team"</span><span style="color: #990000">,</span>
+                                <span style="color: #FF0000">"role"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"Developer"</span><span style="color: #990000">,</span>
+                                <span style="color: #FF0000">"homepage"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"https://forge.typo3.org/projects/typo3cms-core"</span>
+                        <span style="color: #FF0000">}</span><span style="color: #990000">,</span>
+                        <span style="color: #FF0000">{</span>
+                                <span style="color: #FF0000">"name"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"The TYPO3 Community"</span><span style="color: #990000">,</span>
+                                <span style="color: #FF0000">"role"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"Contributor"</span><span style="color: #990000">,</span>
+                                <span style="color: #FF0000">"homepage"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"https://typo3.org/community/"</span>
+                        <span style="color: #FF0000">}</span>
+                <span style="color: #990000">],</span>
+                <span style="color: #FF0000">"support"</span><span style="color: #990000">:</span> <span style="color: #FF0000">{</span>
+                        <span style="color: #FF0000">"general"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"https://typo3.org/support/"</span><span style="color: #990000">,</span>
+                        <span style="color: #FF0000">"issues"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"https://forge.typo3.org"</span><span style="color: #990000">,</span>
+                        <span style="color: #FF0000">"irc"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"irc://irc.freenode.net/#typo3-cms"</span><span style="color: #990000">,</span>
+                        <span style="color: #FF0000">"news"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"nntp://lists.typo3.org"</span>
+                <span style="color: #FF0000">}</span><span style="color: #990000">,</span>
+                <span style="color: #FF0000">"require"</span><span style="color: #990000">:</span> <span style="color: #FF0000">{</span>
+                        <span style="color: #FF0000">"typo3/cms-backend"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"9.5.*@dev"</span><span style="color: #990000">,</span>
+                        <span style="color: #FF0000">"typo3/cms-core"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"9.5.*@dev"</span><span style="color: #990000">,</span>
+                        <span style="color: #FF0000">"typo3/cms-extbase"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"9.5.*@dev"</span><span style="color: #990000">,</span>
+                        <span style="color: #FF0000">"typo3/cms-extensionmanager"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"9.5.*@dev"</span><span style="color: #990000">,</span>
+                        <span style="color: #FF0000">"typo3/cms-filelist"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"9.5.*@dev"</span><span style="color: #990000">,</span>
+                        <span style="color: #FF0000">"typo3/cms-fluid"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"9.5.*@dev"</span><span style="color: #990000">,</span>
+                        <span style="color: #FF0000">"typo3/cms-frontend"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"9.5.*@dev"</span><span style="color: #990000">,</span>
+                        <span style="color: #FF0000">"typo3/cms-install"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"9.5.*@dev"</span><span style="color: #990000">,</span>
+                        <span style="color: #FF0000">"typo3/cms-recordlist"</span><span style="color: #990000">:</span> <span style="color: #FF0000">"9.5.*@dev"</span>
+                <span style="color: #FF0000">}</span>
+        <span style="color: #FF0000">}</span>
+CMS9</tt></pre></div></div>
 </div>
 <div class="sect2">
-<h3 id="_configuration">Configuration</h3>
+<h3 id="_html">HTML</h3>
 <div class="paragraph"><p>This typo3 configuration uses backend interface and config files.</p></div>
 <div class="olist arabic"><ol class="arabic">
 <li>
@@ -839,7 +1042,7 @@ Open List module menu
 </li>
 <li>
 <p>
-Add Home template page
+Add Home template page with little plus icon
 </p>
 </li>
 <li>
@@ -871,7 +1074,7 @@ Define page constants
 </li>
 </ol></div>
 <div class="listingblock">
-<div class="title">Setup</div>
+<div class="title">TypoScript</div>
 <div class="content"><!-- Generator: GNU source-highlight 3.1.8
 by Lorenzo Bettini
 http://www.lorenzobettini.it
@@ -889,7 +1092,22 @@ src<span style="color: #990000">=</span><span style="color: #FF0000">"https://li
 <div class="ulist"><ul>
 <li>
 <p>
-<a href="https://docs.typo3.org/typo3cms/TemplatingTutorial/BasicFluidTemplates/Index.html#prepare-typoscript">https://docs.typo3.org/typo3cms/TemplatingTutorial/BasicFluidTemplates/Index.html#prepare-typoscript</a>
+<a href="https://docs.typo3.org/typo3cms/TemplatingTutorial/BasicFluidTemplates/Index.html">https://docs.typo3.org/typo3cms/TemplatingTutorial/BasicFluidTemplates/Index.html</a>
+</p>
+</li>
+<li>
+<p>
+<a href="https://wiki.typo3.org/Fluid">https://wiki.typo3.org/Fluid</a>
+</p>
+</li>
+<li>
+<p>
+<a href="https://wiki.typo3.org/T3Doc/Fluidtemplate_by_example">https://wiki.typo3.org/T3Doc/Fluidtemplate_by_example</a>
+</p>
+</li>
+<li>
+<p>
+<a href="https://docs.typo3.org/typo3cms/extensions/dce/Index.html">https://docs.typo3.org/typo3cms/extensions/dce/Index.html</a>
 </p>
 </li>
 </ul></div>
@@ -909,6 +1127,109 @@ page.1 {
    }
 }</tt></pre></div></div>
 </div>
+<div class="sect2">
+<h3 id="_backup">Backup</h3>
+<div class="paragraph"><p>A backup requires the config files and the database.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="https://docs.typo3.org/typo3cms/InstallationGuide/Upgrade/Backup/Index.html">https://docs.typo3.org/typo3cms/InstallationGuide/Upgrade/Backup/Index.html</a>
+</p>
+</li>
+</ul></div>
+<div class="listingblock">
+<div class="title">Backup</div>
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-style: italic"><span style="color: #9A1900">#!/bin/sh</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># Import Database, TYPO3 Templates and AdditionalConfiguration.php</span></span>
+
+service mysql stop
+service apache2 stop
+
+<span style="font-style: italic"><span style="color: #9A1900"># AdditionalConfguration.php</span></span>
+usermod www-data --shell<span style="color: #990000">=</span>/bin/sh --home<span style="color: #990000">=</span>/var/www <span style="color: #990000">&amp;&amp;</span>
+su - www-data <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'SH'</span>
+        <span style="font-style: italic"><span style="color: #9A1900"># &lt;?php</span></span>
+        <span style="font-style: italic"><span style="color: #9A1900"># $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey'] = '...';</span></span>
+        <span style="font-style: italic"><span style="color: #9A1900"># ?&gt;</span></span>
+        git --git-dir<span style="color: #990000">=</span>cms<span style="color: #990000">/.</span>git show 30f47db5 <span style="color: #990000">\</span>
+        <span style="color: #993399">1</span><span style="color: #990000">&gt;</span>cms/typo3conf/AdditionalConfiguration<span style="color: #990000">.</span>php
+SH
+
+<span style="font-style: italic"><span style="color: #9A1900"># Initialize database</span></span>
+<span style="color: #990000">:</span> <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'COMMENT'</span>
+        mysql_install_db <span style="color: #990000">\</span>
+                --skip-auth-anonymous-user <span style="color: #990000">\</span>
+                --auth-root-authentication-method<span style="color: #990000">=</span>socket <span style="color: #990000">\</span>
+                --rpm <span style="color: #990000">\</span>
+                --cross-bootstrap <span style="color: #990000">\</span>
+                --user<span style="color: #990000">=</span>mysql <span style="color: #990000">\</span>
+                --disable-log-bin
+COMMENT
+
+<span style="font-style: italic"><span style="color: #9A1900"># This commands are copied from debian mariadb-server package</span></span>
+usermod mysql --shell<span style="color: #990000">=</span>/bin/sh --home<span style="color: #990000">=</span>/var/lib/mysql <span style="color: #990000">&amp;&amp;</span>
+su - mysql <span style="color: #990000">\</span>
+<span style="color: #993399">0</span><span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'SH'</span> <span style="color: #990000">\</span>
+<span style="color: #993399">3</span><span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'SQL'</span> <span style="color: #990000">\</span>
+<span style="color: #993399">4</span><span style="color: #990000">&lt;</span>/usr/share/mysql/mysql_system_tables<span style="color: #990000">.</span>sql <span style="color: #990000">\</span>
+<span style="color: #993399">5</span><span style="color: #990000">&lt;</span>/usr/share/mysql/mysql_performance_tables<span style="color: #990000">.</span>sql <span style="color: #990000">\</span>
+<span style="color: #993399">6</span><span style="color: #990000">&lt;</span>/usr/share/mysql/mysql_system_tables_data<span style="color: #990000">.</span>sql
+
+        find -delete
+        seq <span style="color: #993399">3</span> <span style="color: #993399">6</span> <span style="color: #990000">|</span> <span style="font-weight: bold"><span style="color: #0000FF">while</span></span> <span style="font-weight: bold"><span style="color: #0000FF">read</span></span> REPLY
+                <span style="font-weight: bold"><span style="color: #0000FF">do</span></span> cat <span style="color: #990000">&lt;&amp;</span><span style="color: #009900">$REPLY</span>
+        <span style="font-weight: bold"><span style="color: #0000FF">done</span></span> <span style="color: #990000">|</span>
+        sed -e <span style="color: #990000">/</span>@current_hostname/d <span style="color: #990000">|</span>
+        /usr/sbin/mysqld <span style="color: #990000">\</span>
+                --lc-messages-dir<span style="color: #990000">=</span>/usr/share/mysql/english<span style="color: #990000">/..</span> <span style="color: #990000">\</span>
+                --bootstrap <span style="color: #990000">\</span>
+                --basedir<span style="color: #990000">=</span>/usr <span style="color: #990000">\</span>
+                --datadir<span style="color: #990000">=</span>/var/lib/mysql <span style="color: #990000">\</span>
+                --log-warnings<span style="color: #990000">=</span><span style="color: #993399">0</span> <span style="color: #990000">\</span>
+                --enforce-storage-engine<span style="color: #990000">=</span> <span style="color: #990000">\</span>
+                --disable-log-bin <span style="color: #990000">\</span>
+                --user<span style="color: #990000">=</span>mysql <span style="color: #990000">\</span>
+                --max<span style="color: #009900">_allowed_packet</span><span style="color: #990000">=</span>8M <span style="color: #990000">\</span>
+                --net<span style="color: #009900">_buffer_length</span><span style="color: #990000">=</span>16K
+SH
+        CREATE DATABASE mysql<span style="color: #990000">;</span>
+        USE mysql<span style="color: #990000">;</span>
+        SET @<span style="color: #009900">skip_auth_anonymous</span><span style="color: #990000">=</span><span style="color: #993399">1</span><span style="color: #990000">;</span>
+        SET @<span style="color: #009900">skip_auth_root_nopasswd</span><span style="color: #990000">=</span><span style="color: #993399">1</span><span style="color: #990000">;</span>
+        SET @<span style="color: #009900">auth_root_socket</span><span style="color: #990000">=</span><span style="color: #FF0000">'root'</span><span style="color: #990000">;</span>
+SQL
+
+service mysql start
+
+sh <span style="color: #990000">\</span>
+<span style="color: #993399">0</span><span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'SH'</span> <span style="color: #990000">\</span>
+<span style="color: #993399">3</span><span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'TYPO3'</span> <span style="color: #990000">\</span>
+<span style="color: #993399">4</span><span style="color: #990000">&lt;</span>/var/www/cms/schema<span style="color: #990000">.</span>sql <span style="color: #990000">\</span>
+<span style="color: #993399">5</span><span style="color: #990000">&lt;</span>/var/www/cms/be_users<span style="color: #990000">.</span>sql <span style="color: #990000">\</span>
+<span style="color: #993399">6</span><span style="color: #990000">&lt;</span>/var/www/cms/pages<span style="color: #990000">.</span>sql <span style="color: #990000">\</span>
+<span style="color: #993399">7</span><span style="color: #990000">&lt;</span>/var/www/cms/sys_template<span style="color: #990000">.</span>sql
+        seq <span style="color: #993399">3</span> <span style="color: #993399">7</span> <span style="color: #990000">|</span> <span style="font-weight: bold"><span style="color: #0000FF">while</span></span> <span style="font-weight: bold"><span style="color: #0000FF">read</span></span> REPLY
+                <span style="font-weight: bold"><span style="color: #0000FF">do</span></span> cat <span style="color: #990000">&lt;&amp;</span><span style="color: #009900">$REPLY</span>
+        <span style="font-weight: bold"><span style="color: #0000FF">done</span></span> <span style="color: #990000">|</span>
+        mysql
+SH
+        DROP DATABASE IF exists typo3<span style="color: #990000">;</span>
+        DROP USER IF exists typo3<span style="color: #990000">;</span>
+        CREATE DATABASE typo3<span style="color: #990000">;</span>
+        CREATE USER typo3 IDENTIFIED by <span style="color: #FF0000">'strongpassword'</span><span style="color: #990000">;</span>
+        USE typo3<span style="color: #990000">;</span>
+        GRANT ALL PRIVILEGES ON typo3<span style="color: #990000">.*</span> TO <span style="color: #FF0000">'typo3'</span><span style="color: #990000">;</span>
+        -- SET GLOBAL general_log <span style="color: #990000">=</span> <span style="color: #FF0000">'ON'</span><span style="color: #990000">;</span>
+        SET GLOBAL slow_query_log <span style="color: #990000">=</span> <span style="color: #FF0000">'ON'</span><span style="color: #990000">;</span>
+TYPO3
+
+service apache2 start
+</tt></pre></div></div>
+</div>
 </div>
 </div>
 </div>
@@ -916,7 +1237,7 @@ page.1 {
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2019-02-22 12:49:39 CET
+ 2019-03-01 15:18:12 CET
 </div>
 </div>
 </body>
