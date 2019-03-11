@@ -31,6 +31,7 @@ index.html: README.html \
 	wiki/programming/Cpp.html \
 	wiki/programming/Java.html \
 	wiki/programming/Perl.html \
+	wiki/programming/Qt.html \
 	wiki/tools/Git.html \
 	wiki/tools/Jenkins.html \
 	wiki/tools/Maven.html \

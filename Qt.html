@@ -1,0 +1,1037 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.6.9" />
+<title></title>
+<style type="text/css">
+/* Shared CSS for AsciiDoc xhtml11 and html5 backends */
+
+/* Default font. */
+body {
+  font-family: Georgia,serif;
+}
+
+/* Title font. */
+h1, h2, h3, h4, h5, h6,
+div.title, caption.title,
+thead, p.table.header,
+#toctitle,
+#author, #revnumber, #revdate, #revremark,
+#footer {
+  font-family: Arial,Helvetica,sans-serif;
+}
+
+body {
+  margin: 1em 5% 1em 5%;
+}
+
+a {
+  color: blue;
+  text-decoration: underline;
+}
+a:visited {
+  color: fuchsia;
+}
+
+em {
+  font-style: italic;
+  color: navy;
+}
+
+strong {
+  font-weight: bold;
+  color: #083194;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #527bbd;
+  margin-top: 1.2em;
+  margin-bottom: 0.5em;
+  line-height: 1.3;
+}
+
+h1, h2, h3 {
+  border-bottom: 2px solid silver;
+}
+h2 {
+  padding-top: 0.5em;
+}
+h3 {
+  float: left;
+}
+h3 + * {
+  clear: left;
+}
+h5 {
+  font-size: 1.0em;
+}
+
+div.sectionbody {
+  margin-left: 0;
+}
+
+hr {
+  border: 1px solid silver;
+}
+
+p {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+ul, ol, li > p {
+  margin-top: 0;
+}
+ul > li     { color: #aaa; }
+ul > li > * { color: black; }
+
+.monospaced, code, pre {
+  font-family: "Courier New", Courier, monospace;
+  font-size: inherit;
+  color: navy;
+  padding: 0;
+  margin: 0;
+}
+pre {
+  white-space: pre-wrap;
+}
+
+#author {
+  color: #527bbd;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+#email {
+}
+#revnumber, #revdate, #revremark {
+}
+
+#footer {
+  font-size: small;
+  border-top: 2px solid silver;
+  padding-top: 0.5em;
+  margin-top: 4.0em;
+}
+#footer-text {
+  float: left;
+  padding-bottom: 0.5em;
+}
+#footer-badges {
+  float: right;
+  padding-bottom: 0.5em;
+}
+
+#preamble {
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+}
+div.imageblock, div.exampleblock, div.verseblock,
+div.quoteblock, div.literalblock, div.listingblock, div.sidebarblock,
+div.admonitionblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+div.admonitionblock {
+  margin-top: 2.0em;
+  margin-bottom: 2.0em;
+  margin-right: 10%;
+  color: #606060;
+}
+
+div.content { /* Block element content. */
+  padding: 0;
+}
+
+/* Block element titles. */
+div.title, caption.title {
+  color: #527bbd;
+  font-weight: bold;
+  text-align: left;
+  margin-top: 1.0em;
+  margin-bottom: 0.5em;
+}
+div.title + * {
+  margin-top: 0;
+}
+
+td div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content + div.title {
+  margin-top: 0.0em;
+}
+
+div.sidebarblock > div.content {
+  background: #ffffee;
+  border: 1px solid #dddddd;
+  border-left: 4px solid #f0f0f0;
+  padding: 0.5em;
+}
+
+div.listingblock > div.content {
+  border: 1px solid #dddddd;
+  border-left: 5px solid #f0f0f0;
+  background: #f8f8f8;
+  padding: 0.5em;
+}
+
+div.quoteblock, div.verseblock {
+  padding-left: 1.0em;
+  margin-left: 1.0em;
+  margin-right: 10%;
+  border-left: 5px solid #f0f0f0;
+  color: #888;
+}
+
+div.quoteblock > div.attribution {
+  padding-top: 0.5em;
+  text-align: right;
+}
+
+div.verseblock > pre.content {
+  font-family: inherit;
+  font-size: inherit;
+}
+div.verseblock > div.attribution {
+  padding-top: 0.75em;
+  text-align: left;
+}
+/* DEPRECATED: Pre version 8.2.7 verse style literal block. */
+div.verseblock + div.attribution {
+  text-align: left;
+}
+
+div.admonitionblock .icon {
+  vertical-align: top;
+  font-size: 1.1em;
+  font-weight: bold;
+  text-decoration: underline;
+  color: #527bbd;
+  padding-right: 0.5em;
+}
+div.admonitionblock td.content {
+  padding-left: 0.5em;
+  border-left: 3px solid #dddddd;
+}
+
+div.exampleblock > div.content {
+  border-left: 3px solid #dddddd;
+  padding-left: 0.5em;
+}
+
+div.imageblock div.content { padding-left: 0; }
+span.image img { border-style: none; vertical-align: text-bottom; }
+a.image:visited { color: white; }
+
+dl {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+dt {
+  margin-top: 0.5em;
+  margin-bottom: 0;
+  font-style: normal;
+  color: navy;
+}
+dd > *:first-child {
+  margin-top: 0.1em;
+}
+
+ul, ol {
+    list-style-position: outside;
+}
+ol.arabic {
+  list-style-type: decimal;
+}
+ol.loweralpha {
+  list-style-type: lower-alpha;
+}
+ol.upperalpha {
+  list-style-type: upper-alpha;
+}
+ol.lowerroman {
+  list-style-type: lower-roman;
+}
+ol.upperroman {
+  list-style-type: upper-roman;
+}
+
+div.compact ul, div.compact ol,
+div.compact p, div.compact p,
+div.compact div, div.compact div {
+  margin-top: 0.1em;
+  margin-bottom: 0.1em;
+}
+
+tfoot {
+  font-weight: bold;
+}
+td > div.verse {
+  white-space: pre;
+}
+
+div.hdlist {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+div.hdlist tr {
+  padding-bottom: 15px;
+}
+dt.hdlist1.strong, td.hdlist1.strong {
+  font-weight: bold;
+}
+td.hdlist1 {
+  vertical-align: top;
+  font-style: normal;
+  padding-right: 0.8em;
+  color: navy;
+}
+td.hdlist2 {
+  vertical-align: top;
+}
+div.hdlist.compact tr {
+  margin: 0;
+  padding-bottom: 0;
+}
+
+.comment {
+  background: yellow;
+}
+
+.footnote, .footnoteref {
+  font-size: 0.8em;
+}
+
+span.footnote, span.footnoteref {
+  vertical-align: super;
+}
+
+#footnotes {
+  margin: 20px 0 20px 0;
+  padding: 7px 0 0 0;
+}
+
+#footnotes div.footnote {
+  margin: 0 0 5px 0;
+}
+
+#footnotes hr {
+  border: none;
+  border-top: 1px solid silver;
+  height: 1px;
+  text-align: left;
+  margin-left: 0;
+  width: 20%;
+  min-width: 100px;
+}
+
+div.colist td {
+  padding-right: 0.5em;
+  padding-bottom: 0.3em;
+  vertical-align: top;
+}
+div.colist td img {
+  margin-top: 0.3em;
+}
+
+@media print {
+  #footer-badges { display: none; }
+}
+
+#toc {
+  margin-bottom: 2.5em;
+}
+
+#toctitle {
+  color: #527bbd;
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-top: 1.0em;
+  margin-bottom: 0.1em;
+}
+
+div.toclevel0, div.toclevel1, div.toclevel2, div.toclevel3, div.toclevel4 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+div.toclevel2 {
+  margin-left: 2em;
+  font-size: 0.9em;
+}
+div.toclevel3 {
+  margin-left: 4em;
+  font-size: 0.9em;
+}
+div.toclevel4 {
+  margin-left: 6em;
+  font-size: 0.9em;
+}
+
+span.aqua { color: aqua; }
+span.black { color: black; }
+span.blue { color: blue; }
+span.fuchsia { color: fuchsia; }
+span.gray { color: gray; }
+span.green { color: green; }
+span.lime { color: lime; }
+span.maroon { color: maroon; }
+span.navy { color: navy; }
+span.olive { color: olive; }
+span.purple { color: purple; }
+span.red { color: red; }
+span.silver { color: silver; }
+span.teal { color: teal; }
+span.white { color: white; }
+span.yellow { color: yellow; }
+
+span.aqua-background { background: aqua; }
+span.black-background { background: black; }
+span.blue-background { background: blue; }
+span.fuchsia-background { background: fuchsia; }
+span.gray-background { background: gray; }
+span.green-background { background: green; }
+span.lime-background { background: lime; }
+span.maroon-background { background: maroon; }
+span.navy-background { background: navy; }
+span.olive-background { background: olive; }
+span.purple-background { background: purple; }
+span.red-background { background: red; }
+span.silver-background { background: silver; }
+span.teal-background { background: teal; }
+span.white-background { background: white; }
+span.yellow-background { background: yellow; }
+
+span.big { font-size: 2em; }
+span.small { font-size: 0.6em; }
+
+span.underline { text-decoration: underline; }
+span.overline { text-decoration: overline; }
+span.line-through { text-decoration: line-through; }
+
+div.unbreakable { page-break-inside: avoid; }
+
+
+/*
+ * xhtml11 specific
+ *
+ * */
+
+div.tableblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+div.tableblock > table {
+  border: 3px solid #527bbd;
+}
+thead, p.table.header {
+  font-weight: bold;
+  color: #527bbd;
+}
+p.table {
+  margin-top: 0;
+}
+/* Because the table frame attribute is overriden by CSS in most browsers. */
+div.tableblock > table[frame="void"] {
+  border-style: none;
+}
+div.tableblock > table[frame="hsides"] {
+  border-left-style: none;
+  border-right-style: none;
+}
+div.tableblock > table[frame="vsides"] {
+  border-top-style: none;
+  border-bottom-style: none;
+}
+
+
+/*
+ * html5 specific
+ *
+ * */
+
+table.tableblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+thead, p.tableblock.header {
+  font-weight: bold;
+  color: #527bbd;
+}
+p.tableblock {
+  margin-top: 0;
+}
+table.tableblock {
+  border-width: 3px;
+  border-spacing: 0px;
+  border-style: solid;
+  border-color: #527bbd;
+  border-collapse: collapse;
+}
+th.tableblock, td.tableblock {
+  border-width: 1px;
+  padding: 4px;
+  border-style: solid;
+  border-color: #527bbd;
+}
+
+table.tableblock.frame-topbot {
+  border-left-style: hidden;
+  border-right-style: hidden;
+}
+table.tableblock.frame-sides {
+  border-top-style: hidden;
+  border-bottom-style: hidden;
+}
+table.tableblock.frame-none {
+  border-style: hidden;
+}
+
+th.tableblock.halign-left, td.tableblock.halign-left {
+  text-align: left;
+}
+th.tableblock.halign-center, td.tableblock.halign-center {
+  text-align: center;
+}
+th.tableblock.halign-right, td.tableblock.halign-right {
+  text-align: right;
+}
+
+th.tableblock.valign-top, td.tableblock.valign-top {
+  vertical-align: top;
+}
+th.tableblock.valign-middle, td.tableblock.valign-middle {
+  vertical-align: middle;
+}
+th.tableblock.valign-bottom, td.tableblock.valign-bottom {
+  vertical-align: bottom;
+}
+
+
+/*
+ * manpage specific
+ *
+ * */
+
+body.manpage h1 {
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  border-top: 2px solid silver;
+  border-bottom: 2px solid silver;
+}
+body.manpage h2 {
+  border-style: none;
+}
+body.manpage div.sectionbody {
+  margin-left: 3em;
+}
+
+@media print {
+  body.manpage div#toc { display: none; }
+}
+
+
+</style>
+<script type="text/javascript">
+/*<![CDATA[*/
+var asciidoc = {  // Namespace.
+
+/////////////////////////////////////////////////////////////////////
+// Table Of Contents generator
+/////////////////////////////////////////////////////////////////////
+
+/* Author: Mihai Bazon, September 2002
+ * http://students.infoiasi.ro/~mishoo
+ *
+ * Table Of Content generator
+ * Version: 0.4
+ *
+ * Feel free to use this script under the terms of the GNU General Public
+ * License, as long as you do not remove or alter this notice.
+ */
+
+ /* modified by Troy D. Hanson, September 2006. License: GPL */
+ /* modified by Stuart Rackham, 2006, 2009. License: GPL */
+
+// toclevels = 1..4.
+toc: function (toclevels) {
+
+  function getText(el) {
+    var text = "";
+    for (var i = el.firstChild; i != null; i = i.nextSibling) {
+      if (i.nodeType == 3 /* Node.TEXT_NODE */) // IE doesn't speak constants.
+        text += i.data;
+      else if (i.firstChild != null)
+        text += getText(i);
+    }
+    return text;
+  }
+
+  function TocEntry(el, text, toclevel) {
+    this.element = el;
+    this.text = text;
+    this.toclevel = toclevel;
+  }
+
+  function tocEntries(el, toclevels) {
+    var result = new Array;
+    var re = new RegExp('[hH]([1-'+(toclevels+1)+'])');
+    // Function that scans the DOM tree for header elements (the DOM2
+    // nodeIterator API would be a better technique but not supported by all
+    // browsers).
+    var iterate = function (el) {
+      for (var i = el.firstChild; i != null; i = i.nextSibling) {
+        if (i.nodeType == 1 /* Node.ELEMENT_NODE */) {
+          var mo = re.exec(i.tagName);
+          if (mo && (i.getAttribute("class") || i.getAttribute("className")) != "float") {
+            result[result.length] = new TocEntry(i, getText(i), mo[1]-1);
+          }
+          iterate(i);
+        }
+      }
+    }
+    iterate(el);
+    return result;
+  }
+
+  var toc = document.getElementById("toc");
+  if (!toc) {
+    return;
+  }
+
+  // Delete existing TOC entries in case we're reloading the TOC.
+  var tocEntriesToRemove = [];
+  var i;
+  for (i = 0; i < toc.childNodes.length; i++) {
+    var entry = toc.childNodes[i];
+    if (entry.nodeName.toLowerCase() == 'div'
+     && entry.getAttribute("class")
+     && entry.getAttribute("class").match(/^toclevel/))
+      tocEntriesToRemove.push(entry);
+  }
+  for (i = 0; i < tocEntriesToRemove.length; i++) {
+    toc.removeChild(tocEntriesToRemove[i]);
+  }
+
+  // Rebuild TOC entries.
+  var entries = tocEntries(document.getElementById("content"), toclevels);
+  for (var i = 0; i < entries.length; ++i) {
+    var entry = entries[i];
+    if (entry.element.id == "")
+      entry.element.id = "_toc_" + i;
+    var a = document.createElement("a");
+    a.href = "#" + entry.element.id;
+    a.appendChild(document.createTextNode(entry.text));
+    var div = document.createElement("div");
+    div.appendChild(a);
+    div.className = "toclevel" + entry.toclevel;
+    toc.appendChild(div);
+  }
+  if (entries.length == 0)
+    toc.parentNode.removeChild(toc);
+},
+
+
+/////////////////////////////////////////////////////////////////////
+// Footnotes generator
+/////////////////////////////////////////////////////////////////////
+
+/* Based on footnote generation code from:
+ * http://www.brandspankingnew.net/archive/2005/07/format_footnote.html
+ */
+
+footnotes: function () {
+  // Delete existing footnote entries in case we're reloading the footnodes.
+  var i;
+  var noteholder = document.getElementById("footnotes");
+  if (!noteholder) {
+    return;
+  }
+  var entriesToRemove = [];
+  for (i = 0; i < noteholder.childNodes.length; i++) {
+    var entry = noteholder.childNodes[i];
+    if (entry.nodeName.toLowerCase() == 'div' && entry.getAttribute("class") == "footnote")
+      entriesToRemove.push(entry);
+  }
+  for (i = 0; i < entriesToRemove.length; i++) {
+    noteholder.removeChild(entriesToRemove[i]);
+  }
+
+  // Rebuild footnote entries.
+  var cont = document.getElementById("content");
+  var spans = cont.getElementsByTagName("span");
+  var refs = {};
+  var n = 0;
+  for (i=0; i<spans.length; i++) {
+    if (spans[i].className == "footnote") {
+      n++;
+      var note = spans[i].getAttribute("data-note");
+      if (!note) {
+        // Use [\s\S] in place of . so multi-line matches work.
+        // Because JavaScript has no s (dotall) regex flag.
+        note = spans[i].innerHTML.match(/\s*\[([\s\S]*)]\s*/)[1];
+        spans[i].innerHTML =
+          "[<a id='_footnoteref_" + n + "' href='#_footnote_" + n +
+          "' title='View footnote' class='footnote'>" + n + "</a>]";
+        spans[i].setAttribute("data-note", note);
+      }
+      noteholder.innerHTML +=
+        "<div class='footnote' id='_footnote_" + n + "'>" +
+        "<a href='#_footnoteref_" + n + "' title='Return to text'>" +
+        n + "</a>. " + note + "</div>";
+      var id =spans[i].getAttribute("id");
+      if (id != null) refs["#"+id] = n;
+    }
+  }
+  if (n == 0)
+    noteholder.parentNode.removeChild(noteholder);
+  else {
+    // Process footnoterefs.
+    for (i=0; i<spans.length; i++) {
+      if (spans[i].className == "footnoteref") {
+        var href = spans[i].getElementsByTagName("a")[0].getAttribute("href");
+        href = href.match(/#.*/)[0];  // Because IE return full URL.
+        n = refs[href];
+        spans[i].innerHTML =
+          "[<a href='#_footnote_" + n +
+          "' title='View footnote' class='footnote'>" + n + "</a>]";
+      }
+    }
+  }
+},
+
+install: function(toclevels) {
+  var timerId;
+
+  function reinstall() {
+    asciidoc.footnotes();
+    if (toclevels) {
+      asciidoc.toc(toclevels);
+    }
+  }
+
+  function reinstallAndRemoveTimer() {
+    clearInterval(timerId);
+    reinstall();
+  }
+
+  timerId = setInterval(reinstall, 500);
+  if (document.addEventListener)
+    document.addEventListener("DOMContentLoaded", reinstallAndRemoveTimer, false);
+  else
+    window.onload = reinstallAndRemoveTimer;
+}
+
+}
+asciidoc.install();
+/*]]>*/
+</script>
+</head>
+<body class="article">
+<div id="header">
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="_qt">Qt</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Qt is cross platform library for graphical user interfaces writen in C++. It
+offers many classes for Databases, Network and Graphics. The C++ compilers are
+available for embedded devices. Native user interfaces is a strength of Qt
+compared to Java or Python.</p></div>
+<div class="paragraph"><p>Many KDE software is based on Qt libraries. Other examples
+are lyx and qutebrowser software. The integrated development environments
+QtCreator and KDevelop a very good. A downside is the extra complexity
+introduced by the Meta Object Compiler. The Meta Object Compiler (Moc) is used
+to implement a Signal/Slot connection between QObjects.</p></div>
+<div class="sect2">
+<h3 id="_data_binding_with_models_and_views">Data Binding with Models and Views</h3>
+<div class="paragraph"><p>In Qt the GUI Widgets can be bound to abstract models. This separates the model
+from the view. The example shows an abstract model of XML data bound to a
+QTreeView. The XQueries can be replaced by SQL, REST or any other data model.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="./cgit/qt/app">Source</a>
+</p>
+</li>
+</ul></div>
+<div class="imageblock">
+<div class="content">
+<img alt="Qt.png" height="256"
+src="data:image/png;base64,
+iVBORw0KGgoAAAANSUhEUgAAAXQAAADOCAIAAAChJ26jAAAZ+klEQVR4nO3de1wU5f4H8GdvLCDg
+cr+umAQiXkBAyILSUAwEA38RiOQNFe0AinnOz0vnZOZJk/pVyslTCooKyivFS0lQeTtSiAloHhVS
+kMsCZqwaoMDe5vfH6EaosMgOswuf94uXr9nZZ2a/Mw6ffWaWeZZz584dAgCgbVy2CwCAgQnhAgCM
+QLgAACOeJlwaGhrs7Ozo6eTk5E8++USrJQHAQNBzuAQGBpp3cv78eZFItHHjxn4oDgD0F1+TRp98
+8kl0dDQ9LRQKORzO/PnzmawKAPSeRqdFAoHA8CEOh9P5tKizAwcOPPfcc87OzhEREdXV1VquFAD0
+itYu6J4+ffrtt9/+/PPPq6qqpk2bNm/ePIqitLVyANA7GoXL3/72NxcXFxcXl6lTpz6pzc6dOxMS
+Ejw9PXk83tKlSxsbG2/cuKG9OgFAz2h0zWXNmjURERGEED7/ie3r6uqKi4v37dunnnPr1q0RI0b0
+vUQA0EcahYtIJHJwcOi+jaOj4+uvv56QkKCNqgBA72ntmsv8+fO3bNlSWlpKUVRLS8uRI0dUKpW2
+Vg4Aekdr4TJ58uQNGzYsW7Zs2LBh/v7+eXl5HA5HWysHAL3DwV3RAMAE3FsEAIzo4YKuubl5lzno
+6QCAJnBaBACMwGkRADCC39jYyHYNADAA8Wtra9muAQAGID4hJCgoiO0y9ENFRcXIkSPZrkI/YF8N
+csePH8c1FwBgBJ8QgrERNMHhcCiKwr7SBPYVEIRLr+AXRnPYV4DTIm3Kzs4OCwtju4oBSL1jKysr
+bWxs2C4HNMIlD99kKIr66aefgoKCLC0tbW1tX3zxxVOnTlHwBBMmTBB2EhYWRj18o+63Gqqrq83M
+zPrt5frolVdesba2vn//vnqOq6trcXExPd39tvj6+i5ZsoSe7tUe7vwS0J9I556LTCZ79dVXg4KC
+Kisrr169umbNmm6GhgJCyGeffXb3odzcXLbL0WkSieT06dN8Pv/o0aO9XVahULi6uk6fPp2JwoA5
+f/RcamtrpVJpYmKimZmZSCQKDg5+/vnn6af2798/fvx4W1vbkJCQqqoqeubRo0c9PDzs7OxWrlwZ
+EBBw7NgxiqJSU1PV7zAtLS2GhoZtbW0URd26dSsuLs7JycnV1fXjjz+mG2RkZISFhS1cuNDX19fT
+01PdUWpsbIyLixOLxXZ2dvHx8fTMsrKyl19+2dbW1sfH5/vvv++P7O0WIYTP56t7Lnw+Xz2fnnhs
+wfPmzVuzZk1wcLC5uXlISMhvv/22dOlSKysrHx+fK1eudL9gSkpKaGjo+PHjJ0+eXFdXR1FUVFRU
+R0eHm5ubm5ubenHdlJWV5e3tPXfu3L1799JzUlJS6uvro6Ki3Nzcdu3a1WVb6GMjPj5+3Lhxn3/+
+eXZ2dnh4OL0gIWTr1q3Ozs4jRozYunUrPTM8PDw7O5uePnbsWGBg4KMvQeneUTSA/SlcnJycnJyc
+EhISvv3229u3b6sbnThxYtWqVenp6RKJJCQkJDY2VqVS1dTUzJ8/Py0tra6uztrauqysjHS6htf5
+BeiJWbNm2dnZVVRUHD9+PDMz86uvvqKfPXny5IIFC86dO7dx40Y6lVQqVXR0tJmZ2aVLl6qrq+mB
+vpuamqZPn56QkCCRSD799NM5c+Y0NDT0yy56Sk8qmBCyf//+zZs319bWymSywMDAyZMnSySS4ODg
+tWvXdr9gXl5eRkZGSUmJv7//e++9R1FUTk6OUCgsLy8vLy93d3dnd5O7l5WVFRMTExMTc+LECXqL
+PvroI0dHx5ycnPLy8jlz5nTZFkLIiRMnZs+efeHCBfXbFa2lpeXq1avl5eVHjx7dtGnT6dOnu7wW
+/bb56Evo3VGk1x6Ei0KhUCgUXC7322+/tbKyWrFihbOzc3h4+I0bNxQKxfbt2xMSEsaMGUNR1JIl
+SxoaGq5du5abmztp0qSAgACKopKTk0UikVKpVCgUKpVKpVLRK1QqlfTKL126VFZWtn79eoFAYGdn
+t3jx4gMHDtAN/Pz8fH19FQrF5MmT6a7Tzz//fPny5U2bNhkbG3O5XH9/f4VCkZOT4+XlFRkZSVGU
+n5/fpEmT8vLyFP1LqVTS20gjhKxYscLpofXr19ObT1FUNwXT0enh4SEUCl999VUrK6uIiAgulxsV
+FXXx4sUeF7SwsFAoFFOmTCkrK+u8h3VNl31VVFRUWVkZERExatQoNze37Oxsej5FUepmXbZFqVR6
+eXkFBATQ0+odS0///e9/5/F4bm5ucXFxOTk59Ko6H3h04y4voQtH0eBBunwU7ejomJqaSgi5efNm
+YmLi0qVLv/rqq9ra2uLi4uzsbPWp1M2bNxsbGx0dHR/kE5fr4OCgjiv1CtX/1tbWKhQKf39/+lmZ
+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" />
+</div>
+<div class="title">Figure 1. Image</div>
+</div>
+<div class="listingblock">
+<div class="title">Controller</div>
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-weight: bold"><span style="color: #000080">#include</span></span> <span style="color: #FF0000">"XML.h"</span>
+<span style="font-weight: bold"><span style="color: #000080">#include</span></span> <span style="color: #FF0000">&lt;QXmlQuery&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080">#include</span></span> <span style="color: #FF0000">&lt;QDebug&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080">#include</span></span> <span style="color: #FF0000">&lt;QBuffer&gt;</span>
+
+<span style="font-weight: bold"><span style="color: #0000FF">using</span></span> <span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> app<span style="color: #990000">;</span>
+
+XML<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">XML</span></span><span style="color: #990000">()</span>
+<span style="color: #FF0000">{</span>
+    headers_ <span style="color: #990000">&lt;&lt;</span> <span style="font-weight: bold"><span style="color: #000000">tr</span></span><span style="color: #990000">(</span><span style="color: #FF0000">"Sequence"</span><span style="color: #990000">)</span> <span style="color: #990000">&lt;&lt;</span> <span style="font-weight: bold"><span style="color: #000000">tr</span></span><span style="color: #990000">(</span><span style="color: #FF0000">"Element"</span><span style="color: #990000">)</span> <span style="color: #990000">&lt;&lt;</span> <span style="font-weight: bold"><span style="color: #000000">tr</span></span><span style="color: #990000">(</span><span style="color: #FF0000">"Attribute"</span><span style="color: #990000">);</span>
+<span style="color: #FF0000">}</span>
+
+<span style="color: #008080">QModelIndex</span> XML<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">index</span></span><span style="color: #990000">(</span><span style="color: #009900">int</span> row<span style="color: #990000">,</span> <span style="color: #009900">int</span> column<span style="color: #990000">,</span> <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #008080">QModelIndex</span> <span style="color: #990000">&amp;</span>parent<span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #0000FF">const</span></span>
+<span style="color: #FF0000">{</span>
+    <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="font-weight: bold"><span style="color: #000000">createIndex</span></span><span style="color: #990000">(</span>row<span style="color: #990000">,</span> column<span style="color: #990000">,</span> parent<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">row</span></span><span style="color: #990000">());</span>
+<span style="color: #FF0000">}</span>
+
+<span style="color: #008080">QModelIndex</span> XML<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">parent</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #008080">QModelIndex</span> <span style="color: #990000">&amp;</span>index<span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #0000FF">const</span></span>
+<span style="color: #FF0000">{</span>
+    <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #008080">quintptr</span> id<span style="color: #990000">=</span>index<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">internalId</span></span><span style="color: #990000">();</span>
+    <span style="font-weight: bold"><span style="color: #0000FF">if</span></span> <span style="color: #990000">(</span>index<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">isValid</span></span><span style="color: #990000">())</span>
+    <span style="color: #FF0000">{</span>
+        <span style="color: #008080">QModelIndex</span> parent<span style="color: #990000">=</span><span style="font-weight: bold"><span style="color: #0000FF">this</span></span><span style="color: #990000">-&gt;</span><span style="font-weight: bold"><span style="color: #000000">index</span></span><span style="color: #990000">(</span>id<span style="color: #990000">,</span> <span style="color: #993399">0</span><span style="color: #990000">,</span> <span style="font-weight: bold"><span style="color: #000000">QModelIndex</span></span><span style="color: #990000">());</span>
+        <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> parent<span style="color: #990000">;</span>
+    <span style="color: #FF0000">}</span>
+    <span style="font-weight: bold"><span style="color: #0000FF">else</span></span>
+    <span style="color: #FF0000">{</span>
+        <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="font-weight: bold"><span style="color: #000000">QModelIndex</span></span><span style="color: #990000">();</span>
+    <span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span>
+
+<span style="color: #009900">bool</span> XML<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">hasChildren</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #008080">QModelIndex</span> <span style="color: #990000">&amp;</span>parent<span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #0000FF">const</span></span>
+<span style="color: #FF0000">{</span>
+    <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="color: #990000">!</span>parent<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">isValid</span></span><span style="color: #990000">()</span> <span style="color: #990000">||</span> <span style="color: #990000">(</span><span style="color: #009900">int</span><span style="color: #990000">)</span> parent<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">internalId</span></span><span style="color: #990000">()</span> <span style="color: #990000">&lt;</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+
+<span style="color: #009900">int</span> XML<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">rowCount</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #008080">QModelIndex</span> <span style="color: #990000">&amp;</span>parent<span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #0000FF">const</span></span>
+<span style="color: #FF0000">{</span>
+    <span style="color: #008080">QString</span> s<span style="color: #990000">;</span>
+    <span style="color: #008080">QByteArray</span> <span style="font-weight: bold"><span style="color: #000000">xml</span></span><span style="color: #990000">(</span>xml_<span style="color: #990000">);</span>
+    <span style="color: #008080">QBuffer</span> <span style="font-weight: bold"><span style="color: #000000">buffer</span></span><span style="color: #990000">(&amp;</span>xml<span style="color: #990000">);</span>
+    buffer<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">open</span></span><span style="color: #990000">(</span>QIODevice<span style="color: #990000">::</span>ReadOnly<span style="color: #990000">);</span>
+    <span style="color: #008080">QXmlQuery</span> query<span style="color: #990000">;</span>
+        <span style="font-style: italic"><span style="color: #9A1900">// query.setFocus(&amp;buffer);</span></span>
+    query<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">bindVariable</span></span><span style="color: #990000">(</span><span style="color: #FF0000">"root"</span><span style="color: #990000">,&amp;</span>buffer<span style="color: #990000">);</span>
+
+    <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(!</span>parent<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">isValid</span></span><span style="color: #990000">())</span>
+    <span style="color: #FF0000">{</span>
+        query<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">setQuery</span></span><span style="color: #990000">(</span><span style="color: #FF0000">"count(doc($root)/XML/Sequence)"</span><span style="color: #990000">);</span>
+    <span style="color: #FF0000">}</span>
+    <span style="font-weight: bold"><span style="color: #0000FF">else</span></span>
+    <span style="color: #FF0000">{</span>
+        query<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">bindVariable</span></span><span style="color: #990000">(</span><span style="color: #FF0000">"row"</span><span style="color: #990000">,</span> <span style="font-weight: bold"><span style="color: #000000">QVariant</span></span><span style="color: #990000">(</span>parent<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">row</span></span><span style="color: #990000">()+</span><span style="color: #993399">1</span><span style="color: #990000">));</span>
+        query<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">setQuery</span></span><span style="color: #990000">(</span><span style="color: #FF0000">"count(doc($root)/XML/Sequence[$row]/Element)"</span><span style="color: #990000">);</span>
+    <span style="color: #FF0000">}</span>
+
+    <span style="font-weight: bold"><span style="color: #000000">Q_ASSERT</span></span><span style="color: #990000">(</span>query<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">isValid</span></span><span style="color: #990000">());</span>
+    <span style="color: #009900">bool</span> ok<span style="color: #990000">=</span>query<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">evaluateTo</span></span><span style="color: #990000">(&amp;</span>s<span style="color: #990000">);</span>
+    <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #009900">int</span> i<span style="color: #990000">=</span>s<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">trimmed</span></span><span style="color: #990000">().</span><span style="font-weight: bold"><span style="color: #000000">toInt</span></span><span style="color: #990000">();</span>
+    <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok <span style="color: #990000">?</span> i <span style="color: #990000">:</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+
+<span style="color: #009900">int</span> XML<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">columnCount</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #008080">QModelIndex</span> <span style="color: #990000">&amp;</span>parent<span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #0000FF">const</span></span>
+<span style="color: #FF0000">{</span>
+        <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> headers_<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">();</span>
+<span style="color: #FF0000">}</span>
+
+<span style="color: #008080">QVariant</span> XML<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">data</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #008080">QModelIndex</span> <span style="color: #990000">&amp;</span>index<span style="color: #990000">,</span> <span style="color: #009900">int</span> role<span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #0000FF">const</span></span>
+<span style="color: #FF0000">{</span>
+    <span style="font-weight: bold"><span style="color: #000000">Q_ASSERT</span></span><span style="color: #990000">(</span>xml_<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">());</span>
+    <span style="font-weight: bold"><span style="color: #0000FF">switch</span></span><span style="color: #990000">(</span>role<span style="color: #990000">)</span>
+    <span style="color: #FF0000">{</span>
+    <span style="font-weight: bold"><span style="color: #0000FF">case</span></span> <span style="color: #990000">(</span>Qt<span style="color: #990000">::</span>DisplayRole<span style="color: #990000">):</span>
+    <span style="color: #FF0000">{</span>
+        <span style="color: #008080">QByteArray</span> <span style="font-weight: bold"><span style="color: #000000">xml</span></span><span style="color: #990000">(</span>xml_<span style="color: #990000">);</span>
+        <span style="color: #008080">QBuffer</span> <span style="font-weight: bold"><span style="color: #000000">buffer</span></span><span style="color: #990000">(&amp;</span>xml<span style="color: #990000">);</span>
+        buffer<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">open</span></span><span style="color: #990000">(</span>QIODevice<span style="color: #990000">::</span>ReadOnly<span style="color: #990000">);</span>
+        <span style="color: #008080">QXmlQuery</span> query<span style="color: #990000">;</span>
+        <span style="color: #008080">QString</span> x<span style="color: #990000">=</span>QString<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">fromUtf8</span></span><span style="color: #990000">(</span>xml<span style="color: #990000">);</span>
+<span style="font-style: italic"><span style="color: #9A1900">//        query.setFocus(&amp;buffer);</span></span>
+        query<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">bindVariable</span></span><span style="color: #990000">(</span><span style="color: #FF0000">"root"</span><span style="color: #990000">,&amp;</span>buffer<span style="color: #990000">);</span>
+
+        <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">((</span><span style="color: #009900">int</span><span style="color: #990000">)</span>index<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">internalId</span></span><span style="color: #990000">()</span> <span style="color: #990000">&lt;</span> <span style="color: #993399">0</span><span style="color: #990000">)</span>
+        <span style="color: #FF0000">{</span>
+                <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span>index<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">column</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">)</span>
+                        <span style="color: #FF0000">{</span>
+                                query<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">bindVariable</span></span><span style="color: #990000">(</span><span style="color: #FF0000">"seq"</span><span style="color: #990000">,</span> <span style="font-weight: bold"><span style="color: #000000">QVariant</span></span><span style="color: #990000">(</span>index<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">row</span></span><span style="color: #990000">()+</span><span style="color: #993399">1</span><span style="color: #990000">));</span>
+                                query<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">setQuery</span></span><span style="color: #990000">(</span><span style="color: #FF0000">"doc($root)/XML/Sequence[$seq]/@Name/string()"</span><span style="color: #990000">);</span>
+                        <span style="color: #FF0000">}</span>
+                        <span style="font-weight: bold"><span style="color: #0000FF">else</span></span>
+                        <span style="color: #FF0000">{</span>
+                                query<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">setQuery</span></span><span style="color: #990000">(</span><span style="color: #FF0000">"''"</span><span style="color: #990000">);</span>
+                        <span style="color: #FF0000">}</span>
+        <span style="color: #FF0000">}</span>
+        <span style="font-weight: bold"><span style="color: #0000FF">else</span></span>
+        <span style="color: #FF0000">{</span>
+            query<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">bindVariable</span></span><span style="color: #990000">(</span><span style="color: #FF0000">"seq"</span><span style="color: #990000">,</span> <span style="font-weight: bold"><span style="color: #000000">QVariant</span></span><span style="color: #990000">(</span>index<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">internalId</span></span><span style="color: #990000">()+</span><span style="color: #993399">1</span><span style="color: #990000">));</span>
+            query<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">bindVariable</span></span><span style="color: #990000">(</span><span style="color: #FF0000">"ele"</span><span style="color: #990000">,</span> <span style="font-weight: bold"><span style="color: #000000">QVariant</span></span><span style="color: #990000">(</span>index<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">row</span></span><span style="color: #990000">()+</span><span style="color: #993399">1</span><span style="color: #990000">));</span>
+            query<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">bindVariable</span></span><span style="color: #990000">(</span><span style="color: #FF0000">"attr"</span><span style="color: #990000">,</span> <span style="font-weight: bold"><span style="color: #000000">QVariant</span></span><span style="color: #990000">(</span>index<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">column</span></span><span style="color: #990000">()+</span><span style="color: #993399">1</span><span style="color: #990000">));</span>
+            query<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">setQuery</span></span><span style="color: #990000">(</span><span style="color: #FF0000">"doc($root)/XML/Sequence[$seq]/Element[$ele]/@*[$attr]/string()"</span><span style="color: #990000">);</span>
+        <span style="color: #FF0000">}</span>
+
+        <span style="font-weight: bold"><span style="color: #000000">Q_ASSERT</span></span><span style="color: #990000">(</span>query<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">isValid</span></span><span style="color: #990000">());</span>
+        <span style="color: #008080">QString</span> result<span style="color: #990000">;</span>
+        query<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">evaluateTo</span></span><span style="color: #990000">(&amp;</span>result<span style="color: #990000">);</span>
+        <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> result<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">trimmed</span></span><span style="color: #990000">();</span>
+    <span style="color: #FF0000">}</span>
+<span style="font-weight: bold"><span style="color: #008080">    default:</span></span>
+        <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="font-weight: bold"><span style="color: #000000">QVariant</span></span><span style="color: #990000">();</span>
+    <span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span>
+
+<span style="color: #008080">QVariant</span> XML<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">headerData</span></span><span style="color: #990000">(</span><span style="color: #009900">int</span> section<span style="color: #990000">,</span> Qt<span style="color: #990000">::</span><span style="color: #008080">Orientation</span> orientation<span style="color: #990000">,</span> <span style="color: #009900">int</span> role<span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #0000FF">const</span></span>
+<span style="color: #FF0000">{</span>
+    <span style="font-weight: bold"><span style="color: #0000FF">if</span></span> <span style="color: #990000">(</span>orientation <span style="color: #990000">==</span> Qt<span style="color: #990000">::</span>Horizontal <span style="color: #990000">&amp;&amp;</span> role <span style="color: #990000">==</span> Qt<span style="color: #990000">::</span>DisplayRole <span style="color: #990000">&amp;&amp;</span> section <span style="color: #990000">&lt;</span> headers_<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">())</span>
+    <span style="color: #FF0000">{</span>
+        <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> headers_<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">at</span></span><span style="color: #990000">(</span>section<span style="color: #990000">);</span>
+    <span style="color: #FF0000">}</span>
+    <span style="font-weight: bold"><span style="color: #0000FF">else</span></span>
+    <span style="color: #FF0000">{</span>
+        <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="font-weight: bold"><span style="color: #000000">QVariant</span></span><span style="color: #990000">();</span>
+    <span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span>
+
+<span style="color: #009900">void</span> XML<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">set</span></span><span style="color: #990000">(</span><span style="color: #008080">QString</span> xml<span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>
+    <span style="color: #008080">emit</span> <span style="font-weight: bold"><span style="color: #000000">layoutAboutToBeChanged</span></span><span style="color: #990000">();</span>
+    <span style="color: #008080">emit</span> <span style="font-weight: bold"><span style="color: #000000">beginResetModel</span></span><span style="color: #990000">();</span>
+    xml_<span style="color: #990000">=</span>xml<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">toUtf8</span></span><span style="color: #990000">();</span>
+    <span style="color: #008080">emit</span> <span style="font-weight: bold"><span style="color: #000000">endResetModel</span></span><span style="color: #990000">();</span>
+    <span style="color: #008080">emit</span> <span style="font-weight: bold"><span style="color: #000000">layoutChanged</span></span><span style="color: #990000">();</span>
+<span style="color: #FF0000">}</span></tt></pre></div></div>
+</div>
+</div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated
+ 2019-03-12 22:36:39 CET
+</div>
+</div>
+</body>
+</html>
