@@ -28,6 +28,7 @@ index.html: README.html \
 	wiki/documentation/AsciiDoc.html \
 	wiki/documentation/Make.html \
 	wiki/programming/Bash.html \
+	wiki/programming/C.html \
 	wiki/programming/Cpp.html \
 	wiki/programming/Java.html \
 	wiki/programming/Perl.html \

@@ -735,76 +735,103 @@ asciidoc.install();
 <div id="header">
 </div>
 <div id="content">
-<div class="tableblock">
-<table rules="all"
-width="100%"
-frame="border"
-cellspacing="0" cellpadding="4">
-<caption class="title">Table 1. Sites</caption>
-<col width="37%" />
-<col width="62%" />
-<tbody>
-<tr>
-<td align="left" valign="top"><p class="table">Git Webserver</p></td>
-<td align="left" valign="top"><div><div class="paragraph"><p><a href="https://github.com/furrymcgee/cgit">CGit</a></p></div></div></td>
-</tr>
-<tr>
-<td align="left" valign="top"><p class="table">TYPO3 Demo</p></td>
-<td align="left" valign="top"><div><div class="paragraph"><p><a href="https://github.com/furrymcgee/cms">TYPO3</a></p></div></div></td>
-</tr>
-<tr>
-<td align="left" valign="top"><p class="table">PHP Composer Repository</p></td>
-<td align="left" valign="top"><div><div class="paragraph"><p><a href="https://github.com/furrymcgee/satis">Satis</a></p></div></div></td>
-</tr>
-</tbody>
-</table>
+<div class="sect1">
+<h2 id="_c_programming_language">C Programming Language</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>It is a simple language with basic data structures. There are functions and
+pointers for abstraction. A program in C is close to the assembler and machine
+code. The C programming language is often used for operating systems. The Linux
+kernel, drivers, shells and programs with many system calls are preferably
+written in C. Applications with graphical user interface often use more complex
+languages with polymorphic types.</p></div>
+<div class="sect2">
+<h3 id="_dynamic_libraries">Dynamic Libraries</h3>
+<div class="paragraph"><p>The manpage ld-linux.8 describes the linux dynamic linker/loader.</p></div>
+<div class="sect3">
+<h4 id="_example_to_trace_sqlite_with_a_dynamic_library">Example to trace SQLite with a dynamic library</h4>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="http://optumsoft.com/dangers-of-using-dlsym-with-rtld_next/">http://optumsoft.com/dangers-of-using-dlsym-with-rtld_next/</a>
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.faqs.org/docs/Linux-HOWTO/Program-Library-HOWTO.html#INIT-AND-CLEANUP">http://www.faqs.org/docs/Linux-HOWTO/Program-Library-HOWTO.html#INIT-AND-CLEANUP</a>
+</p>
+</li>
+</ul></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-style: italic"><span style="color: #9A1900">/*</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">This library overrides sqlite3_open with a trace function for preloading</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">See also ld-linux.8</span></span>
+
+<span style="font-style: italic"><span style="color: #9A1900">cc sqlite3_trace.c \</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">        -shared \</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">        -fPIC \</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">        -lsqlite3 \</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">        -ldl \</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">        -o sqlite3_trace.so \</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">        -Wl,-init=lib_init</span></span>
+
+<span style="font-style: italic"><span style="color: #9A1900">*/</span></span>
+<span style="font-weight: bold"><span style="color: #000080">#define</span></span> _GNU_SOURCE <span style="font-style: italic"><span style="color: #9A1900">// RTLD_NEXT</span></span>
+<span style="font-weight: bold"><span style="color: #000080">#include</span></span> <span style="color: #FF0000">&lt;assert.h&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080">#include</span></span> <span style="color: #FF0000">&lt;dlfcn.h&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080">#include</span></span> <span style="color: #FF0000">&lt;sqlite3.h&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080">#include</span></span> <span style="color: #FF0000">&lt;stdio.h&gt;</span>
+
+<span style="font-style: italic"><span style="color: #9A1900">/**</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"> * Log database queries.</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"> */</span></span>
+<span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">trace</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span> <span style="color: #990000">*</span> a<span style="color: #990000">,</span> <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #009900">char</span> <span style="color: #990000">*</span> sql<span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>
+        <span style="font-weight: bold"><span style="color: #000000">printf</span></span><span style="color: #990000">(</span><span style="color: #FF0000">"-- %s</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">"</span><span style="color: #990000">,</span> sql<span style="color: #990000">);</span>
+        <span style="font-weight: bold"><span style="color: #000000">fflush</span></span><span style="color: #990000">(</span>stdout<span style="color: #990000">);</span>
+<span style="color: #FF0000">}</span>
+<span style="font-style: italic"><span style="color: #9A1900">/**</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"> * Log sql time.</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"> */</span></span>
+<span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">profile</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">*</span> a<span style="color: #990000">,</span> <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #009900">char</span><span style="color: #990000">*</span> b<span style="color: #990000">,</span> <span style="color: #008080">sqlite3_uint64</span> time<span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>
+        <span style="font-weight: bold"><span style="color: #000000">printf</span></span><span style="color: #990000">(</span> <span style="color: #FF0000">"-- SQL finished in %u ms</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">"</span><span style="color: #990000">,</span> <span style="color: #990000">(</span><span style="color: #009900">unsigned</span> <span style="color: #009900">int</span><span style="color: #990000">)</span> time <span style="color: #990000">/</span> <span style="color: #993399">1000000</span><span style="color: #990000">);</span>
+        <span style="font-weight: bold"><span style="color: #000000">fflush</span></span><span style="color: #990000">(</span>stdout<span style="color: #990000">);</span>
+<span style="color: #FF0000">}</span>
+
+<span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> <span style="color: #008080">SQLITE_API</span> <span style="color: #009900">int</span> <span style="color: #990000">(*</span>sqlite3_open_fp<span style="color: #990000">)(</span>  <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #009900">char</span> <span style="color: #990000">*</span>filename<span style="color: #990000">,</span>  <span style="color: #008080">sqlite3</span> <span style="color: #990000">**</span>ppDb<span style="color: #990000">);</span>
+<span style="color: #008080">sqlite3_open_fp</span> fun<span style="color: #990000">;</span>
+
+<span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">lib_init</span></span> <span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>
+        <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span>RTLD_NEXT<span style="color: #990000">);</span>
+        <span style="color: #009900">void</span><span style="color: #990000">*</span> original_sqlite3_open <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">dlsym</span></span><span style="color: #990000">(</span>RTLD_NEXT<span style="color: #990000">,</span> <span style="color: #FF0000">"sqlite3_open"</span><span style="color: #990000">);</span>
+        <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span>original_sqlite3_open<span style="color: #990000">);</span>
+
+        fun<span style="color: #990000">=(</span>sqlite3_open_fp<span style="color: #990000">)</span>original_sqlite3_open<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+
+SQLITE_API <span style="color: #008080">int</span> <span style="font-weight: bold"><span style="color: #000000">sqlite3_open</span></span> <span style="color: #990000">(</span>  <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #009900">char</span> <span style="color: #990000">*</span>filename<span style="color: #990000">,</span>  <span style="color: #008080">sqlite3</span> <span style="color: #990000">**</span>ppDb<span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>
+        <span style="color: #009900">int</span> ret<span style="color: #990000">=</span><span style="font-weight: bold"><span style="color: #000000">fun</span></span><span style="color: #990000">(</span>filename<span style="color: #990000">,</span> ppDb<span style="color: #990000">);</span>
+        <span style="font-weight: bold"><span style="color: #000000">sqlite3_trace</span></span><span style="color: #990000">((</span>sqlite3<span style="color: #990000">*)</span> <span style="color: #990000">*</span>ppDb<span style="color: #990000">,</span> trace<span style="color: #990000">,</span> NULL<span style="color: #990000">);</span>
+        <span style="font-style: italic"><span style="color: #9A1900">//sqlite3_profile((sqlite3*) *ppDb, profile, NULL);</span></span>
+        <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ret<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+</tt></pre></div></div>
 </div>
-<div class="tableblock">
-<table rules="all"
-width="100%"
-frame="border"
-cellspacing="0" cellpadding="4">
-<caption class="title">Table 2. Wiki</caption>
-<col width="37%" />
-<col width="62%" />
-<tbody>
-<tr>
-<td align="left" valign="top"><p class="table">High Level Programming Languages</p></td>
-<td align="left" valign="top"><div><div class="paragraph"><p><a href="https://github.com/furrymcgee/C.html">C</a>, <a href="https://github.com/furrymcgee/Cpp.html">C++</a>, <a href="https://github.com/furrymcgee/Qt.html">Qt</a></p></div></div></td>
-</tr>
-<tr>
-<td align="left" valign="top"><p class="table">Command Interpreter</p></td>
-<td align="left" valign="top"><div><div class="paragraph"><p><a href="https://github.com/furrymcgee/Bash.html">Bash</a>, <a href="https://github.com/furrymcgee/Perl.html">Perl</a></p></div></div></td>
-</tr>
-<tr>
-<td align="left" valign="top"><p class="table">Markup Languages and Text Processors</p></td>
-<td align="left" valign="top"><div><div class="paragraph"><p><a href="https://github.com/furrymcgee/AsciiDoc.html">AsciiDoc</a>, <a href="https://github.com/furrymcgee/XML.html">XML</a>, <a href="https://github.com/furrymcgee/Make.html">PDF</a></p></div></div></td>
-</tr>
-<tr>
-<td align="left" valign="top"><p class="table">Databases and Filesystems</p></td>
-<td align="left" valign="top"><div><div class="paragraph"><p><a href="https://github.com/furrymcgee/SQLite.html">SQLite</a>, <a href="https://github.com/furrymcgee/Samba.html">Samba</a></p></div></div></td>
-</tr>
-<tr>
-<td align="left" valign="top"><p class="table">Operating Systems and Virtualization</p></td>
-<td align="left" valign="top"><div><div class="paragraph"><p><a href="https://github.com/furrymcgee/Debian.html">Debian</a>, <a href="https://github.com/furrymcgee/Devuan.html">Devuan</a>, <a href="https://github.com/furrymcgee/SUSE.html">openSUSE</a>, <a href="https://github.com/furrymcgee/QEMU.html">QEMU</a></p></div></div></td>
-</tr>
-<tr>
-<td align="left" valign="top"><p class="table">Software Development Tools</p></td>
-<td align="left" valign="top"><div><div class="paragraph"><p><a href="https://github.com/furrymcgee/Make.html">Make</a>, <a href="https://github.com/furrymcgee/Git.html">Git</a></p></div></div></td>
-</tr>
-<tr>
-<td align="left" valign="top"><p class="table">Web Frontends</p></td>
-<td align="left" valign="top"><div><div class="paragraph"><p><a href="https://github.com/furrymcgee/Apache.html">Apache</a>, <a href="https://github.com/furrymcgee/Mojolicious.html">Mojolicious</a>, <a href="https://github.com/furrymcgee/Typo3.html">Typo3</a></p></div></div></td>
-</tr>
-</tbody>
-</table>
+</div>
+</div>
 </div>
 </div>
 <div id="footnotes"><hr /></div>
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2018-12-17 17:38:36 CET
+ 2019-03-14 00:45:51 CET
 </div>
 </div>
 </body>
