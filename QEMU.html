@@ -1177,7 +1177,7 @@ http://www.gnu.org/software/src-highlite -->
 <span style="color: #990000">|</span> <span style="font-weight: bold"><span style="color: #0000FF">while</span></span> <span style="font-weight: bold"><span style="color: #0000FF">read</span></span><span style="color: #990000">;</span> <span style="font-weight: bold"><span style="color: #0000FF">do</span></span>
                 echo <span style="color: #009900">$REPLY</span>
                 mkfs<span style="color: #990000">.</span>btrfs <span style="color: #009900">$REPLY</span>
-                cd <span style="color: #009900">$(</span>mktemp -d<span style="color: #990000">)</span> <span style="color: #990000">&amp;&amp;</span> cd -
+                cd -P <span style="color: #FF0000">"$(mktemp -d)"</span> <span style="color: #990000">&amp;&amp;</span> cd - <span style="color: #990000">||</span> <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span> <span style="color: #993399">1</span>
                 mount <span style="color: #009900">$REPLY</span> <span style="color: #009900">$OLDPWD</span> <span style="color: #990000">&amp;&amp;</span> cd -
                 btrfs subvolume create HEAD
                 btrfs subvolume snapshot -r HEAD <span style="color: #009900">$(</span>date -Ih<span style="color: #990000">)</span>
@@ -1252,7 +1252,7 @@ qemu-system-x86_64 --enable-kvm --nographic -cpu host -m <span style="color: #99
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2019-01-27 13:58:42 CET
+ 2019-03-15 21:00:13 CET
 </div>
 </div>
 </body>

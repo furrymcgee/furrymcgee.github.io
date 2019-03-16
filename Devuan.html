@@ -753,14 +753,7 @@ asciidoc.install();
 </ul></div>
 <div class="sect2">
 <h3 id="_cd_image">CD Image</h3>
-<div class="paragraph"><p>The listed scripts create a new root filesystem with debootstrap program. It does not use variables only file descriptors and pipes. File descriptors connect the top level script with the lower level schroot/bash shells. The generated files can be downloaded with FTP in the cdimage directory.</p></div>
-<div class="ulist"><ul>
-<li>
-<p>
-<a href="ftp://lippydanger.jumpingcrab.com/cdimage/">ftp://lippydanger.jumpingcrab.com/cdimage/</a>
-</p>
-</li>
-</ul></div>
+<div class="paragraph"><p>The listed scripts create a new root filesystem with debootstrap program. It does not use variables only file descriptors and pipes. File descriptors connect the top level script with the lower level schroot/bash shells.</p></div>
 <div class="listingblock">
 <div class="title">devuan</div>
 <div class="content"><!-- Generator: GNU source-highlight 3.1.8
@@ -810,8 +803,7 @@ http://www.gnu.org/software/src-highlite -->
 <pre><tt><span style="font-style: italic"><span style="color: #9A1900">#!/bin/bash</span></span>
 <span style="font-style: italic"><span style="color: #9A1900"># Devuan debootstrap and schroot</span></span>
 
-<span style="font-weight: bold"><span style="color: #0000FF">test</span></span> -d <span style="color: #009900">$TMPDIR</span> <span style="color: #990000">||</span> <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span> <span style="color: #993399">1</span>
-cd <span style="color: #009900">$(</span>mktemp -d<span style="color: #990000">)</span>
+cd -P <span style="color: #FF0000">"$(mktemp -d)"</span> <span style="color: #990000">||</span> <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span> <span style="color: #993399">1</span>
 
 apt-get install --yes debootstrap schroot fuseiso
 
@@ -1082,7 +1074,7 @@ SIGN
 
                 <span style="font-style: italic"><span style="color: #9A1900"># read packages with filename</span></span>
                 <span style="color: #990000">&lt;</span> /var/lib/apt/lists/deb<span style="color: #990000">.</span>devuan<span style="color: #990000">.</span>org_merged_dists_testing_main_binary-amd64_Packages <span style="color: #990000">\</span>
-                bash -e <span style="color: #990000">&lt;(</span>cat <span style="color: #990000">&lt;&amp;</span><span style="color: #993399">8</span><span style="color: #990000">)</span> <span style="color: #990000">|</span>
+                bash -e <span style="color: #990000">&lt;(&lt;&amp;</span><span style="color: #993399">8</span><span style="color: #990000">)</span> <span style="color: #990000">|</span>
 
                 <span style="font-style: italic"><span style="color: #9A1900"># execute parallel apt-get</span></span>
                 xargs --replace<span style="color: #990000">=</span>@ --max-procs<span style="color: #990000">=</span><span style="color: #009900">$(nproc)</span> sh -c <span style="color: #FF0000">'@'</span>
@@ -1138,6 +1130,197 @@ SIGN
         <span style="color: #990000">:</span> umount debian/pool
         <span style="color: #990000">:</span> umount iso
 SCHROOT</tt></pre></div></div>
+<div class="listingblock">
+<div class="title">devuan-sdk</div>
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-style: italic"><span style="color: #9A1900">#!/bin/sh</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># build iso image with devuan-sdk</span></span>
+<span style="color: #993399">3</span><span style="color: #990000">&lt;&amp;</span><span style="color: #993399">0</span> <span style="color: #990000">\</span>
+<span style="color: #993399">0</span><span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'SHELL'</span> <span style="color: #990000">\</span>
+<span style="color: #993399">6</span><span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'SOURCES'</span> <span style="color: #990000">\</span>
+<span style="color: #993399">7</span><span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'SDK'</span> <span style="color: #990000">\</span>
+<span style="color: #993399">8</span><span style="color: #990000">&lt;&lt;</span><span style="color: #FF0000">'PATCH'</span> <span style="color: #990000">\</span>
+bash
+        cat <span style="color: #990000">&gt;</span> /etc/apt/sources<span style="color: #990000">.</span>list <span style="color: #990000">&lt;&amp;</span><span style="color: #993399">6</span>
+
+        apt-get update
+        apt-get install --yes git
+        cat <span style="color: #990000">&gt;</span> <span style="color: #990000">.</span>gitconfig <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'GIT'</span>
+                <span style="color: #990000">[</span>user<span style="color: #990000">]</span>
+                        name <span style="color: #990000">=</span> root
+                        email <span style="color: #990000">=</span> root@localhost
+        GIT
+
+        <span style="color: #990000">[[</span> -d devuan-sdk <span style="color: #990000">]]</span> <span style="color: #990000">||</span>
+        git clone https<span style="color: #990000">:</span>//git<span style="color: #990000">.</span>devuan<span style="color: #990000">.</span>org/devuan/devuan-sdk
+        cd devuan-sdk <span style="color: #990000">||</span> <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span> <span style="color: #993399">1</span>
+        git reset --hard 2b9287a
+        git am <span style="color: #990000">&lt;&amp;</span><span style="color: #993399">8</span> <span style="color: #990000">||</span> {
+                git am --abort
+                <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span> <span style="color: #993399">1</span>
+        }
+
+        <span style="font-weight: bold"><span style="color: #0000FF">exec</span></span> zsh <span style="color: #990000">&lt;&amp;</span><span style="color: #993399">7</span>
+SHELL
+
+        <span style="font-style: italic"><span style="color: #9A1900">#deb [trusted=yes] ftp://localhost/debian testing main</span></span>
+        <span style="font-style: italic"><span style="color: #9A1900">#deb-src [trusted=yes] ftp://localhost/debian testing main</span></span>
+        deb <span style="color: #990000">[</span><span style="color: #009900">trusted</span><span style="color: #990000">=</span>yes<span style="color: #990000">]</span> http<span style="color: #990000">:</span>//deb<span style="color: #990000">.</span>devuan<span style="color: #990000">.</span>org/merged ascii main
+        deb-src <span style="color: #990000">[</span><span style="color: #009900">trusted</span><span style="color: #990000">=</span>yes<span style="color: #990000">]</span> http<span style="color: #990000">:</span>//deb<span style="color: #990000">.</span>devuan<span style="color: #990000">.</span>org/merged ascii main
+        deb <span style="color: #990000">[</span><span style="color: #009900">trusted</span><span style="color: #990000">=</span>yes<span style="color: #990000">]</span> http<span style="color: #990000">:</span>//deb<span style="color: #990000">.</span>devuan<span style="color: #990000">.</span>org/merged ascii-backports main
+        deb-src <span style="color: #990000">[</span><span style="color: #009900">trusted</span><span style="color: #990000">=</span>yes<span style="color: #990000">]</span> http<span style="color: #990000">:</span>//deb<span style="color: #990000">.</span>devuan<span style="color: #990000">.</span>org/merged ascii-backports main
+        deb <span style="color: #990000">[</span><span style="color: #009900">trusted</span><span style="color: #990000">=</span>yes<span style="color: #990000">]</span> http<span style="color: #990000">:</span>//deb<span style="color: #990000">.</span>devuan<span style="color: #990000">.</span>org/merged testing main
+        deb-src <span style="color: #990000">[</span><span style="color: #009900">trusted</span><span style="color: #990000">=</span>yes<span style="color: #990000">]</span> http<span style="color: #990000">:</span>//deb<span style="color: #990000">.</span>devuan<span style="color: #990000">.</span>org/merged testing main
+        deb <span style="color: #990000">[</span><span style="color: #009900">trusted</span><span style="color: #990000">=</span>yes<span style="color: #990000">]</span> http<span style="color: #990000">:</span>//deb<span style="color: #990000">.</span>devuan<span style="color: #990000">.</span>org/merged unstable main
+        deb-src <span style="color: #990000">[</span><span style="color: #009900">trusted</span><span style="color: #990000">=</span>yes<span style="color: #990000">]</span> http<span style="color: #990000">:</span>//deb<span style="color: #990000">.</span>devuan<span style="color: #990000">.</span>org/merged unstable main
+SOURCES
+        <span style="font-style: italic"><span style="color: #9A1900"># sudo TERM=linux schroot -d/root/devuan-sdk -- zsh</span></span>
+        <span style="font-weight: bold"><span style="color: #0000FF">source</span></span> sdk <span style="color: #990000">||</span> <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span> <span style="color: #993399">1</span>
+        <span style="color: #009900">mirror</span><span style="color: #990000">=</span>ftp<span style="color: #990000">:</span>//localhost/debian<span style="color: #990000">/</span>
+        <span style="color: #009900">mirror</span><span style="color: #990000">=</span>http<span style="color: #990000">:</span>//deb<span style="color: #990000">.</span>devuan<span style="color: #990000">.</span>org/merged
+        <span style="color: #009900">chroot_variant</span><span style="color: #990000">=</span>buildd
+        <span style="color: #009900">chroot_arch</span><span style="color: #990000">=</span>amd64
+        <span style="color: #009900">release</span><span style="color: #990000">=</span>unstable
+        <span style="color: #009900">version</span><span style="color: #990000">=</span><span style="color: #993399">2.0</span><span style="color: #990000">.</span><span style="color: #993399">0</span>
+        <span style="color: #009900">iso_type</span><span style="color: #990000">=</span>netinst-auto
+        <span style="color: #009900">src_name</span><span style="color: #990000">=</span>debian-installer
+        <span style="color: #009900">orig_ver</span><span style="color: #990000">=</span><span style="color: #993399">20181231</span><span style="color: #990000">+</span>devuan1
+        init
+        <span style="color: #990000">:</span> init-repos
+
+        <span style="font-style: italic"><span style="color: #9A1900"># chroot and debootstrap</span></span>
+        <span style="color: #990000">[</span> -r <span style="color: #990000">..</span>/devuan-amd<span style="color: #993399">64</span><span style="color: #990000">.</span>tgz <span style="color: #990000">]</span> <span style="color: #990000">||</span> {
+                <span style="font-style: italic"><span style="color: #9A1900"># todo cache a local repository</span></span>
+                apt-get update
+                apt-get install --yes debootstrap
+                chroot-create first
+                schroot <span style="color: #990000">\</span>
+                        --directory<span style="color: #990000">=</span>/root <span style="color: #990000">\</span>
+                        --chroot<span style="color: #990000">=</span>devuan-amd<span style="color: #993399">64</span> <span style="color: #990000">\</span>
+                        -- sh /debootstrap/debootstrap --second-stage
+
+                <span style="font-style: italic"><span style="color: #9A1900"># builds</span></span>
+                mkdir -p stage builds/amd<span style="color: #993399">64</span><span style="color: #990000">/</span>{sysvinit<span style="color: #990000">,</span>devuan-{keyring<span style="color: #990000">,</span>baseconf}}
+
+                cat <span style="color: #990000">&gt;</span> chroot/amd<span style="color: #993399">64</span>/etc/apt/apt<span style="color: #990000">.</span>conf<span style="color: #990000">.</span>d<span style="color: #990000">/</span>00testing <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'RELEASE'</span>
+                        APT<span style="color: #990000">::</span>Default-Release <span style="color: #FF0000">"testing"</span><span style="color: #990000">;</span>
+                        Dpkg<span style="color: #990000">::</span>Options {<span style="color: #FF0000">"--force-confnew"</span><span style="color: #990000">;</span>}<span style="color: #990000">;</span>
+                RELEASE
+
+                cat <span style="color: #990000">&gt;</span> chroot/amd<span style="color: #993399">64</span>/etc/apt/sources<span style="color: #990000">.</span>list <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'APT'</span>
+                        <span style="font-style: italic"><span style="color: #9A1900">#deb [trusted=yes] ftp://localhost/debian testing main</span></span>
+                        <span style="font-style: italic"><span style="color: #9A1900">#deb-src [trusted=yes] ftp://localhost/debian testing main</span></span>
+                        deb <span style="color: #990000">[</span><span style="color: #009900">trusted</span><span style="color: #990000">=</span>yes<span style="color: #990000">]</span> http<span style="color: #990000">:</span>//deb<span style="color: #990000">.</span>devuan<span style="color: #990000">.</span>org/merged testing main
+                        deb-src <span style="color: #990000">[</span><span style="color: #009900">trusted</span><span style="color: #990000">=</span>yes<span style="color: #990000">]</span> http<span style="color: #990000">:</span>//deb<span style="color: #990000">.</span>devuan<span style="color: #990000">.</span>org/merged testing main
+                APT
+
+                schroot --chroot devuan-amd<span style="color: #993399">64</span> --directory<span style="color: #990000">=</span>/root -- apt-get update
+                tar czf <span style="color: #990000">..</span>/devuan-amd<span style="color: #993399">64</span><span style="color: #990000">.</span>tgz chroot/amd<span style="color: #993399">64</span>
+        } <span style="color: #990000">&amp;&amp;</span> rm -rf chroot <span style="color: #990000">&amp;&amp;</span> tar xf <span style="color: #990000">..</span>/devuan-amd<span style="color: #993399">64</span><span style="color: #990000">.</span>tgz
+        mkdir -p chroot/amd<span style="color: #993399">64</span>/usr/src/orig-iso
+        cp -av /tmp/de<span style="color: #990000">*.</span>iso <span style="color: #990000">\</span>
+                chroot/amd<span style="color: #993399">64</span>/usr/src/orig-iso/devuan-<span style="color: #009900">$release</span>-<span style="color: #009900">$chroot_arch</span>-<span style="color: #009900">$version</span>-netboot<span style="color: #990000">.</span>iso
+
+        <span style="font-style: italic"><span style="color: #9A1900"># iso</span></span>
+        seed <span style="color: #009900">$iso_type</span>
+        iso-import
+        iso-build-installer
+        <span style="color: #990000">:</span> build-deps
+        <span style="color: #990000">:</span> build-clean
+        <span style="color: #990000">:</span> build-sync
+        <span style="color: #990000">:</span> build-pack-orig
+        <span style="color: #990000">:</span> build-pack-debian
+        <span style="color: #990000">:</span> build-start
+        <span style="color: #990000">:</span> build-finish
+        iso-seed
+        <span style="color: #990000">:</span> iso-index
+        iso-make
+
+        <span style="font-style: italic"><span style="color: #9A1900">#schroot -c devuan-amd64 -d /usr/src/${src_name}-${orig_ver}/build make build_cdrom_isolinux</span></span>
+        <span style="font-style: italic"><span style="color: #9A1900">#script -c "exec bash -exc 'PATH=util:$PATH make ./stamps/get_udebs-cdrom_isolinux-stamp SUBARCH= MEDIUM=cdrom FLAVOUR=isolinux -C /usr/src/debian-installer-20180414+devuan1/build'"</span></span>
+        <span style="font-style: italic"><span style="color: #9A1900"># debootstrap --variant=buildd --verbose --include=bzip2,less,dialog,zsh,sysvinit,debian-keyring,devuan-keyring,apt-utils,fakeroot,e2fsprogs,curl,file, --exclude=libsystemd0,systemd,systemd-sysv --components=main --foreign --arch amd64 --no-check-gpg testing ../devuan-sdk/chroot/amd64 ftp://localhost/debian/</span></span>
+
+        <span style="font-style: italic"><span style="color: #9A1900"># qemu-system-x86_64 -m 1G -nographic -cdrom iso/devuan-testing-amd64-netinst-auto.iso --enable-kvm -kernel iso/mnt/install.amd/vmlinuz -initrd iso/mnt/install.amd/initrd.gz  -append 'console=ttyS0 auto=true priority=critical'</span></span>
+SDK
+From 01595140931e107cefe0a8257c583f7800f17689 Mon Sep <span style="color: #993399">17</span> <span style="color: #993399">00</span><span style="color: #990000">:</span><span style="color: #993399">00</span><span style="color: #990000">:</span><span style="color: #993399">00</span> <span style="color: #993399">2001</span>
+From<span style="color: #990000">:</span> furrymcgee <span style="color: #990000">&lt;</span>furrymcgee@lippydanger<span style="color: #990000">.</span>jumpingcrab<span style="color: #990000">.</span>com<span style="color: #990000">&gt;</span>
+Date<span style="color: #990000">:</span> Wed<span style="color: #990000">,</span> <span style="color: #993399">19</span> Dec <span style="color: #993399">2018</span> <span style="color: #993399">20</span><span style="color: #990000">:</span><span style="color: #993399">03</span><span style="color: #990000">:</span><span style="color: #993399">03</span> <span style="color: #990000">+</span><span style="color: #993399">0100</span>
+Subject<span style="color: #990000">:</span> <span style="color: #990000">[</span>PATCH<span style="color: #990000">]</span> index on master<span style="color: #990000">:</span> 2b9287a typo <span style="font-weight: bold"><span style="color: #0000FF">for</span></span> markdown formatting
+
+---
+ zlibs/build <span style="color: #990000">|</span> <span style="color: #993399">3</span> <span style="color: #990000">++</span>-
+ zlibs/iso   <span style="color: #990000">|</span> <span style="color: #993399">8</span> <span style="color: #990000">++++</span>----
+ <span style="color: #993399">2</span> files changed<span style="color: #990000">,</span> <span style="color: #993399">6</span> insertions<span style="color: #990000">(+),</span> <span style="color: #993399">5</span> deletions<span style="color: #990000">(</span>-<span style="color: #990000">)</span>
+
+diff --git a/zlibs/build b/zlibs/build
+index 880c14e<span style="color: #990000">..</span>d249e90 <span style="color: #993399">100755</span>
+--- a/zlibs/build
+<span style="color: #990000">+++</span> b/zlibs/build
+@@ -<span style="color: #993399">183</span><span style="color: #990000">,</span><span style="color: #993399">7</span> <span style="color: #990000">+</span><span style="color: #993399">183</span><span style="color: #990000">,</span><span style="color: #993399">7</span> @@ build-deps<span style="color: #990000">()</span> {
+         act <span style="color: #FF0000">"Installing dep: $d"</span>
+         schroot -c devuan-<span style="color: #009900">$chroot_arch</span> -u root <span style="color: #990000">\</span>
+             -d /usr/src <span style="color: #990000">\</span>
+-            -- apt-get --force-yes -y install <span style="color: #009900">$d</span>
+<span style="color: #990000">+</span>            -- apt-get -y install <span style="color: #009900">$d</span>
+
+     <span style="font-weight: bold"><span style="color: #0000FF">done</span></span>
+
+@@ -<span style="color: #993399">205</span><span style="color: #990000">,</span><span style="color: #993399">6</span> <span style="color: #990000">+</span><span style="color: #993399">205</span><span style="color: #990000">,</span><span style="color: #993399">7</span> @@ build-clean<span style="color: #990000">()</span> {
+             rm -rf <span style="color: #009900">$R</span>/chroot<span style="color: #990000">/</span><span style="color: #009900">$chroot_arch</span>/usr/src<span style="color: #990000">/</span><span style="color: #009900">$src_name</span>-<span style="color: #009900">${orig_ver}</span>
+     }
+
+<span style="color: #990000">+</span>    <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="color: #993399">0</span>
+ }
+
+ build-sync<span style="color: #990000">()</span> {
+diff --git a/zlibs/iso b/zlibs/iso
+index 989a826<span style="color: #990000">..</span>84803f0 <span style="color: #993399">100755</span>
+--- a/zlibs/iso
+<span style="color: #990000">+++</span> b/zlibs/iso
+@@ -<span style="color: #993399">66</span><span style="color: #990000">,</span><span style="color: #993399">7</span> <span style="color: #990000">+</span><span style="color: #993399">66</span><span style="color: #990000">,</span><span style="color: #993399">7</span> @@ iso-del-package<span style="color: #990000">()</span> {
+     <span style="color: #009900">req</span><span style="color: #990000">=(</span>release chroot_arch iso_type<span style="color: #990000">)</span>
+     <span style="color: #009900">iso</span><span style="color: #990000">=</span>usr/src/devuan-iso<span style="color: #990000">/</span><span style="color: #009900">$release</span>-<span style="color: #009900">$chroot_arch</span>-<span style="color: #009900">$iso_type</span>
+     <span style="color: #009900">pname</span><span style="color: #990000">=</span><span style="color: #009900">$1</span>
+-    <span style="color: #009900">freq</span><span style="color: #990000">=(</span><span style="color: #009900">$R</span>/chroot<span style="color: #990000">/</span><span style="color: #009900">$chroot_arch</span><span style="color: #990000">/</span><span style="color: #009900">$iso</span>/initrd<span style="color: #990000">.</span>gz<span style="color: #990000">)</span>
+<span style="color: #990000">+</span>    <span style="font-style: italic"><span style="color: #9A1900">#freq=($R/chroot/$chroot_arch/$iso/initrd.gz)</span></span>
+     reqck <span style="color: #990000">||</span> <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="color: #009900">$?</span>
+
+     notice <span style="color: #FF0000">"Deleting package from $release $chroot_arch $iso_type: $pname"</span>
+@@ -<span style="color: #993399">79</span><span style="color: #990000">,</span><span style="color: #993399">7</span> <span style="color: #990000">+</span><span style="color: #993399">79</span><span style="color: #990000">,</span><span style="color: #993399">7</span> @@ iso-add-package<span style="color: #990000">()</span> {
+     <span style="color: #009900">req</span><span style="color: #990000">=(</span>release chroot_arch iso_type<span style="color: #990000">)</span>
+     <span style="color: #009900">iso</span><span style="color: #990000">=</span>usr/src/devuan-iso<span style="color: #990000">/</span><span style="color: #009900">$release</span>-<span style="color: #009900">$chroot_arch</span>-<span style="color: #009900">$iso_type</span>
+     <span style="color: #009900">pname</span><span style="color: #990000">=</span><span style="color: #009900">$1</span>
+-    <span style="color: #009900">freq</span><span style="color: #990000">=(</span><span style="color: #009900">$R</span>/builds<span style="color: #990000">/</span><span style="color: #009900">${chroot_arch}</span><span style="color: #990000">/</span><span style="color: #009900">$pname</span> <span style="color: #009900">$R</span>/chroot<span style="color: #990000">/</span><span style="color: #009900">$chroot_arch</span><span style="color: #990000">/</span><span style="color: #009900">$iso</span>/initrd<span style="color: #990000">.</span>gz<span style="color: #990000">)</span>
+<span style="color: #990000">+</span>    <span style="font-style: italic"><span style="color: #9A1900">#freq=($R/builds/${chroot_arch}/$pname $R/chroot/$chroot_arch/$iso/initrd.gz)</span></span>
+     reqck <span style="color: #990000">||</span> <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="color: #009900">$?</span>
+
+     notice <span style="color: #FF0000">"Adding package to $release $chroot_arch $iso_type: $pname"</span>
+@@ -<span style="color: #993399">104</span><span style="color: #990000">,</span><span style="color: #993399">7</span> <span style="color: #990000">+</span><span style="color: #993399">104</span><span style="color: #990000">,</span><span style="color: #993399">7</span> @@ iso-add-preseed<span style="color: #990000">()</span> {
+     fn iso-add-preseed
+     <span style="color: #009900">req</span><span style="color: #990000">=(</span>chroot_arch<span style="color: #990000">)</span>
+     <span style="color: #009900">iso</span><span style="color: #990000">=</span>usr/src/devuan-iso<span style="color: #990000">/</span><span style="color: #009900">$release</span>-<span style="color: #009900">$chroot_arch</span>-<span style="color: #009900">$iso_type</span>
+-    <span style="color: #009900">freq</span><span style="color: #990000">=(</span><span style="color: #009900">$R</span>/chroot<span style="color: #990000">/</span><span style="color: #009900">$chroot_arch</span><span style="color: #990000">/</span><span style="color: #009900">$iso</span>/initrd<span style="color: #990000">.</span>gz<span style="color: #990000">)</span>
+<span style="color: #990000">+</span>    <span style="font-style: italic"><span style="color: #9A1900">#freq=($R/chroot/$chroot_arch/$iso/initrd.gz)</span></span>
+     reqck <span style="color: #990000">||</span> <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="color: #009900">$?</span>
+
+
+@@ -<span style="color: #993399">407</span><span style="color: #990000">,</span><span style="color: #993399">7</span> <span style="color: #990000">+</span><span style="color: #993399">407</span><span style="color: #990000">,</span><span style="color: #993399">7</span> @@ iso-index iso-prepare<span style="color: #990000">()</span> {
+     <span style="color: #009900">req</span><span style="color: #990000">=(</span>release chroot_arch<span style="color: #990000">)</span>
+     <span style="color: #009900">root</span><span style="color: #990000">=</span><span style="color: #009900">$R</span>/chroot<span style="color: #990000">/</span><span style="color: #009900">$chroot_arch</span>
+     <span style="color: #009900">iso</span><span style="color: #990000">=</span>usr/src/devuan-iso<span style="color: #990000">/</span><span style="color: #009900">$release</span>-<span style="color: #009900">$chroot_arch</span>-<span style="color: #009900">$iso_type</span>
+-    <span style="color: #009900">freq</span><span style="color: #990000">=(</span><span style="color: #009900">$R</span>/chroot<span style="color: #990000">/</span><span style="color: #009900">$chroot_arch</span><span style="color: #990000">/</span><span style="color: #009900">$iso</span>/initrd<span style="color: #990000">.</span>gz<span style="color: #990000">)</span>
+<span style="color: #990000">+</span>    <span style="font-style: italic"><span style="color: #9A1900">#freq=($R/chroot/$chroot_arch/$iso/initrd.gz)</span></span>
+     reqck <span style="color: #990000">||</span> <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="color: #009900">$?</span>
+
+     notice <span style="color: #FF0000">"Indexing all packages inside the iso"</span>
+--
+<span style="color: #993399">2.19</span><span style="color: #990000">.</span><span style="color: #993399">2</span>
+
+PATCH
+</tt></pre></div></div>
 </div>
 </div>
 </div>
@@ -1146,7 +1329,7 @@ SCHROOT</tt></pre></div></div>
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2019-03-13 10:20:48 CET
+ 2019-03-15 07:39:02 CET
 </div>
 </div>
 </body>

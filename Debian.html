@@ -1308,7 +1308,7 @@ SIGN
 
                 <span style="font-style: italic"><span style="color: #9A1900"># read packages with filename</span></span>
                 <span style="color: #990000">&lt;</span> /var/lib/apt/lists/deb<span style="color: #990000">.</span>devuan<span style="color: #990000">.</span>org_merged_dists_testing_main_binary-amd64_Packages <span style="color: #990000">\</span>
-                bash -e <span style="color: #990000">&lt;(</span>cat <span style="color: #990000">&lt;&amp;</span><span style="color: #993399">8</span><span style="color: #990000">)</span> <span style="color: #990000">|</span>
+                bash -e <span style="color: #990000">&lt;(&lt;&amp;</span><span style="color: #993399">8</span><span style="color: #990000">)</span> <span style="color: #990000">|</span>
 
                 <span style="font-style: italic"><span style="color: #9A1900"># execute parallel apt-get</span></span>
                 xargs --replace<span style="color: #990000">=</span>@ --max-procs<span style="color: #990000">=</span><span style="color: #009900">$(nproc)</span> sh -c <span style="color: #FF0000">'@'</span>
