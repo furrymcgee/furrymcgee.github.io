@@ -835,7 +835,7 @@ cat <span style="color: #990000">&gt;</span> /etc/schroot/chroot<span style="col
         setup<span style="color: #990000">.</span><span style="color: #009900">fstab</span><span style="color: #990000">=</span>default/fstab
 EOF
 
-bash -e <span style="color: #990000">&lt;&lt;</span>-BASH
+bash -ex <span style="color: #990000">&lt;&lt;</span>-BASH
         debootstrap <span style="color: #990000">\</span>
                 --no-check-gpg <span style="color: #990000">\</span>
                 --exclude<span style="color: #990000">=</span><span style="color: #009900">$(</span> paste -s -d<span style="color: #990000">,</span> <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'EXCLUDE'</span>

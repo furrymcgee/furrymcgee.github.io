@@ -810,6 +810,38 @@ telnet localhost
         <span style="font-weight: bold"><span style="color: #000000">dir</span></span>
         <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span>
 EOF</tt></pre></div></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="https://serverfault.com/questions/554298/windows-serial-console">https://serverfault.com/questions/554298/windows-serial-console</a>
+</p>
+</li>
+<li>
+<p>
+<a href="http://servicedefaults.com/xp/tlntsvr/">http://servicedefaults.com/xp/tlntsvr/</a>
+</p>
+</li>
+</ul></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>bootcfg <span style="color: #990000">/</span>ems on <span style="color: #990000">/</span>port com1 <span style="color: #990000">/</span>baud <span style="color: #993399">9600</span> <span style="color: #990000">/</span>id <span style="color: #993399">1</span>
+sc config TlntSvr <span style="font-weight: bold"><span style="color: #000000">start</span></span><span style="color: #990000">=</span> demand</tt></pre></div></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="color: #990000">&lt;&lt;-</span>EOF <span style="color: #990000">\</span>
+stdbuf <span style="color: #990000">-</span>oL sed s<span style="color: #990000">/.*/</span>sleep<span style="color: #990000">\</span> <span style="color: #993399">2</span><span style="color: #990000">\</span> <span style="color: #990000">\\\&amp;\\\&amp;\</span> printf<span style="color: #990000">\</span> <span style="color: #990000">%</span>s<span style="color: #990000">\\\\\\\\\\\\</span>r<span style="color: #990000">\</span> <span style="color: #990000">\&amp;/</span>e <span style="color: #990000">|</span> <span style="color: #990000">\</span>
+telnet localhost
+        Administrator
+        Administrator
+        <span style="font-weight: bold"><span style="color: #000000">dir</span></span>
+        <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span>
+EOF</tt></pre></div></div>
 <div class="listingblock">
 <div class="title">Debian</div>
 <div class="content"><!-- Generator: GNU source-highlight 3.1.8
@@ -1304,7 +1336,7 @@ mount -t 9p -o <span style="color: #009900">trans</span><span style="color: #990
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2019-06-15 17:49:59 CEST
+ 2019-06-16 16:50:16 CEST
 </div>
 </div>
 </body>

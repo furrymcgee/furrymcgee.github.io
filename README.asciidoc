@@ -1,9 +1,10 @@
 :http: ../../../..
 :source: {http}/cgit/www/wiki/tree
 
-= Welcome
+== Welcome
 
-This is a website about software development.
+This website is about software development.
+
 
 include::./wiki/_Sidebar.asciidoc[]
 

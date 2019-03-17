@@ -20,6 +20,7 @@ wiki/documentation/AsciiDoc.html: wiki/Wiki.256.png
 
 index.html: README.html \
 	wiki/Wiki.html \
+	wiki/android/Android.html \
 	wiki/databases/SQLite.html \
 	wiki/databases/Samba.html \
 	wiki/debian/Debian.html \
