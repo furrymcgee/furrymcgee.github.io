@@ -765,15 +765,51 @@ http://www.gnu.org/software/src-highlite -->
 <pre><tt><span style="font-style: italic"><span style="color: #9A1900"># Installation</span></span>
 apt install qemu-system kvm syslinux extlinux ipxe grub-pc-bin dosfstools -y
 
-<span style="font-style: italic"><span style="color: #9A1900"># Run qemu and built in vnc server</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># Run qemu and built-in vnc server</span></span>
 qemu-system-x86_64 -vnc <span style="color: #990000">:</span><span style="color: #993399">0</span> --enable-kvm -cpu host -smp <span style="color: #993399">1</span> -m 1G -net nic<span style="color: #990000">,</span><span style="color: #009900">model</span><span style="color: #990000">=</span>rtl8139 -net user -drive <span style="color: #009900">file</span><span style="color: #990000">=</span>VirtualXPVHD -usbdevice tablet <span style="color: #990000">\</span>
 <span style="font-style: italic"><span style="color: #9A1900">#-usb -device usb-host,hostbus=1,hostaddr=27 -device usb-host,hostbus=1,hostaddr=31</span></span>
 
-<span style="font-style: italic"><span style="color: #9A1900"># Start without graphics and rdp</span></span>
-qemu-system-x86_64 --enable-kvm -cpu host -smp <span style="color: #993399">1</span> -m 2G -device rtl8139<span style="color: #990000">,</span><span style="color: #009900">netdev</span><span style="color: #990000">=</span>host<span style="color: #990000">,</span><span style="color: #009900">mac</span><span style="color: #990000">=</span><span style="color: #993399">52</span><span style="color: #990000">:</span><span style="color: #993399">55</span><span style="color: #990000">:</span>0a<span style="color: #990000">:</span><span style="color: #993399">00</span><span style="color: #990000">:</span><span style="color: #993399">02</span><span style="color: #990000">:</span><span style="color: #993399">02</span> -netdev user<span style="color: #990000">,</span><span style="color: #009900">id</span><span style="color: #990000">=</span>host<span style="color: #990000">,</span><span style="color: #009900">net</span><span style="color: #990000">=</span><span style="color: #993399">192.168</span><span style="color: #990000">.</span><span style="color: #993399">76.0</span><span style="color: #990000">/</span><span style="color: #993399">24</span><span style="color: #990000">,</span><span style="color: #009900">hostfwd</span><span style="color: #990000">=</span>tcp<span style="color: #990000">::</span><span style="color: #993399">3389</span>-<span style="color: #990000">:</span><span style="color: #993399">3389</span> -drive <span style="color: #009900">file</span><span style="color: #990000">=</span>VirtualXPVHD --nographic --soundhw ac97  -usbdevice tablet -nographic -vnc <span style="color: #990000">:</span><span style="color: #993399">0</span> -monitor stdio -serial none
+<span style="font-style: italic"><span style="color: #9A1900"># Start with nographic and rdp</span></span>
+qemu-system-x86_64 --enable-kvm -cpu host -smp <span style="color: #993399">1</span> -m 2G -device rtl8139<span style="color: #990000">,</span><span style="color: #009900">netdev</span><span style="color: #990000">=</span>host<span style="color: #990000">,</span><span style="color: #009900">mac</span><span style="color: #990000">=</span><span style="color: #993399">52</span><span style="color: #990000">:</span><span style="color: #993399">55</span><span style="color: #990000">:</span>0a<span style="color: #990000">:</span><span style="color: #993399">00</span><span style="color: #990000">:</span><span style="color: #993399">02</span><span style="color: #990000">:</span><span style="color: #993399">02</span> -netdev user<span style="color: #990000">,</span><span style="color: #009900">id</span><span style="color: #990000">=</span>host<span style="color: #990000">,</span><span style="color: #009900">net</span><span style="color: #990000">=</span><span style="color: #993399">192.168</span><span style="color: #990000">.</span><span style="color: #993399">76.0</span><span style="color: #990000">/</span><span style="color: #993399">24</span><span style="color: #990000">,</span><span style="color: #009900">hostfwd</span><span style="color: #990000">=</span>tcp<span style="color: #990000">::</span><span style="color: #993399">3389</span>-<span style="color: #990000">:</span><span style="color: #993399">3389</span> -drive <span style="color: #009900">file</span><span style="color: #990000">=</span>VirtualXPVHD --soundhw ac97  -usb -device usb-tablet -nographic -vnc <span style="color: #990000">:</span><span style="color: #993399">0</span> -monitor stdio -serial none
+
+qemu-system-x86_64 --enable-kvm -cpu host -smp <span style="color: #993399">1</span> -m 2G -device rtl8139<span style="color: #990000">,</span><span style="color: #009900">netdev</span><span style="color: #990000">=</span>host<span style="color: #990000">,</span><span style="color: #009900">mac</span><span style="color: #990000">=</span><span style="color: #993399">52</span><span style="color: #990000">:</span><span style="color: #993399">55</span><span style="color: #990000">:</span>0a<span style="color: #990000">:</span><span style="color: #993399">00</span><span style="color: #990000">:</span><span style="color: #993399">02</span><span style="color: #990000">:</span><span style="color: #993399">02</span> -netdev user<span style="color: #990000">,</span><span style="color: #009900">id</span><span style="color: #990000">=</span>host<span style="color: #990000">,</span><span style="color: #009900">net</span><span style="color: #990000">=</span><span style="color: #993399">192.168</span><span style="color: #990000">.</span><span style="color: #993399">76.0</span><span style="color: #990000">/</span><span style="color: #993399">24</span><span style="color: #990000">,</span><span style="color: #009900">hostfwd</span><span style="color: #990000">=</span>tcp<span style="color: #990000">::</span><span style="color: #993399">3389</span>-<span style="color: #990000">:</span><span style="color: #993399">3389</span> -drive <span style="color: #009900">file</span><span style="color: #990000">=</span>VirtualXPVHD --soundhw ac97  -usb -device usb-tablet -nographic -vnc <span style="color: #990000">:</span><span style="color: #993399">0</span> -monitor none -serial chardev<span style="color: #990000">:</span>char0 -chardev stdio<span style="color: #990000">,</span><span style="color: #009900">mux</span><span style="color: #990000">=</span>off<span style="color: #990000">,</span><span style="color: #009900">id</span><span style="color: #990000">=</span>char0
+
+qemu-system-x86_64 --enable-kvm -cpu host -smp <span style="color: #993399">1</span> -m 2G -device rtl8139<span style="color: #990000">,</span><span style="color: #009900">netdev</span><span style="color: #990000">=</span>host<span style="color: #990000">,</span><span style="color: #009900">mac</span><span style="color: #990000">=</span><span style="color: #993399">52</span><span style="color: #990000">:</span><span style="color: #993399">55</span><span style="color: #990000">:</span>0a<span style="color: #990000">:</span><span style="color: #993399">00</span><span style="color: #990000">:</span><span style="color: #993399">02</span><span style="color: #990000">:</span><span style="color: #993399">02</span> -netdev user<span style="color: #990000">,</span><span style="color: #009900">id</span><span style="color: #990000">=</span>host<span style="color: #990000">,</span><span style="color: #009900">net</span><span style="color: #990000">=</span><span style="color: #993399">192.168</span><span style="color: #990000">.</span><span style="color: #993399">76.0</span><span style="color: #990000">/</span><span style="color: #993399">24</span><span style="color: #990000">,</span><span style="color: #009900">hostfwd</span><span style="color: #990000">=</span>tcp<span style="color: #990000">::</span><span style="color: #993399">3389</span>-<span style="color: #990000">:</span><span style="color: #993399">3389</span><span style="color: #990000">,</span><span style="color: #009900">hostfwd</span><span style="color: #990000">=</span>tcp<span style="color: #990000">::</span><span style="color: #993399">23</span>-<span style="color: #990000">:</span><span style="color: #993399">23</span> -drive <span style="color: #009900">file</span><span style="color: #990000">=</span>VirtualXPVHD --soundhw ac97  -usb -device usb-tablet -nographic -vnc <span style="color: #990000">:</span><span style="color: #993399">0</span> -chardev stdio<span style="color: #990000">,</span><span style="color: #009900">mux</span><span style="color: #990000">=</span>on<span style="color: #990000">,</span><span style="color: #009900">id</span><span style="color: #990000">=</span>char0 -mon <span style="color: #009900">chardev</span><span style="color: #990000">=</span>char0<span style="color: #990000">,</span><span style="color: #009900">mode</span><span style="color: #990000">=</span>readline -serial none
 
 qemu-system-x86_64 -vnc <span style="color: #990000">:</span><span style="color: #993399">0</span> --enable-kvm -cpu host -smp <span style="color: #993399">1</span> -m <span style="color: #993399">450</span> -drive <span style="color: #009900">file</span><span style="color: #990000">=</span>disk<span style="color: #990000">.</span>img --nographic -kernel linux -initrd initrd -monitor stdio -serial none
-qemu-system-x86_64 --enable-kvm -append <span style="color: #FF0000">'console=ttyS0 root=/dev/sda1 rw'</span> -initrd boot/initrd<span style="color: #990000">.</span>img-<span style="color: #993399">4.9</span><span style="color: #990000">.</span><span style="color: #993399">0</span>-<span style="color: #993399">6</span>-amd<span style="color: #993399">64</span> -kernel boot/vmlinuz-<span style="color: #993399">4.9</span><span style="color: #990000">.</span><span style="color: #993399">0</span>-<span style="color: #993399">6</span>-amd<span style="color: #993399">64</span> -drive <span style="color: #009900">file</span><span style="color: #990000">=</span>rootfs<span style="color: #990000">.</span>img -m <span style="color: #993399">1000</span> -netdev tap<span style="color: #990000">,</span><span style="color: #009900">id</span><span style="color: #990000">=</span>nd1<span style="color: #990000">,</span><span style="color: #009900">ifname</span><span style="color: #990000">=</span>tap1 -device rtl8139<span style="color: #990000">,</span><span style="color: #009900">netdev</span><span style="color: #990000">=</span>nd1</tt></pre></div></div>
+qemu-system-x86_64 --enable-kvm -append <span style="color: #FF0000">'console=ttyS0 root=/dev/sda1 rw'</span> -initrd boot/initrd<span style="color: #990000">.</span>img-<span style="color: #993399">4.9</span><span style="color: #990000">.</span><span style="color: #993399">0</span>-<span style="color: #993399">6</span>-amd<span style="color: #993399">64</span> -kernel boot/vmlinuz-<span style="color: #993399">4.9</span><span style="color: #990000">.</span><span style="color: #993399">0</span>-<span style="color: #993399">6</span>-amd<span style="color: #993399">64</span> -drive <span style="color: #009900">file</span><span style="color: #990000">=</span>rootfs<span style="color: #990000">.</span>img -m <span style="color: #993399">1000</span> -netdev tap<span style="color: #990000">,</span><span style="color: #009900">id</span><span style="color: #990000">=</span>tap1<span style="color: #990000">,</span><span style="color: #009900">ifname</span><span style="color: #990000">=</span>tap1 -device rtl8139<span style="color: #990000">,</span><span style="color: #009900">netdev</span><span style="color: #990000">=</span>tap1</tt></pre></div></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="https://serverfault.com/questions/554298/windows-serial-console">https://serverfault.com/questions/554298/windows-serial-console</a>
+</p>
+</li>
+<li>
+<p>
+<a href="http://servicedefaults.com/xp/tlntsvr/">http://servicedefaults.com/xp/tlntsvr/</a>
+</p>
+</li>
+</ul></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>bootcfg <span style="color: #990000">/</span>ems on <span style="color: #990000">/</span>port com1 <span style="color: #990000">/</span>baud <span style="color: #993399">9600</span> <span style="color: #990000">/</span>id <span style="color: #993399">1</span>
+sc config TlntSvr <span style="font-weight: bold"><span style="color: #000000">start</span></span><span style="color: #990000">=</span> demand</tt></pre></div></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="color: #990000">&lt;&lt;-</span>EOF <span style="color: #990000">\</span>
+stdbuf <span style="color: #990000">-</span>oL sed s<span style="color: #990000">/.*/</span>sleep<span style="color: #990000">\</span> <span style="color: #993399">2</span><span style="color: #990000">\</span> <span style="color: #990000">\\\&amp;\\\&amp;\</span> printf<span style="color: #990000">\</span> <span style="color: #990000">%</span>s<span style="color: #990000">\\\\\\\\\\\\</span>r<span style="color: #990000">\</span> <span style="color: #990000">\&amp;/</span>e <span style="color: #990000">|</span> <span style="color: #990000">\</span>
+telnet localhost
+        Administrator
+        Administrator
+        <span style="font-weight: bold"><span style="color: #000000">dir</span></span>
+        <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span>
+EOF</tt></pre></div></div>
 <div class="listingblock">
 <div class="title">Debian</div>
 <div class="content"><!-- Generator: GNU source-highlight 3.1.8
@@ -980,6 +1016,13 @@ qemu-system-x86_64 -vnc <span style="color: #990000">:</span><span style="color:
 
 qemu-system-x86_64 -vnc <span style="color: #990000">:</span><span style="color: #993399">0</span> --enable-kvm -cpu host -smp <span style="color: #993399">1</span> -m <span style="color: #993399">450</span> -drive <span style="color: #009900">file</span><span style="color: #990000">=</span>disk<span style="color: #990000">.</span>img --nographic -kernel linux -initrd initrd -monitor stdio
 </tt></pre></div></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="https://www.karlrupp.net/en/computer/nat_tutorial">https://www.karlrupp.net/en/computer/nat_tutorial</a>
+</p>
+</li>
+</ul></div>
 <div class="listingblock">
 <div class="title">Routing</div>
 <div class="content"><!-- Generator: GNU source-highlight 3.1.8
@@ -1245,6 +1288,15 @@ qemu-system-x86_64 --enable-kvm --nographic -cpu host -m <span style="color: #99
         -initrd /tmp/tmp<span style="color: #990000">.*</span>/srv/mirror/tmp/sid/CD<span style="color: #993399">1</span>/install<span style="color: #990000">.</span>amd/initrd<span style="color: #990000">.</span>gz <span style="color: #990000">\</span>
         -append <span style="color: #FF0000">'console=ttyS0 auto=true priority=critical url=tftp://10.0.2.2/example-preseed.txt'</span> <span style="color: #990000">\</span>
 </tt></pre></div></div>
+<div class="listingblock">
+<div class="title">9p</div>
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>lkvm run --9p /mnt hostfs
+modprobe 9pnet_virtio
+mount -t 9p -o <span style="color: #009900">trans</span><span style="color: #990000">=</span>virtio hostfs /mnt<span style="color: #990000">/</span> -oversion<span style="color: #990000">=</span>9p2000<span style="color: #990000">.</span>L</tt></pre></div></div>
 </div>
 </div>
 </div>
@@ -1252,7 +1304,7 @@ qemu-system-x86_64 --enable-kvm --nographic -cpu host -m <span style="color: #99
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2019-03-15 21:00:13 CET
+ 2019-06-15 17:49:59 CEST
 </div>
 </div>
 </body>

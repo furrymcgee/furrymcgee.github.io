@@ -743,6 +743,11 @@ http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
 <pre><tt><span style="font-style: italic"><span style="color: #9A1900">#!/bin/bash</span></span>
 
+<span style="color: #990000">:</span> apt install p7zip-full libguestfs-tools locate
+
+cd -P <span style="color: #FF0000">"$(mktemp -d)"</span>
+cp -avu <span style="color: #FF0000">"$(locate WindowsXPMode_en-us.exe)"</span> <span style="color: #990000">.</span>
+
 <span style="font-style: italic"><span style="color: #9A1900"># Extract the raw image</span></span>
 7za x WindowsXPMode_en-us<span style="color: #990000">.</span>exe
 7za x sources/xpm
@@ -754,6 +759,30 @@ cabextract -F pciide<span style="color: #990000">.</span>sys driver<span style="
 virt-copy-in -a windows<span style="color: #990000">.</span>raw pciide<span style="color: #990000">.</span>sys /WINDOWS/system<span style="color: #993399">32</span>/drivers<span style="color: #990000">/</span>
 
 <span style="font-style: italic"><span style="color: #9A1900"># Modify registry for qemu</span></span>
+<span style="color: #990000">:</span> sed -e <span style="color: #FF0000">'s,CurrentControlSet,ControlSet001,'</span> <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'SED'</span> <span style="color: #990000">|</span> <span style="color: #990000">\</span>
+        virt-win-reg --merge windows<span style="color: #990000">.</span>raw
+        Windows Registry Editor Version <span style="color: #993399">5.00</span>
+
+        <span style="color: #990000">[</span>HKEY_CURRENT_USER<span style="color: #990000">\</span>Software<span style="color: #990000">\</span>Microsoft<span style="color: #990000">\</span>Windows<span style="color: #990000">\</span>CurrentVersion<span style="color: #990000">\</span>Policies<span style="color: #990000">\</span>Explorer<span style="color: #990000">]</span>
+        <span style="color: #FF0000">"NoWindowsUpdate"</span><span style="color: #990000">=</span>dword<span style="color: #990000">:</span><span style="color: #993399">00000000</span>
+SED
+
+sed -e <span style="color: #FF0000">'s,CurrentControlSet,ControlSet001,'</span> <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'SED'</span> <span style="color: #990000">|</span> <span style="color: #990000">\</span>
+        virt-win-reg --merge windows<span style="color: #990000">.</span>raw
+        Windows Registry Editor Version <span style="color: #993399">5.00</span>
+
+        <span style="color: #990000">[</span>HKEY_LOCAL_MACHINE<span style="color: #990000">\</span>SOFTWARE<span style="color: #990000">\</span>Microsoft<span style="color: #990000">\</span>Windows<span style="color: #990000">\</span>CurrentVersion<span style="color: #990000">\</span>RunOnce<span style="color: #990000">]</span>
+        <span style="color: #FF0000">"Password"</span><span style="color: #990000">=</span><span style="color: #FF0000">"net user Administrator Administrator"</span>
+
+        <span style="color: #990000">[</span>HKEY_LOCAL_MACHINE<span style="color: #990000">\</span>SYSTEM<span style="color: #990000">\</span>CurrentControlSet<span style="color: #990000">\</span>Services<span style="color: #990000">\</span>SharedAccess<span style="color: #990000">\</span>Parameters<span style="color: #990000">\</span>FirewallPolicy<span style="color: #990000">\</span>StandardProfile<span style="color: #990000">]</span>
+        <span style="color: #FF0000">"EnableFirewall"</span><span style="color: #990000">=</span>dword<span style="color: #990000">:</span><span style="color: #993399">00000000</span>
+
+        <span style="color: #990000">[</span>HKEY_LOCAL_MACHINE<span style="color: #990000">\</span>SYSTEM<span style="color: #990000">\</span>CurrentControlSet<span style="color: #990000">\</span>Services<span style="color: #990000">\</span>TlntSvr<span style="color: #990000">]</span>
+        <span style="color: #FF0000">"Type"</span><span style="color: #990000">=</span>dword<span style="color: #990000">:</span><span style="color: #993399">00000010</span>
+        <span style="color: #FF0000">"Start"</span><span style="color: #990000">=</span>dword<span style="color: #990000">:</span><span style="color: #993399">00000002</span>
+        <span style="color: #FF0000">"DisplayName"</span><span style="color: #990000">=</span><span style="color: #FF0000">"Telnet"</span>
+        <span style="color: #FF0000">"ObjectName"</span><span style="color: #990000">=</span><span style="color: #FF0000">"LocalSystem"</span>
+SED
 sed -e <span style="color: #FF0000">'s,CurrentControlSet,ControlSet001,'</span> <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'SED'</span> <span style="color: #990000">|</span> <span style="color: #990000">\</span>
         virt-win-reg --merge windows<span style="color: #990000">.</span>raw
         Windows Registry Editor Version <span style="color: #993399">5.00</span>
@@ -930,13 +959,22 @@ EOF
 qemu-img convert -f raw -O qcow2 windows<span style="color: #990000">.</span>raw VirtualXPVHD
 qemu-img snapshot VirtualXPVHD -c VirtualXPVHD
 
-find -<span style="color: #990000">!</span> -name VirtualXPVHD -delete</tt></pre></div></div>
+find -<span style="color: #990000">!</span> -name VirtualXPVHD -delete
+
+mv VirtualXPVHD <span style="color: #990000">..</span>
+cd -
+rmdir <span style="color: #009900">$OLDPWD</span></tt></pre></div></div>
+<div class="paragraph"><p># NET command
+net view \\SAMBA
+net user Administrator Administrator
+net use X: \\SAMBA\pub
+net</p></div>
 </div>
 <div id="footnotes"><hr /></div>
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2019-01-27 13:58:42 CET
+ 2019-06-13 13:25:08 CEST
 </div>
 </div>
 </body>

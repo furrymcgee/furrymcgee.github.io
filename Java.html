@@ -739,10 +739,119 @@ asciidoc.install();
 <h2 id="_java">Java</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>Java programs run in a virtual machine independent of the operating system.</p></div>
-<div class="sect2">
-<h3 id="_java_gradle_maven_eclipse">Java, Gradle, Maven, Eclipse</h3>
-<div class="paragraph"><p><a href="./Maven.html">Maven</a></p></div>
 </div>
+</div>
+<div class="sect1">
+<h2 id="_maven">Maven</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Maven is the java package and dependency management tool. Java repositories can be used by Windows and Linux operating systems. With a SMB the repository can be used as a local repository for both operating systems.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="http://download.eclipse.org/technology/m2e/releases/1.3">http://download.eclipse.org/technology/m2e/releases/1.3</a>
+</p>
+</li>
+</ul></div>
+<div class="listingblock">
+<div class="title">Maven</div>
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-style: italic"><span style="color: #9A1900">#!/bin/bash</span></span>
+java -version
+mvn --version
+mvn archetype<span style="color: #990000">:</span>generate -DgroupId<span style="color: #990000">=</span>com<span style="color: #990000">.</span>mycompany<span style="color: #990000">.</span>app -DartifactId<span style="color: #990000">=</span>my-app -DarchetypeArtifactId<span style="color: #990000">=</span>maven-archetype-quickstart -DinteractiveMode<span style="color: #990000">=</span><span style="font-weight: bold"><span style="color: #0000FF">false</span></span> -Dmaven<span style="color: #990000">.</span>repo<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #0000FF">local</span></span><span style="color: #990000">=</span>/tmp/pub/repo
+
+xqilla -i my-app/pom<span style="color: #990000">.</span>xml <span style="color: #990000">&lt;(</span> cat <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'POM'</span>
+        <span style="font-weight: bold"><span style="color: #0000FF">declare</span></span> namespace xsi <span style="color: #990000">=</span> <span style="color: #FF0000">"http://www.w3.org/2001/XMLSchema-instance"</span><span style="color: #990000">;</span>
+        <span style="font-weight: bold"><span style="color: #0000FF">declare</span></span> default element namespace <span style="color: #FF0000">"http://maven.apache.org/POM/4.0.0"</span><span style="color: #990000">;</span>
+        <span style="font-weight: bold"><span style="color: #0000FF">declare</span></span> variable <span style="color: #009900">$build</span> external <span style="color: #990000">;</span>
+                element {<span style="color: #FF0000">"project"</span>} {
+                        attribute {<span style="color: #FF0000">"xsi:schemaLocation"</span>} {
+                                <span style="color: #FF0000">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"</span>
+                        }<span style="color: #990000">,</span>
+                        <span style="color: #990000">.</span>/project<span style="color: #990000">/*,</span>
+                        doc<span style="color: #990000">(</span><span style="color: #009900">$build</span><span style="color: #990000">)</span>
+                }
+POM
+<span style="color: #990000">)</span> -v build <span style="color: #990000">&lt;(</span> cat <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'XML'</span>
+        <span style="color: #990000">&lt;?</span>xml <span style="color: #009900">version</span><span style="color: #990000">=</span><span style="color: #FF0000">"1.0"</span><span style="color: #990000">?&gt;</span>
+        <span style="color: #990000">&lt;</span>build <span style="color: #009900">xmlns</span><span style="color: #990000">=</span><span style="color: #FF0000">"http://maven.apache.org/POM/4.0.0"</span> xmlns<span style="color: #990000">:</span><span style="color: #009900">xsi</span><span style="color: #990000">=</span><span style="color: #FF0000">"http://www.w3.org/2001/XMLSchema-instance"</span><span style="color: #990000">&gt;</span>
+          <span style="color: #990000">&lt;</span>plugins<span style="color: #990000">&gt;</span>
+                <span style="color: #990000">&lt;</span>plugin<span style="color: #990000">&gt;</span>
+                  <span style="color: #990000">&lt;</span>groupId<span style="color: #990000">&gt;</span>org<span style="color: #990000">.</span>apache<span style="color: #990000">.</span>maven<span style="color: #990000">.</span>plugins<span style="color: #990000">&lt;</span>/groupId<span style="color: #990000">&gt;</span>
+                  <span style="color: #990000">&lt;</span>artifactId<span style="color: #990000">&gt;</span>maven-site-plugin<span style="color: #990000">&lt;</span>/artifactId<span style="color: #990000">&gt;</span>
+                  <span style="color: #990000">&lt;</span>version<span style="color: #990000">&gt;</span><span style="color: #993399">3.3</span><span style="color: #990000">&lt;</span>/version<span style="color: #990000">&gt;</span>
+                <span style="color: #990000">&lt;</span>/plugin<span style="color: #990000">&gt;</span>
+                <span style="color: #990000">&lt;</span>plugin<span style="color: #990000">&gt;</span>
+                  <span style="color: #990000">&lt;</span>groupId<span style="color: #990000">&gt;</span>org<span style="color: #990000">.</span>apache<span style="color: #990000">.</span>maven<span style="color: #990000">.</span>plugins<span style="color: #990000">&lt;</span>/groupId<span style="color: #990000">&gt;</span>
+                  <span style="color: #990000">&lt;</span>artifactId<span style="color: #990000">&gt;</span>maven-project-info-reports-plugin<span style="color: #990000">&lt;</span>/artifactId<span style="color: #990000">&gt;</span>
+                  <span style="color: #990000">&lt;</span>version<span style="color: #990000">&gt;</span><span style="color: #993399">2.7</span><span style="color: #990000">&lt;</span>/version<span style="color: #990000">&gt;</span>
+                <span style="color: #990000">&lt;</span>/plugin<span style="color: #990000">&gt;</span>
+                <span style="color: #990000">&lt;!</span>-- any other plugins --<span style="color: #990000">&gt;</span>
+                <span style="color: #990000">&lt;</span>plugin<span style="color: #990000">&gt;</span>
+                  <span style="color: #990000">&lt;</span>artifactId<span style="color: #990000">&gt;</span>maven-clean-plugin<span style="color: #990000">&lt;</span>/artifactId<span style="color: #990000">&gt;</span>
+                  <span style="color: #990000">&lt;</span>version<span style="color: #990000">&gt;</span><span style="color: #993399">3.1</span><span style="color: #990000">.</span><span style="color: #993399">0</span><span style="color: #990000">&lt;</span>/version<span style="color: #990000">&gt;</span>
+                  <span style="color: #990000">&lt;</span>executions<span style="color: #990000">&gt;</span>
+                        <span style="color: #990000">&lt;</span>execution<span style="color: #990000">&gt;</span>
+                          <span style="color: #990000">&lt;</span>id<span style="color: #990000">&gt;</span>default-clean<span style="color: #990000">&lt;</span>/id<span style="color: #990000">&gt;</span>
+                          <span style="color: #990000">&lt;</span>phase<span style="color: #990000">&gt;</span>clean<span style="color: #990000">&lt;</span>/phase<span style="color: #990000">&gt;</span>
+                          <span style="color: #990000">&lt;</span>goals<span style="color: #990000">&gt;</span>
+                                <span style="color: #990000">&lt;</span>goal<span style="color: #990000">&gt;</span>clean<span style="color: #990000">&lt;</span>/goal<span style="color: #990000">&gt;</span>
+                          <span style="color: #990000">&lt;</span>/goals<span style="color: #990000">&gt;</span>
+                        <span style="color: #990000">&lt;</span>/execution<span style="color: #990000">&gt;</span>
+                  <span style="color: #990000">&lt;</span>/executions<span style="color: #990000">&gt;</span>
+                <span style="color: #990000">&lt;</span>/plugin<span style="color: #990000">&gt;</span>
+                <span style="color: #990000">&lt;</span>plugin<span style="color: #990000">&gt;</span>
+                  <span style="color: #990000">&lt;</span>artifactId<span style="color: #990000">&gt;</span>maven-assembly-plugin<span style="color: #990000">&lt;</span>/artifactId<span style="color: #990000">&gt;</span>
+                  <span style="color: #990000">&lt;</span>version<span style="color: #990000">&gt;</span><span style="color: #993399">3.1</span><span style="color: #990000">.</span><span style="color: #993399">0</span><span style="color: #990000">&lt;</span>/version<span style="color: #990000">&gt;</span>
+                  <span style="color: #990000">&lt;</span>configuration<span style="color: #990000">&gt;</span>
+                        <span style="color: #990000">&lt;</span>descriptorRefs<span style="color: #990000">&gt;</span>
+                          <span style="color: #990000">&lt;</span>descriptorRef<span style="color: #990000">&gt;</span>jar-with-dependencies<span style="color: #990000">&lt;</span>/descriptorRef<span style="color: #990000">&gt;</span>
+                        <span style="color: #990000">&lt;</span>/descriptorRefs<span style="color: #990000">&gt;</span>
+                        <span style="color: #990000">&lt;</span>archive<span style="color: #990000">&gt;</span>
+                          <span style="color: #990000">&lt;</span>manifest<span style="color: #990000">&gt;</span>
+                                <span style="color: #990000">&lt;</span>mainClass<span style="color: #990000">&gt;</span>com<span style="color: #990000">.</span>mycompany<span style="color: #990000">.</span>app<span style="color: #990000">.</span>App<span style="color: #990000">&lt;</span>/mainClass<span style="color: #990000">&gt;</span>
+                          <span style="color: #990000">&lt;</span>/manifest<span style="color: #990000">&gt;</span>
+                        <span style="color: #990000">&lt;</span>/archive<span style="color: #990000">&gt;</span>
+                  <span style="color: #990000">&lt;</span>/configuration<span style="color: #990000">&gt;</span>
+                  <span style="color: #990000">&lt;</span>executions<span style="color: #990000">&gt;</span>
+                        <span style="color: #990000">&lt;</span>execution<span style="color: #990000">&gt;</span>
+                          <span style="color: #990000">&lt;</span>id<span style="color: #990000">&gt;</span>make-assembly<span style="color: #990000">&lt;</span>/id<span style="color: #990000">&gt;</span>
+                          <span style="color: #990000">&lt;!</span>-- this is used <span style="font-weight: bold"><span style="color: #0000FF">for</span></span> inheritance merges --<span style="color: #990000">&gt;</span>
+                          <span style="color: #990000">&lt;</span>phase<span style="color: #990000">&gt;</span>package<span style="color: #990000">&lt;</span>/phase<span style="color: #990000">&gt;</span>
+                          <span style="color: #990000">&lt;!</span>-- <span style="font-weight: bold"><span style="color: #0000FF">bind</span></span> to the packaging phase --<span style="color: #990000">&gt;</span>
+                          <span style="color: #990000">&lt;</span>goals<span style="color: #990000">&gt;</span>
+                                <span style="color: #990000">&lt;</span>goal<span style="color: #990000">&gt;</span>single<span style="color: #990000">&lt;</span>/goal<span style="color: #990000">&gt;</span>
+                          <span style="color: #990000">&lt;</span>/goals<span style="color: #990000">&gt;</span>
+                        <span style="color: #990000">&lt;</span>/execution<span style="color: #990000">&gt;</span>
+                  <span style="color: #990000">&lt;</span>/executions<span style="color: #990000">&gt;</span>
+                <span style="color: #990000">&lt;</span>/plugin<span style="color: #990000">&gt;</span>
+          <span style="color: #990000">&lt;</span>/plugins<span style="color: #990000">&gt;</span>
+        <span style="color: #990000">&lt;</span>/build<span style="color: #990000">&gt;</span>
+XML
+<span style="color: #990000">)</span> <span style="color: #990000">|</span> xmllint --format --nowarning --output my-app/pom<span style="color: #990000">.</span>xml -
+
+cat my-app/pom<span style="color: #990000">.</span>xml
+
+mvn -Dmaven<span style="color: #990000">.</span>compiler<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #0000FF">source</span></span><span style="color: #990000">=</span><span style="color: #993399">1.6</span> -Dmaven<span style="color: #990000">.</span>compiler<span style="color: #990000">.</span><span style="color: #009900">target</span><span style="color: #990000">=</span><span style="color: #993399">1.6</span> -Dmaven<span style="color: #990000">.</span>repo<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #0000FF">local</span></span><span style="color: #990000">=</span>/tmp/pub/repo --file my-app/pom<span style="color: #990000">.</span>xml <span style="font-weight: bold"><span style="color: #0000FF">help</span></span><span style="color: #990000">:</span>effective-pom
+
+mvn dependency<span style="color: #990000">:</span>tree -Dverbose --file<span style="color: #990000">=</span>my-app/pom<span style="color: #990000">.</span>xml
+
+mvn -Dmaven<span style="color: #990000">.</span>compiler<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #0000FF">source</span></span><span style="color: #990000">=</span><span style="color: #993399">1.6</span> -Dmaven<span style="color: #990000">.</span>compiler<span style="color: #990000">.</span><span style="color: #009900">target</span><span style="color: #990000">=</span><span style="color: #993399">1.6</span> -Dmaven<span style="color: #990000">.</span>repo<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #0000FF">local</span></span><span style="color: #990000">=</span>/tmp/pub/repo --file my-app/pom<span style="color: #990000">.</span>xml dependency<span style="color: #990000">:</span>tree
+
+mvn compile -Dmaven<span style="color: #990000">.</span>compiler<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #0000FF">source</span></span><span style="color: #990000">=</span><span style="color: #993399">1.6</span> -Dmaven<span style="color: #990000">.</span>compiler<span style="color: #990000">.</span><span style="color: #009900">target</span><span style="color: #990000">=</span><span style="color: #993399">1.6</span> -Dmaven<span style="color: #990000">.</span>repo<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #0000FF">local</span></span><span style="color: #990000">=</span>/tmp/pub/repo --file my-app/pom<span style="color: #990000">.</span>xml
+
+mvn <span style="font-weight: bold"><span style="color: #0000FF">test</span></span> -Dmaven<span style="color: #990000">.</span>compiler<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #0000FF">source</span></span><span style="color: #990000">=</span><span style="color: #993399">1.6</span> -Dmaven<span style="color: #990000">.</span>compiler<span style="color: #990000">.</span><span style="color: #009900">target</span><span style="color: #990000">=</span><span style="color: #993399">1.6</span> -Dmaven<span style="color: #990000">.</span>repo<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #0000FF">local</span></span><span style="color: #990000">=</span>/tmp/pub/repo --file my-app/pom<span style="color: #990000">.</span>xml
+
+mvn package -Dmaven<span style="color: #990000">.</span>compiler<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #0000FF">source</span></span><span style="color: #990000">=</span><span style="color: #993399">1.6</span> -Dmaven<span style="color: #990000">.</span>compiler<span style="color: #990000">.</span><span style="color: #009900">target</span><span style="color: #990000">=</span><span style="color: #993399">1.6</span> -Dmaven<span style="color: #990000">.</span>repo<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #0000FF">local</span></span><span style="color: #990000">=</span>/tmp/pub/repo --file my-app/pom<span style="color: #990000">.</span>xml
+
+jar cvfe my-app<span style="color: #990000">.</span>jar com<span style="color: #990000">.</span>mycompany<span style="color: #990000">.</span>app<span style="color: #990000">.</span>App  -C my-app/target/classes <span style="color: #990000">.</span>
+
+mvn -Dmaven<span style="color: #990000">.</span>compiler<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #0000FF">source</span></span><span style="color: #990000">=</span><span style="color: #993399">1.6</span> -Dmaven<span style="color: #990000">.</span>coiler<span style="color: #990000">.</span><span style="color: #009900">target</span><span style="color: #990000">=</span><span style="color: #993399">1.6</span> -Dmaven<span style="color: #990000">.</span>repo<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #0000FF">local</span></span><span style="color: #990000">=</span>/tmp/pub/repo --file my-app/pom<span style="color: #990000">.</span>xml -Ddependency<span style="color: #990000">.</span>locations<span style="color: #990000">.</span><span style="color: #009900">enabled</span><span style="color: #990000">=</span><span style="font-weight: bold"><span style="color: #0000FF">false</span></span> site
+
+</tt></pre></div></div>
 </div>
 </div>
 </div>
@@ -750,7 +859,7 @@ asciidoc.install();
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2019-01-27 13:58:42 CET
+ 2019-03-23 19:18:10 CET
 </div>
 </div>
 </body>

@@ -803,17 +803,21 @@ http://www.gnu.org/software/src-highlite -->
 <pre><tt><span style="font-style: italic"><span style="color: #9A1900">#!/bin/bash</span></span>
 <span style="font-style: italic"><span style="color: #9A1900"># Devuan debootstrap and schroot</span></span>
 
+<span style="font-style: italic"><span style="color: #9A1900"># set -o physical</span></span>
 cd -P <span style="color: #FF0000">"$(mktemp -d)"</span> <span style="color: #990000">||</span> <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span> <span style="color: #993399">1</span>
 
 apt-get install --yes debootstrap schroot fuseiso
 
+locate devuan_ascii_2<span style="color: #990000">.</span><span style="color: #993399">0</span><span style="color: #990000">.</span>0_amd64_cd-<span style="color: #993399">1</span><span style="color: #990000">.</span>iso <span style="color: #990000">|</span>
+xargs -I@ -r cp -avu @ <span style="color: #990000">..</span>
 wget --continue --no-check-certificate --directory-prefix<span style="color: #990000">=..</span> <span style="color: #990000">\</span>
-        ftp<span style="color: #990000">:</span>//mirror<span style="color: #990000">.</span>leaseweb<span style="color: #990000">.</span>com/devuan/devuan_ascii/installer-iso/devuan_ascii_2<span style="color: #990000">.</span><span style="color: #993399">0</span><span style="color: #990000">.</span>0_amd64_cd-<span style="color: #993399">1</span><span style="color: #990000">.</span>iso
+        ftp<span style="color: #990000">:</span>//ftp<span style="color: #990000">.</span>nluug<span style="color: #990000">.</span>nl/pub/os/Linux/distr/devuan/devuan_ascii/installer-iso/devuan_ascii_2<span style="color: #990000">.</span><span style="color: #993399">0</span><span style="color: #990000">.</span>0_amd64_cd-<span style="color: #993399">1</span><span style="color: #990000">.</span>iso
+        <span style="font-style: italic"><span style="color: #9A1900"># ftp://mirror.leaseweb.com/devuan/devuan_ascii/installer-iso/devuan_ascii_2.0.0_amd64_cd-1.iso</span></span>
         <span style="font-style: italic"><span style="color: #9A1900"># https://cdimage.debian.org/cdimage/weekly-builds/amd64/iso-cd/debian-testing-amd64-netinst.iso</span></span>
 
 fuseiso <span style="color: #990000">..</span>/de<span style="color: #990000">*.</span>iso <span style="color: #990000">.</span>
 
-cd <span style="color: #009900">$(</span>mktemp -d<span style="color: #990000">)</span>
+cd -P <span style="color: #FF0000">"$(mktemp -d)"</span> <span style="color: #990000">||</span> <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span> <span style="color: #993399">2</span>
 chmod <span style="color: #993399">755</span> <span style="color: #990000">.</span>
 sed -i /etc/schroot/default/fstab <span style="color: #990000">\</span>
         -e /home<span style="color: #990000">\\\|</span>tmp/s<span style="color: #990000">%^/%</span><span style="font-style: italic"><span style="color: #9A1900">#/%</span></span>
@@ -1329,7 +1333,7 @@ PATCH
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2019-03-15 07:39:02 CET
+ 2019-03-23 19:04:07 CET
 </div>
 </div>
 </body>

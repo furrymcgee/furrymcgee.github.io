@@ -736,82 +736,84 @@ asciidoc.install();
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="_sites">Sites</h2>
+<h2 id="_haskell">Haskell</h2>
 <div class="sectionbody">
-<div class="paragraph"><div class="title">Webpages</div><p>The following Websites are hosted on this domain.</p></div>
-<div class="tableblock">
-<table rules="all"
-width="100%"
-frame="border"
-cellspacing="0" cellpadding="4">
-<caption class="title">Table 1. Sites</caption>
-<col width="37%" />
-<col width="62%" />
-<tbody>
-<tr>
-<td align="left" valign="top"><p class="table">Git Webserver</p></td>
-<td align="left" valign="top"><div><div class="paragraph"><p><a href="https://github.com/furrymcgee/cgit">CGit</a></p></div></div></td>
-</tr>
-<tr>
-<td align="left" valign="top"><p class="table">TYPO3 Demo</p></td>
-<td align="left" valign="top"><div><div class="paragraph"><p><a href="https://github.com/furrymcgee/cms">TYPO3</a></p></div></div></td>
-</tr>
-<tr>
-<td align="left" valign="top"><p class="table">PHP Composer Repository</p></td>
-<td align="left" valign="top"><div><div class="paragraph"><p><a href="https://github.com/furrymcgee/satis">Satis</a></p></div></div></td>
-</tr>
-<tr>
-<td align="left" valign="top"><p class="table">Haskell Blog</p></td>
-<td align="left" valign="top"><div><div class="paragraph"><p><a href="https://github.com/furrymcgee/blog">Hakyll</a></p></div></div></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph"><p>Haskell is a functional programming language.
+The blog is compiled with Hakyll static site generator to learn Haskell.
+The Haskell wiki has more information "Why Haskell matters".</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="https://wiki.haskell.org/Why_Haskell_matters">https://wiki.haskell.org/Why_Haskell_matters</a>
+</p>
+</li>
+</ul></div>
+<div class="sect2">
+<h3 id="_build_a_debian_package_with_cabal_debian">Build a debian package with cabal-debian</h3>
+<div class="paragraph"><p>This article describes steps to build hakyll for debian.
+It uses libraries from debian repository.
+This is the preferred method because it uses the debian package repository.</p></div>
+<div class="listingblock">
+<div class="title">cabal</div>
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>apt-get --yes install haskell-platform cabal-debian haskell-devscripts ghc cabal-install
+apt-get --yes install libghc-hakyll-doc
+cd -P <span style="color: #FF0000">"$(mktemp -d)"</span>
+hakyll-init hakyll
+dh_make -p haskell-hakyll_0<span style="color: #990000">.</span><span style="color: #993399">1.0</span><span style="color: #990000">.</span><span style="color: #993399">0</span> --indep --yes --createorig
+cabal-debian
+debuild -uc -us</tt></pre></div></div>
 </div>
+<div class="sect2">
+<h3 id="_build_hakyll_with_haskell_stack">Build hakyll with haskell stack</h3>
+<div class="paragraph"><p>This method need more time and space because all libraries are recompiled. It works for all platforms with haskell-stack.</p></div>
+<div class="listingblock">
+<div class="title">hakyll</div>
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>aptitude install haskell-stack -y
+su hakyll -c sh <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">"EOF"</span>
+        stack update
+        stack setup --no-install-ghc
+        stack install hakyll --compiler<span style="color: #990000">=</span>ghc-<span style="color: #993399">8.0</span><span style="color: #990000">.</span><span style="color: #993399">1</span>
+        <span style="color: #990000">.</span>local/bin/hakyll-init hakyll
+EOF
+
+<span style="font-style: italic"><span style="color: #9A1900"># cabal update</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># stack update --resolver ghc-7.10.3 --stack-root /mnt/tmp/haskell-stack --no-install-ghc</span></span>
+stack update --resolver ghc-<span style="color: #993399">7.10</span><span style="color: #990000">.</span><span style="color: #993399">3</span> --stack-root <span style="color: #009900">$OLDPWD</span>/haskell-stack --no-install-ghc
+stack solver --resolver ghc-<span style="color: #993399">7.10</span><span style="color: #990000">.</span><span style="color: #993399">3</span> --stack-root <span style="color: #009900">$OLDPWD</span>/haskell-stack --no-install-ghc --update-config
+
+stack init --resolver ghc-<span style="color: #993399">7.10</span><span style="color: #990000">.</span><span style="color: #993399">3</span> --stack-root /mnt/tmp/haskell-stack --no-install-ghc
+stack build --resolver ghc-<span style="color: #993399">7.10</span><span style="color: #990000">.</span><span style="color: #993399">3</span> --stack-root /mnt/tmp/haskell-stack --no-install-ghc
+stack install ghcjs --resolver ghc-<span style="color: #993399">7.10</span><span style="color: #990000">.</span><span style="color: #993399">3</span> --stack-root /mnt/tmp/haskell-stack --no-install-ghc
+stack setup --resolver ghcjs-<span style="color: #993399">0.1</span><span style="color: #990000">.</span>0_ghc-<span style="color: #993399">7.10</span><span style="color: #990000">.</span><span style="color: #993399">2</span> --stack-root /mnt/tmp/stack<span style="color: #990000">/</span>
+
+<span style="color: #993399">2</span><span style="color: #990000">&gt;</span> script<span style="color: #990000">.</span>tm script -t script<span style="color: #990000">.</span>out -c <span style="color: #FF0000">'</span>
+<span style="color: #FF0000">STACK_ROOT=/mnt/tmp/stack-root stack setup --resolver ghcjs-0.1.0_ghc-7.10.2</span>
+<span style="color: #FF0000">echo $?</span>
+<span style="color: #FF0000">'</span>
+aptitude install nodejs-legacy
+stack setup --resolver ghcjs-<span style="color: #993399">0.1</span><span style="color: #990000">.</span><span style="color: #993399">0</span><span style="color: #990000">.</span>20150924_ghc-<span style="color: #993399">7.10</span><span style="color: #990000">.</span><span style="color: #993399">2</span> --stack-root /mnt/tmp/haskell-stack
+
+<span style="color: #990000">.</span>stack-work/install/x86_64-linux/ghc-<span style="color: #993399">7.10</span><span style="color: #990000">.</span><span style="color: #993399">3</span><span style="color: #990000">/</span><span style="color: #993399">7.10</span><span style="color: #990000">.</span><span style="color: #993399">3</span>/bin/elm make src/Main<span style="color: #990000">.</span>elm --no-install-ghc</tt></pre></div></div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_topics">Topics</h2>
-<div class="sectionbody">
-<div class="paragraph"><p>Some ideas on different computer programming topics.</p></div>
-<div class="tableblock">
-<table rules="all"
-width="100%"
-frame="border"
-cellspacing="0" cellpadding="4">
-<caption class="title">Table 2. Topics</caption>
-<col width="37%" />
-<col width="62%" />
-<tbody>
-<tr>
-<td align="left" valign="top"><p class="table">High Level Programming Languages</p></td>
-<td align="left" valign="top"><div><div class="paragraph"><p><a href="https://github.com/furrymcgee/C.html">C</a>, <a href="https://github.com/furrymcgee/Cpp.html">C++</a>, <a href="https://github.com/furrymcgee/Java.html">Java</a>, <a href="https://github.com/furrymcgee/Haskell.html">Haskell</a></p></div></div></td>
-</tr>
-<tr>
-<td align="left" valign="top"><p class="table">Command Interpreter</p></td>
-<td align="left" valign="top"><div><div class="paragraph"><p><a href="https://github.com/furrymcgee/Bash.html">Bash</a>, <a href="https://github.com/furrymcgee/Perl.html">Perl</a></p></div></div></td>
-</tr>
-<tr>
-<td align="left" valign="top"><p class="table">Markup Languages and Text Processors</p></td>
-<td align="left" valign="top"><div><div class="paragraph"><p><a href="https://github.com/furrymcgee/AsciiDoc.html">AsciiDoc</a>, <a href="https://github.com/furrymcgee/XML.html">XML</a>, <a href="https://github.com/furrymcgee/Make.html">PDF</a></p></div></div></td>
-</tr>
-<tr>
-<td align="left" valign="top"><p class="table">Databases and Filesystems</p></td>
-<td align="left" valign="top"><div><div class="paragraph"><p><a href="https://github.com/furrymcgee/SQLite.html">SQLite</a>, <a href="https://github.com/furrymcgee/Samba.html">Samba</a></p></div></div></td>
-</tr>
-<tr>
-<td align="left" valign="top"><p class="table">Operating Systems</p></td>
-<td align="left" valign="top"><div><div class="paragraph"><p><a href="https://github.com/furrymcgee/GNU.html">GNU</a>, <a href="https://github.com/furrymcgee/Linux.html">Linux</a>, <a href="https://github.com/furrymcgee/Debian.html">Debian</a>, <a href="https://github.com/furrymcgee/Devuan.html">Devuan</a>, <a href="https://github.com/furrymcgee/SUSE.html">openSUSE</a>, <a href="https://github.com/furrymcgee/Android.html">Android</a></p></div></div></td>
-</tr>
-<tr>
-<td align="left" valign="top"><p class="table">Software Development Tools</p></td>
-<td align="left" valign="top"><div><div class="paragraph"><p><a href="https://github.com/furrymcgee/Make.html">Make</a>, <a href="https://github.com/furrymcgee/Git.html">Git</a>, <a href="https://github.com/furrymcgee/Jenkins.html">Jenkins</a>, <a href="https://github.com/furrymcgee/Qt.html">Qt</a>, <a href="https://github.com/furrymcgee/QEMU.html">QEMU</a></p></div></div></td>
-</tr>
-<tr>
-<td align="left" valign="top"><p class="table">Web Frontends</p></td>
-<td align="left" valign="top"><div><div class="paragraph"><p><a href="https://github.com/furrymcgee/Apache.html">Apache</a>, <a href="https://github.com/furrymcgee/Mojolicious.html">Mojolicious</a>, <a href="https://github.com/furrymcgee/Typo3.html">Typo3</a></p></div></div></td>
-</tr>
-</tbody>
-</table>
+<div class="sect2">
+<h3 id="_build_pandoc_with_haskell_stack">Build pandoc with haskell stack</h3>
+<div class="paragraph"><p>This builds pandoc with haskell stack.</p></div>
+<div class="listingblock">
+<div class="title">pandoc</div>
+<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>apt build-dep pandoc
+stack install pandoc --resolver lts-<span style="color: #993399">9.20</span> --system-ghc</tt></pre></div></div>
 </div>
 </div>
 </div>
@@ -820,7 +822,7 @@ cellspacing="0" cellpadding="4">
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2018-12-17 17:38:36 CET
+ 2019-03-23 19:18:10 CET
 </div>
 </div>
 </body>

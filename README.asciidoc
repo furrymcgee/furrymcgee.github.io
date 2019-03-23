@@ -1,9 +1,10 @@
 :http: ../../../..
 :source: {http}/cgit/www/wiki/tree
-== Welcome
-A free software developer website about GNU, Linux and more
 
-.Content
+= Welcome
+
+This is a website about software development.
+
 include::./wiki/_Sidebar.asciidoc[]
 
 link:mailto:webmaster@lippydanger.jumpingcrab.com[webmaster@lippydanger.jumpingcrab.com]

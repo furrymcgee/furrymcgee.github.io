@@ -831,6 +831,7 @@ SED
         <span style="font-style: italic"><span style="color: #9A1900"># init</span></span>
         haveged <span style="color: #990000">&amp;&amp;</span> sleep <span style="color: #993399">2</span>
         busybox --install -s
+        <span style="font-weight: bold"><span style="color: #0000FF">test</span></span> -d /usr/lib/jvm/default-java <span style="color: #990000">&amp;&amp;</span>
         stow --dir<span style="color: #990000">=</span>/usr/lib/jvm/default-java --target<span style="color: #990000">=</span>/usr/bin bin
 
         echo /var/spool/cron/atjobs<span style="color: #990000">/.</span>SEQ <span style="color: #990000">|</span>
@@ -848,29 +849,45 @@ SED
         udhcpc eth0
         ln -sf /usr/share/zoneinfo/UTC /etc/localtime
 
+        mkdir /mnt
         cp /usr/share/samba/smb<span style="color: #990000">.</span>conf /etc/samba/smb<span style="color: #990000">.</span>conf -av
         cat <span style="color: #990000">&gt;&gt;</span> /etc/samba/smb<span style="color: #990000">.</span>conf <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'SMB'</span>
-                <span style="color: #990000">[</span>pub<span style="color: #990000">]</span>
+                <span style="color: #990000">[</span>share<span style="color: #990000">]</span>
                         comment <span style="color: #990000">=</span> Some useful files
                         <span style="font-weight: bold"><span style="color: #0000FF">read</span></span> only <span style="color: #990000">=</span> no
-                        path <span style="color: #990000">=</span> /tmp
+                        path <span style="color: #990000">=</span> /mnt
                         guest ok <span style="color: #990000">=</span> yes
                         browsable <span style="color: #990000">=</span> yes
                         guest account <span style="color: #990000">=</span> nobody
                         guest only <span style="color: #990000">=</span> yes
         SMB
 
+        <span style="font-style: italic"><span style="color: #9A1900"># renew dhcp after login</span></span>
+        cat <span style="color: #990000">&gt;</span> /root<span style="color: #990000">/.</span>profile <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'RUNLEVEL'</span>
+                <span style="font-style: italic"><span style="color: #9A1900">#!/bin/sh</span></span>
+                udhcpc eth0
+        RUNLEVEL
+
+        chmod <span style="color: #990000">+</span>x /sbin/runlevel
+
+        <span style="font-style: italic"><span style="color: #9A1900"># invoke-rc.d runlevel see runit-init</span></span>
+        cat <span style="color: #990000">&gt;</span> /sbin/runlevel <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'RUNLEVEL'</span>
+                <span style="font-style: italic"><span style="color: #9A1900">#!/bin/sh</span></span>
+                <span style="font-weight: bold"><span style="color: #0000FF">exec</span></span> <span style="font-weight: bold"><span style="color: #0000FF">printf</span></span> <span style="color: #FF0000">'N 2'</span>
+        RUNLEVEL
+
+        chmod <span style="color: #990000">+</span>x /sbin/runlevel
+
         <span style="font-style: italic"><span style="color: #9A1900"># https://busybox.net/FAQ.html#job_control</span></span>
         cat <span style="color: #990000">&gt;</span> /etc/init<span style="color: #990000">.</span>d/rcS <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'RUN'</span>
                 <span style="color: #009900">DEBIAN_FRONTEND</span><span style="color: #990000">=</span>noninteractive <span style="color: #990000">\</span>
                 pam-auth-update --package --force
-                <span style="font-style: italic"><span style="color: #9A1900"># /etc/init.d/vsftpd start</span></span>
-                <span style="font-style: italic"><span style="color: #9A1900"># /etc/init.d/nmbd start</span></span>
-                <span style="font-style: italic"><span style="color: #9A1900"># /etc/init.d/smbd start</span></span>
-                <span style="font-style: italic"><span style="color: #9A1900"># /etc/init.d/samba-ad-dc start</span></span>
-                <span style="font-style: italic"><span style="color: #9A1900"># /etc/init.d/atd start</span></span>
-                <span style="font-style: italic"><span style="color: #9A1900"># /etc/init.d/jenkins start</span></span>
-                <span style="font-style: italic"><span style="color: #9A1900"># /etc/init.d/atd start</span></span>
+                invoke-rc<span style="color: #990000">.</span>d --force vsftpd start
+                invoke-rc<span style="color: #990000">.</span>d --force nmbd start
+                invoke-rc<span style="color: #990000">.</span>d --force smbd start
+                invoke-rc<span style="color: #990000">.</span>d --force samba-ad-dc start
+                <span style="font-style: italic"><span style="color: #9A1900"># invoke-rc.d --force atd start</span></span>
+                <span style="font-style: italic"><span style="color: #9A1900"># invoke-rc.d --force jenkins start</span></span>
         RUN
 
         chmod <span style="color: #990000">+</span>x /etc/init<span style="color: #990000">.</span>d/rcS
@@ -911,6 +928,7 @@ JENKINS
         <span style="font-weight: bold"><span style="color: #0000FF">while</span></span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span>
         <span style="font-weight: bold"><span style="color: #0000FF">do</span></span>
                 lkvm run <span style="color: #990000">\</span>
+                        -n <span style="color: #990000">\</span>
                         -k appliance<span style="color: #990000">.</span>d/kernel <span style="color: #990000">\</span>
                         -i appliance<span style="color: #990000">.</span>d/initrd <span style="color: #990000">\</span>
                         -d appliance<span style="color: #990000">.</span>d/root <span style="color: #990000">\</span>
@@ -939,7 +957,7 @@ APPLIANCE</tt></pre></div></div>
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2019-01-27 13:58:42 CET
+ 2019-03-23 17:11:30 CET
 </div>
 </div>
 </body>

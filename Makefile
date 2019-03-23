@@ -24,6 +24,8 @@ index.html: README.html \
 	wiki/databases/Samba.html \
 	wiki/debian/Debian.html \
 	wiki/debian/Devuan.html \
+	wiki/debian/GNU.html \
+	wiki/debian/Linux.html \
 	wiki/debian/SUSE.html \
 	wiki/documentation/AsciiDoc.html \
 	wiki/documentation/Make.html \
@@ -31,6 +33,7 @@ index.html: README.html \
 	wiki/programming/C.html \
 	wiki/programming/Cpp.html \
 	wiki/programming/Java.html \
+	wiki/programming/Haskell.html \
 	wiki/programming/Perl.html \
 	wiki/programming/Qt.html \
 	wiki/tools/Git.html \
