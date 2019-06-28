@@ -1,9 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
     "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
-<meta name="generator" content="AsciiDoc 8.6.9" />
+<meta name="generator" content="AsciiDoc 8.6.10" />
 <title>SQLite Database</title>
 <style type="text/css">
 /* Shared CSS for AsciiDoc xhtml11 and html5 backends */
@@ -745,7 +746,7 @@ With a cascade on delete relational databases delete multiple elements with a si
 The database engine maintains referential integrity of the data.</p></div>
 <div class="paragraph"><p>Example sorting rows</p></div>
 <div class="listingblock">
-<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+<div class="content"><!-- Generator: GNU source-highlight
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
@@ -755,7 +756,7 @@ http://www.gnu.org/software/src-highlite -->
             b.2         b.1</tt></pre></div></div>
 <div class="paragraph"><p>This can be solved in a shell with GNU coreutils but its easier with a database and a join of two distinct tables.</p></div>
 <div class="listingblock">
-<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+<div class="content"><!-- Generator: GNU source-highlight
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
@@ -768,7 +769,7 @@ http://www.gnu.org/software/src-highlite -->
 Sorting of data requires self join and a a comparison and a group by. This is similar to C\++ std::sort algorithm.</p></div>
 <div class="paragraph"><p>Example in SQLite</p></div>
 <div class="listingblock">
-<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+<div class="content"><!-- Generator: GNU source-highlight
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
@@ -795,7 +796,7 @@ order by count<span style="color: #990000">(*)</span>
 <div class="paragraph"><p>Some problems require recursion.</p></div>
 <div class="paragraph"><p>Example recursive split of a string.</p></div>
 <div class="listingblock">
-<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+<div class="content"><!-- Generator: GNU source-highlight
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
@@ -846,7 +847,7 @@ example<span style="color: #990000">(</span>name<span style="color: #990000">,</
 <div class="sectionbody">
 <div class="paragraph"><p>The example can be split and joined with file streams in the shell.</p></div>
 <div class="listingblock">
-<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+<div class="content"><!-- Generator: GNU source-highlight
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
@@ -866,7 +867,7 @@ YASH
 <span style="color: #990000">)</span> <span style="color: #990000">|</span> sort <span style="color: #990000">|</span> tr <span style="color: #FF0000">' '</span> <span style="color: #990000">.</span> <span style="color: #990000">|</span> cut -d<span style="color: #990000">.</span> -f<span style="color: #993399">1</span><span style="color: #990000">,</span><span style="color: #993399">4</span></tt></pre></div></div>
 <div class="listingblock">
 <div class="title">zipfile</div>
-<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+<div class="content"><!-- Generator: GNU source-highlight
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
@@ -879,6 +880,13 @@ DELETE FROM temp<span style="color: #990000">.</span>zip<span style="color: #990
 INSERT INTO temp<span style="color: #990000">.</span>zip<span style="color: #990000">(</span>name<span style="color: #990000">,</span> data<span style="color: #990000">)</span> VALUES<span style="color: #990000">(</span><span style="color: #FF0000">'dir1'</span><span style="color: #990000">,</span> NULL<span style="color: #990000">);</span>           -- Add directory
 INSERT INTO temp<span style="color: #990000">.</span>zip<span style="color: #990000">(</span>name<span style="color: #990000">,</span> data<span style="color: #990000">)</span> VALUES<span style="color: #990000">(</span><span style="color: #FF0000">'m.txt'</span><span style="color: #990000">,</span> <span style="color: #FF0000">'abcdefghi'</span><span style="color: #990000">);</span>   -- Add regular file
 SELECT <span style="color: #990000">*</span> FROM temp<span style="color: #990000">.</span>zip<span style="color: #990000">;</span></tt></pre></div></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="https://sqlite.org/tclsqlite.html#serialize">https://sqlite.org/tclsqlite.html#serialize</a>
+</p>
+</li>
+</ul></div>
 </div>
 </div>
 </div>
@@ -886,7 +894,7 @@ SELECT <span style="color: #990000">*</span> FROM temp<span style="color: #99000
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2018-12-17 17:52:25 CET
+ 2020-06-29 00:14:33 CEST
 </div>
 </div>
 </body>

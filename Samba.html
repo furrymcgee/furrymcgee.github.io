@@ -1,9 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
     "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
-<meta name="generator" content="AsciiDoc 8.6.9" />
+<meta name="generator" content="AsciiDoc 8.6.10" />
 <title></title>
 <style type="text/css">
 /* Shared CSS for AsciiDoc xhtml11 and html5 backends */
@@ -745,20 +746,18 @@ asciidoc.install();
 <div class="paragraph"><p></p></div>
 <div class="listingblock">
 <div class="title">Samba</div>
-<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+<div class="content"><!-- Generator: GNU source-highlight
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
 <pre><tt><span style="font-style: italic"><span style="color: #9A1900">#!/bin/bash</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># Create the appliance in a schroot and</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># configures the shellinabox daemon.</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># Create the appliance and configure shellinabox.</span></span>
 <span style="font-style: italic"><span style="color: #9A1900"># Process edits variable SHELLINABOX_ARGS which</span></span>
 <span style="font-style: italic"><span style="color: #9A1900"># will be evaluated by the daemon at runtime.</span></span>
-<span style="font-style: italic"><span style="color: #9A1900"># File descriptors sorted in reverse order</span></span>
 <span style="color: #993399">0</span><span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'BASH'</span> <span style="color: #990000">\</span>
 <span style="color: #993399">3</span><span style="color: #990000">&lt;&amp;</span><span style="color: #993399">0</span> <span style="color: #990000">\</span>
 <span style="color: #993399">7</span><span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'SED'</span> <span style="color: #990000">\</span>
-<span style="color: #993399">5</span><span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'JENKINS'</span> <span style="color: #990000">\</span>
+<span style="color: #993399">5</span><span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'INIT'</span> <span style="color: #990000">\</span>
 <span style="color: #993399">6</span><span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'LKVM'</span> <span style="color: #990000">\</span>
 <span style="color: #993399">8</span><span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'APPLIANCE'</span> <span style="color: #990000">\</span>
 bash -ex
@@ -775,6 +774,8 @@ bash -ex
         chmod <span style="color: #990000">+</span>x init
         tar zcf supermin<span style="color: #990000">.</span>d/init<span style="color: #990000">.</span>tar<span style="color: #990000">.</span>gz init
         supermin --verbose --build supermin<span style="color: #990000">.</span>d -f ext2 -o appliance<span style="color: #990000">.</span>d
+
+        e2fsck -y appliance<span style="color: #990000">.</span>d/root <span style="color: #990000">&gt;</span> /dev/null <span style="color: #990000">||</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span>
 BASH
         <span style="font-style: italic"><span style="color: #9A1900"># This example shows how variable is used</span></span>
         <span style="font-style: italic"><span style="color: #9A1900"># SHELLINABOX_ARGS="--service=/:shellinabox:shellinabox:HOME:bash"</span></span>
@@ -794,7 +795,7 @@ SED
         HOSTS
 
         <span style="font-style: italic"><span style="color: #9A1900"># users and groups etc</span></span>
-        touch /etc/shadow
+        touch /etc/passwd /etc/group /etc/shadow
         groupadd --gid<span style="color: #990000">=</span><span style="color: #993399">0</span> root
         groupadd --gid<span style="color: #990000">=</span><span style="color: #993399">1</span> daemon
         groupadd adm
@@ -803,11 +804,10 @@ SED
         useradd --gid<span style="color: #990000">=</span><span style="color: #993399">1</span> --uid<span style="color: #990000">=</span><span style="color: #993399">1</span> --home-dir<span style="color: #990000">=</span>/usr/sbin daemon
         useradd nobody
 
-        mkdir /var/ftp
-        mkdir --mode<span style="color: #990000">=</span><span style="color: #993399">555</span> /var/ftp
+        <span style="font-weight: bold"><span style="color: #0000FF">test</span></span> -d /var/ftp <span style="color: #990000">||</span>
+        mkdir --mode<span style="color: #990000">=</span><span style="color: #993399">555</span> /var/ftp <span style="color: #990000">&amp;&amp;</span>
         useradd --home-dir<span style="color: #990000">=</span>/var/ftp ftp
 
-        <span style="font-style: italic"><span style="color: #9A1900"># devices</span></span>
         <span style="font-style: italic"><span style="color: #9A1900"># http://www.tldp.org/LDP/lfs/LFS-BOOK-6.1.1-HTML/chapter06/devices.html</span></span>
         mknod -m <span style="color: #993399">600</span> /dev/console c <span style="color: #993399">5</span> <span style="color: #993399">1</span>
         mknod -m <span style="color: #993399">666</span> /dev/null c <span style="color: #993399">1</span> <span style="color: #993399">3</span>
@@ -860,6 +860,7 @@ SED
                         browsable <span style="color: #990000">=</span> yes
                         guest account <span style="color: #990000">=</span> nobody
                         guest only <span style="color: #990000">=</span> yes
+                        admin users <span style="color: #990000">=</span> nobody
         SMB
 
         <span style="font-style: italic"><span style="color: #9A1900"># renew dhcp after login</span></span>
@@ -868,15 +869,22 @@ SED
                 udhcpc eth0
         RUNLEVEL
 
-        chmod <span style="color: #990000">+</span>x /sbin/runlevel
-
         <span style="font-style: italic"><span style="color: #9A1900"># invoke-rc.d runlevel see runit-init</span></span>
         cat <span style="color: #990000">&gt;</span> /sbin/runlevel <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'RUNLEVEL'</span>
                 <span style="font-style: italic"><span style="color: #9A1900">#!/bin/sh</span></span>
                 <span style="font-weight: bold"><span style="color: #0000FF">exec</span></span> <span style="font-weight: bold"><span style="color: #0000FF">printf</span></span> <span style="color: #FF0000">'N 2'</span>
         RUNLEVEL
-
         chmod <span style="color: #990000">+</span>x /sbin/runlevel
+        cat <span style="color: #990000">&gt;</span> /etc/modules <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'MODULES'</span>
+                9pnet_virtio
+        MODULES
+
+        cat <span style="color: #990000">&gt;</span> /etc/fstab <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'FSTAB'</span>
+                hostfs /var/ftp/pub 9p <span style="color: #009900">trans</span><span style="color: #990000">=</span>virtio <span style="color: #993399">0</span> <span style="color: #993399">0</span>
+                overlay /mnt overlay <span style="color: #009900">lowerdir</span><span style="color: #990000">=</span>/var/ftp/pub<span style="color: #990000">,</span><span style="color: #009900">upperdir</span><span style="color: #990000">=</span>/var/tmp/ftp/pub<span style="color: #990000">,</span><span style="color: #009900">workdir</span><span style="color: #990000">=</span>/var/tmp/work
+                hostfs /mnt 9p <span style="color: #009900">trans</span><span style="color: #990000">=</span>virtio <span style="color: #993399">0</span> <span style="color: #993399">0</span>
+                overlay /var/ftp/pub overlay <span style="color: #009900">lowerdir</span><span style="color: #990000">=</span>/mnt/pub<span style="color: #990000">,</span><span style="color: #009900">upperdir</span><span style="color: #990000">=</span>/var/tmp/pub<span style="color: #990000">,</span><span style="color: #009900">workdir</span><span style="color: #990000">=</span>/var/tmp/work
+        FSTAB
 
         <span style="font-style: italic"><span style="color: #9A1900"># https://busybox.net/FAQ.html#job_control</span></span>
         cat <span style="color: #990000">&gt;</span> /etc/init<span style="color: #990000">.</span>d/rcS <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'RUN'</span>
@@ -921,13 +929,14 @@ SED
                 <span style="color: #990000">::</span>shutdown<span style="color: #990000">:</span>/bin/umount -a -r
                 <span style="color: #990000">::</span>shutdown<span style="color: #990000">:</span>/sbin/swapoff -a
         INITTAB
+        <span style="font-style: italic"><span style="color: #9A1900">#update-alternatives --install /usr/bin/wine wine /usr/bin/wine-stable 50</span></span>
 
         echo Welcome to supermin<span style="color: #990000">!</span>
         <span style="font-weight: bold"><span style="color: #0000FF">exec</span></span> busybox init
-JENKINS
+INIT
         <span style="font-weight: bold"><span style="color: #0000FF">while</span></span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span>
         <span style="font-weight: bold"><span style="color: #0000FF">do</span></span>
-                lkvm run <span style="color: #990000">\</span>
+                lkvm run --9p /mnt<span style="color: #990000">,</span>hostfs <span style="color: #990000">\</span>
                         -n <span style="color: #990000">\</span>
                         -k appliance<span style="color: #990000">.</span>d/kernel <span style="color: #990000">\</span>
                         -i appliance<span style="color: #990000">.</span>d/initrd <span style="color: #990000">\</span>
@@ -944,10 +953,13 @@ LKVM
                 --assume-yes <span style="color: #990000">\</span>
                 --option<span style="color: #990000">=</span><span style="color: #FF0000">'Acquire::http::AllowRedirect=true'</span> <span style="color: #990000">\</span>
                 --option<span style="color: #990000">=</span><span style="color: #FF0000">'APT::Get::Download-Only=false'</span> <span style="color: #990000">\</span>
-                at bash dash man mount base-files busybox strace ncurses-term ncurses-bin samba smbclient cifs-utils smbldap-tools ldap-utils udhcpc stow sysvinit-utils util-linux login libc-bin libpam-runtime libpam0g apache2-utils vsftpd sed haveged <span style="color: #990000">||</span> <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span> <span style="color: #993399">1</span>
+                at bash curl dash man mount base-files busybox strace ncurses-term ncurses-bin samba smbclient cifs-utils smbldap-tools ldap-utils udhcpc stow sysvinit-utils util-linux login rsync libc-bin libpam-runtime libpam0g apache2-utils vsftpd sed haveged ssh <span style="color: #990000">||</span> <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span> <span style="color: #993399">1</span>
+    <span style="font-style: italic"><span style="color: #9A1900">#wine wine32 winetricks</span></span>
 
-        supermin --verbose --prepare --use-installed -o supermin<span style="color: #990000">.</span>d at busybox mount bash dash udhcpc strace samba file base-files bsdutils mailutils coreutils tzdata ncurses-bin ncurses-term eudev net-tools hostname elogind smbclient stow sysvinit-utils util-linux login libc-bin libpam-runtime libpam0g apache2-utils vsftpd sed haveged <span style="color: #990000">||</span> <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span> <span style="color: #993399">1</span>
+        <span style="font-style: italic"><span style="color: #9A1900"># SUPERMIN_KERNEL=/boot/vmlinuz-4.9.0-12-686 \</span></span>
+        supermin --host-cpu<span style="color: #990000">=</span>i686 --verbose --prepare --use-installed -o supermin<span style="color: #990000">.</span>d at busybox mount bash curl dash udhcpc strace samba file base-files bsdutils mailutils coreutils tzdata ncurses-bin ncurses-term eudev net-tools hostname elogind smbclient stow sysvinit-utils util-linux login rsync libc-bin libpam-runtime libpam0g apache2-utils vsftpd sed haveged ssh <span style="color: #990000">||</span> <span style="font-weight: bold"><span style="color: #0000FF">exit</span></span> <span style="color: #993399">7</span>
 
+        find /etc/init<span style="color: #990000">.</span>d<span style="color: #990000">/</span>{cron<span style="color: #990000">,</span>exim4<span style="color: #990000">,</span>haveged<span style="color: #990000">,</span>elogind<span style="color: #990000">,</span>smbd<span style="color: #990000">,</span>nmbd<span style="color: #990000">,</span>vsftpd<span style="color: #990000">,</span>cron<span style="color: #990000">,</span>apache2<span style="color: #990000">,</span>atd} -type f <span style="color: #990000">|</span> xargs -I@ sh @ stop
 APPLIANCE</tt></pre></div></div>
 </div>
 </div>

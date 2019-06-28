@@ -1,9 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
     "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
-<meta name="generator" content="AsciiDoc 8.6.9" />
+<meta name="generator" content="AsciiDoc 8.6.10" />
 <title>Virtualization</title>
 <style type="text/css">
 /* Shared CSS for AsciiDoc xhtml11 and html5 backends */
@@ -756,9 +757,24 @@ Linux containers use the host kernel and virtualize the operating system.</p></d
 <a href="https://wiki.debian.org/QEMU">https://wiki.debian.org/QEMU</a>
 </p>
 </li>
+<li>
+<p>
+<a href="https://en.wikibooks.org/wiki/QEMU/Monitor">https://en.wikibooks.org/wiki/QEMU/Monitor</a>
+</p>
+</li>
+<li>
+<p>
+<a href="https://doc.opensuse.org/documentation/leap/archive/42.3/virtualization/html/book.virt/cha.qemu.monitor.html">https://doc.opensuse.org/documentation/leap/archive/42.3/virtualization/html/book.virt/cha.qemu.monitor.html</a>
+</p>
+</li>
+<li>
+<p>
+<a href="https://wiki.ubuntu.com/QemuDiskHotplug">https://wiki.ubuntu.com/QemuDiskHotplug</a>
+</p>
+</li>
 </ul></div>
 <div class="listingblock">
-<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+<div class="content"><!-- Generator: GNU source-highlight
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
@@ -791,14 +807,14 @@ qemu-system-x86_64 --enable-kvm -append <span style="color: #FF0000">'console=tt
 </li>
 </ul></div>
 <div class="listingblock">
-<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+<div class="content"><!-- Generator: GNU source-highlight
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
 <pre><tt>bootcfg <span style="color: #990000">/</span>ems on <span style="color: #990000">/</span>port com1 <span style="color: #990000">/</span>baud <span style="color: #993399">9600</span> <span style="color: #990000">/</span>id <span style="color: #993399">1</span>
 sc config TlntSvr <span style="font-weight: bold"><span style="color: #000000">start</span></span><span style="color: #990000">=</span> demand</tt></pre></div></div>
 <div class="listingblock">
-<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+<div class="content"><!-- Generator: GNU source-highlight
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
@@ -823,14 +839,14 @@ EOF</tt></pre></div></div>
 </li>
 </ul></div>
 <div class="listingblock">
-<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+<div class="content"><!-- Generator: GNU source-highlight
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
 <pre><tt>bootcfg <span style="color: #990000">/</span>ems on <span style="color: #990000">/</span>port com1 <span style="color: #990000">/</span>baud <span style="color: #993399">9600</span> <span style="color: #990000">/</span>id <span style="color: #993399">1</span>
 sc config TlntSvr <span style="font-weight: bold"><span style="color: #000000">start</span></span><span style="color: #990000">=</span> demand</tt></pre></div></div>
 <div class="listingblock">
-<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+<div class="content"><!-- Generator: GNU source-highlight
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
@@ -844,7 +860,7 @@ telnet localhost
 EOF</tt></pre></div></div>
 <div class="listingblock">
 <div class="title">Debian</div>
-<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+<div class="content"><!-- Generator: GNU source-highlight
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
@@ -895,7 +911,7 @@ IPXE</tt></pre></div></div>
 <h3 id="_disk_images">Disk images</h3>
 <div class="paragraph"><p>Mounting disk images</p></div>
 <div class="listingblock">
-<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+<div class="content"><!-- Generator: GNU source-highlight
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
@@ -913,7 +929,7 @@ losetup -D
 guestmount -a VirtualXPVHD -o nonempty <span style="color: #990000">.</span></tt></pre></div></div>
 <div class="paragraph"><p>Boot floppy with syslinux and ipxe</p></div>
 <div class="listingblock">
-<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+<div class="content"><!-- Generator: GNU source-highlight
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
@@ -940,7 +956,7 @@ IPXE
 umount <span style="color: #990000">.</span> <span style="color: #990000">&amp;&amp;</span> cd - <span style="color: #990000">&amp;&amp;</span> rmdir <span style="color: #009900">$OLDPWD</span></tt></pre></div></div>
 <div class="paragraph"><p>Create a bootable hard disk image with grub, ipxe and extlinux</p></div>
 <div class="listingblock">
-<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+<div class="content"><!-- Generator: GNU source-highlight
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
@@ -1008,7 +1024,7 @@ cd - <span style="color: #990000">&amp;&amp;</span> umount <span style="color: #
 </li>
 </ul></div>
 <div class="listingblock">
-<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+<div class="content"><!-- Generator: GNU source-highlight
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
@@ -1028,7 +1044,7 @@ cat <span style="color: #990000">&gt;&gt;</span> /etc/network/interfaces<span st
 <div class="sectionbody">
 <div class="listingblock">
 <div class="title">Examples</div>
-<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+<div class="content"><!-- Generator: GNU source-highlight
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
@@ -1057,7 +1073,7 @@ qemu-system-x86_64 -vnc <span style="color: #990000">:</span><span style="color:
 </ul></div>
 <div class="listingblock">
 <div class="title">Routing</div>
-<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+<div class="content"><!-- Generator: GNU source-highlight
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
@@ -1073,7 +1089,7 @@ iptables -t nat -A POSTROUTING -s <span style="color: #993399">192.168</span><sp
 <div class="paragraph"><p>Virtual machine configuration of VirtualBox VBoxManage
 - <a href="https://www.virtualbox.org">https://www.virtualbox.org</a></p></div>
 <div class="listingblock">
-<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+<div class="content"><!-- Generator: GNU source-highlight
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
@@ -1144,7 +1160,7 @@ For qemu the Windows image requires different drivers.</p></div>
 </li>
 </ul></div>
 <div class="listingblock">
-<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+<div class="content"><!-- Generator: GNU source-highlight
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
@@ -1171,7 +1187,7 @@ usermod -a <span style="color: #009900">$(</span>getent passwd <span style="colo
 </li>
 </ul></div>
 <div class="listingblock">
-<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+<div class="content"><!-- Generator: GNU source-highlight
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
@@ -1226,14 +1242,14 @@ lxc-attach --name<span style="color: #990000">=</span>debian</tt></pre></div></d
 - <a href="http://btrfs.wiki.kernel.org">http://btrfs.wiki.kernel.org</a></p></div>
 <div class="listingblock">
 <div class="title">kvmtool</div>
-<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+<div class="content"><!-- Generator: GNU source-highlight
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
 <pre><tt>lkvm run -k vmlinuz-<span style="color: #993399">4.18</span><span style="color: #990000">.</span><span style="color: #993399">5</span>-<span style="color: #993399">300</span><span style="color: #990000">.</span>fc29<span style="color: #990000">.</span>x86_64 -i initramfs-<span style="color: #993399">4.18</span><span style="color: #990000">.</span><span style="color: #993399">5</span>-<span style="color: #993399">300</span><span style="color: #990000">.</span>fc29<span style="color: #990000">.</span>x86_64<span style="color: #990000">.</span>img -d disk<span style="color: #990000">.</span>img -n -m <span style="color: #993399">2000</span> -p <span style="color: #FF0000">'root=UUID=04277801-2387-4949-a82a-46b5d6f2dbd4'</span></tt></pre></div></div>
 <div class="listingblock">
 <div class="title">network</div>
-<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+<div class="content"><!-- Generator: GNU source-highlight
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
@@ -1242,7 +1258,7 @@ ifconfig tap0 <span style="color: #993399">0</span>
 brctl addif br0 tap0 eth0</tt></pre></div></div>
 <div class="listingblock">
 <div class="title">btrfs</div>
-<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+<div class="content"><!-- Generator: GNU source-highlight
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
@@ -1270,7 +1286,7 @@ EOF</tt></pre></div></div>
 With QEMU a different processor architecture can be emulated. This can be used to test Debian GNU/Linux on IBM S/390</p></div>
 <div class="listingblock">
 <div class="title">s390-ccw</div>
-<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+<div class="content"><!-- Generator: GNU source-highlight
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
@@ -1308,7 +1324,7 @@ qemu-system-s390x <span style="color: #990000">\</span>
         -initrd generic/initrd<span style="color: #990000">.</span>debian</tt></pre></div></div>
 <div class="listingblock">
 <div class="title">tftp</div>
-<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+<div class="content"><!-- Generator: GNU source-highlight
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
@@ -1320,15 +1336,32 @@ qemu-system-x86_64 --enable-kvm --nographic -cpu host -m <span style="color: #99
         -initrd /tmp/tmp<span style="color: #990000">.*</span>/srv/mirror/tmp/sid/CD<span style="color: #993399">1</span>/install<span style="color: #990000">.</span>amd/initrd<span style="color: #990000">.</span>gz <span style="color: #990000">\</span>
         -append <span style="color: #FF0000">'console=ttyS0 auto=true priority=critical url=tftp://10.0.2.2/example-preseed.txt'</span> <span style="color: #990000">\</span>
 </tt></pre></div></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="https://www.kernel.org/doc/html/latest/filesystems/9p.html">https://www.kernel.org/doc/html/latest/filesystems/9p.html</a>
+</p>
+</li>
+</ul></div>
 <div class="listingblock">
 <div class="title">9p</div>
-<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+<div class="content"><!-- Generator: GNU source-highlight
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
-<pre><tt>lkvm run --9p /mnt hostfs
+<pre><tt>lkvm run --9p /mnt<span style="color: #990000">,</span>hostfs
 modprobe 9pnet_virtio
 mount -t 9p -o <span style="color: #009900">trans</span><span style="color: #990000">=</span>virtio hostfs /mnt<span style="color: #990000">/</span> -oversion<span style="color: #990000">=</span>9p2000<span style="color: #990000">.</span>L</tt></pre></div></div>
+<div class="paragraph"><p># Wine
+apt install wine winetricks
+# vcrun6 vb6run
+# winetricks wsh57 wscript.exe=native cscript.exe=native
+# <a href="https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=701871">https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=701871</a>
+WINETRICKS_DOWNLOADER=curl winetricks wsh57 msxml6 mdac28 dotnet40
+cat &gt; .curlrc &lt;&#8592;<em>CURLRC</em>
+        insecure
+CURLRC
+apt install crossbuild-essential-i386</p></div>
 </div>
 </div>
 </div>
@@ -1336,7 +1369,7 @@ mount -t 9p -o <span style="color: #009900">trans</span><span style="color: #990
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2019-06-16 16:50:16 CEST
+ 2020-09-24 13:48:37 CEST
 </div>
 </div>
 </body>

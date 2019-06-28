@@ -1,9 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
     "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
-<meta name="generator" content="AsciiDoc 8.6.9" />
+<meta name="generator" content="AsciiDoc 8.6.10" />
 <title></title>
 <style type="text/css">
 /* Shared CSS for AsciiDoc xhtml11 and html5 backends */
@@ -740,7 +741,9 @@ asciidoc.install();
 <div class="sectionbody">
 <div class="paragraph"><p>The XML specification defines a language for text based data files. It includes XSD schema definitions for validation and XSLT for stylesheet transformation. Many additional tools are available to parse and query data.</p></div>
 <div class="sect2">
-<h3 id="_programming_xml_with_xqilla">Programming XML with XQilla</h3>
+<h3 id="_programming_xml">Programming XML</h3>
+<div class="sect3">
+<h4 id="_xqilla">XQilla</h4>
 <div class="paragraph"><p>The Java package and dependency management tool Maven uses a XML based Project Object Model definition. The dependencies are defined in pom.xml files. The pom.xml files can be prepared beforehand. Stylesheet definitions or Xquery can be used to preprocess XML files.</p></div>
 <div class="ulist"><ul>
 <li>
@@ -756,7 +759,7 @@ asciidoc.install();
 </ul></div>
 <div class="listingblock">
 <div class="title">xqilla</div>
-<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+<div class="content"><!-- Generator: GNU source-highlight
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
@@ -854,6 +857,53 @@ jar cvfe my-app<span style="color: #990000">.</span>jar com<span style="color: #
 mvn -Dmaven<span style="color: #990000">.</span>compiler<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #0000FF">source</span></span><span style="color: #990000">=</span><span style="color: #993399">1.6</span> -Dmaven<span style="color: #990000">.</span>coiler<span style="color: #990000">.</span><span style="color: #009900">target</span><span style="color: #990000">=</span><span style="color: #993399">1.6</span> -Dmaven<span style="color: #990000">.</span>repo<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #0000FF">local</span></span><span style="color: #990000">=</span>/tmp/pub/repo --file my-app/pom<span style="color: #990000">.</span>xml -Ddependency<span style="color: #990000">.</span>locations<span style="color: #990000">.</span><span style="color: #009900">enabled</span><span style="color: #990000">=</span><span style="font-weight: bold"><span style="color: #0000FF">false</span></span> site
 
 </tt></pre></div></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="https://docs.marklogic.com/guide/app-dev/import_modules">https://docs.marklogic.com/guide/app-dev/import_modules</a>
+</p>
+</li>
+<li>
+<p>
+<a href="https://www.w3.org/TR/2017/REC-xquery-31-20170321">https://www.w3.org/TR/2017/REC-xquery-31-20170321</a>
+</p>
+</li>
+</ul></div>
+<div class="listingblock">
+<div class="title">modules</div>
+<div class="content"><!-- Generator: GNU source-highlight
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-style: italic"><span style="color: #9A1900">#!/bin/sh</span></span>
+<span style="color: #993399">0</span><span style="color: #990000">&lt;&lt;</span>-XQUERY <span style="color: #990000">\</span>
+<span style="color: #993399">4</span><span style="color: #990000">&lt;&lt;</span>-MODULE <span style="color: #990000">\</span>
+xqilla /proc/self/fd<span style="color: #990000">/</span><span style="color: #993399">0</span>
+        xquery version <span style="color: #FF0000">"1.0"</span><span style="color: #990000">;</span>
+        <span style="font-weight: bold"><span style="color: #000080">import</span></span> module namespace <span style="color: #009900">hello</span><span style="color: #990000">=</span><span style="color: #FF0000">"hello"</span> at <span style="color: #FF0000">"/proc/self/fd/4"</span><span style="color: #990000">;</span>
+    <span style="font-weight: bold"><span style="color: #0000FF">declare</span></span> variable <span style="color: #009900">$x</span> as xs<span style="color: #990000">:</span>string <span style="color: #990000">:=</span> <span style="color: #FF0000">"7"</span><span style="color: #990000">;</span>
+
+        hello<span style="color: #990000">:</span><span style="font-weight: bold"><span style="color: #000000">world()</span></span>
+XQUERY
+        xquery version <span style="color: #FF0000">"1.0"</span><span style="color: #990000">;</span>
+        module namespace hello <span style="color: #990000">=</span> <span style="color: #FF0000">"hello"</span><span style="color: #990000">;</span>
+
+        <span style="font-weight: bold"><span style="color: #0000FF">declare</span></span> <span style="font-weight: bold"><span style="color: #000000">function hello</span></span><span style="color: #990000">:</span><span style="font-weight: bold"><span style="color: #000000">world()</span></span>
+        {
+          <span style="color: #FF0000">"hello world"</span>
+        }<span style="color: #990000">;</span>
+MODULE</tt></pre></div></div>
+</div>
+<div class="sect3">
+<h4 id="_xmllint">Xmllint</h4>
+<div class="listingblock">
+<div class="title">xmllint</div>
+<div class="content"><!-- Generator: GNU source-highlight
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>xmllint --shell XML-FILE <span style="color: #990000">&lt;&lt;&lt;</span>$<span style="color: #FF0000">'setrootns</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">cd /office:document/body/</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">cat'</span></tt></pre></div></div>
+</div>
 </div>
 </div>
 </div>
@@ -862,7 +912,7 @@ mvn -Dmaven<span style="color: #990000">.</span>compiler<span style="color: #990
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2019-03-23 17:11:30 CET
+ 2020-09-24 17:09:03 CEST
 </div>
 </div>
 </body>

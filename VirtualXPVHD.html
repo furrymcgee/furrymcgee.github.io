@@ -1,9 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
     "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
-<meta name="generator" content="AsciiDoc 8.6.9" />
+<meta name="generator" content="AsciiDoc 8.6.10" />
 <title></title>
 <style type="text/css">
 /* Shared CSS for AsciiDoc xhtml11 and html5 backends */
@@ -737,7 +738,7 @@ asciidoc.install();
 <div id="content">
 <div class="listingblock">
 <div class="title">Shell script for Virtual Windows XP</div>
-<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+<div class="content"><!-- Generator: GNU source-highlight
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
@@ -746,7 +747,7 @@ http://www.gnu.org/software/src-highlite -->
 <span style="color: #990000">:</span> apt install p7zip-full libguestfs-tools locate
 
 cd -P <span style="color: #FF0000">"$(mktemp -d)"</span>
-cp -avu <span style="color: #FF0000">"$(locate WindowsXPMode_en-us.exe)"</span> <span style="color: #990000">.</span>
+cp -avu <span style="color: #FF0000">"$(locate --limit=1 WindowsXPMode_en-us.exe)"</span> <span style="color: #990000">.</span>
 
 <span style="font-style: italic"><span style="color: #9A1900"># Extract the raw image</span></span>
 7za x WindowsXPMode_en-us<span style="color: #990000">.</span>exe
@@ -950,20 +951,30 @@ sed -e <span style="color: #FF0000">'s,CurrentControlSet,ControlSet001,'</span> 
           <span style="color: #993399">00</span><span style="color: #990000">,</span>2e<span style="color: #990000">,</span><span style="color: #993399">00</span><span style="color: #990000">,</span><span style="color: #993399">73</span><span style="color: #990000">,</span><span style="color: #993399">00</span><span style="color: #990000">,</span><span style="color: #993399">79</span><span style="color: #990000">,</span><span style="color: #993399">00</span><span style="color: #990000">,</span><span style="color: #993399">73</span><span style="color: #990000">,</span><span style="color: #993399">00</span><span style="color: #990000">,</span><span style="color: #993399">00</span><span style="color: #990000">,</span><span style="color: #993399">00</span>
 SED
 
+<span style="font-style: italic"><span style="color: #9A1900"># https://cygwin.com/cygwin-ug-net/using-specialnames.html#pathnames-casesensitive</span></span>
+<span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'SED'</span> <span style="color: #990000">\</span>
+sed -e <span style="color: #FF0000">'s,CurrentControlSet,ControlSet001,'</span> <span style="color: #990000">|</span> <span style="color: #990000">\</span>
+virt-win-reg --merge windows<span style="color: #990000">.</span>raw
+        REGEDIT4
+
+        <span style="color: #990000">[</span>HKEY_LOCAL_MACHINE<span style="color: #990000">\</span>SYSTEM<span style="color: #990000">\</span>CurrentControlSet<span style="color: #990000">\</span>Control<span style="color: #990000">\</span>Session Manager<span style="color: #990000">\</span>kernel<span style="color: #990000">]</span>
+        <span style="color: #FF0000">"obcaseinsensitive"</span><span style="color: #990000">=</span>dword<span style="color: #990000">:</span><span style="color: #993399">00000000</span>
+
+SED
+
 guestfish -a windows<span style="color: #990000">.</span>raw -i <span style="color: #990000">&lt;&lt;</span>-<span style="color: #FF0000">'EOF'</span>
         rm /WINDOWS/system<span style="color: #993399">32</span>/drivers/processr<span style="color: #990000">.</span>sys
         rm /WINDOWS/system<span style="color: #993399">32</span>/drivers/intelppm<span style="color: #990000">.</span>sys
         rm /WINDOWS/inf/cpu<span style="color: #990000">.</span>inf
 EOF
 
-qemu-img convert -f raw -O qcow2 windows<span style="color: #990000">.</span>raw VirtualXPVHD
-qemu-img snapshot VirtualXPVHD -c VirtualXPVHD
-
-find -<span style="color: #990000">!</span> -name VirtualXPVHD -delete
-
-mv VirtualXPVHD <span style="color: #990000">..</span>
+qemu-img convert -f raw -O qcow2 windows<span style="color: #990000">.</span>raw VirtualXPVHD<span style="color: #990000">.~</span><span style="color: #993399">1</span><span style="color: #990000">~</span>
+find -<span style="color: #990000">!</span> -name VirtualXPVHD<span style="color: #990000">.~</span><span style="color: #993399">1</span><span style="color: #990000">~</span> -delete
+qemu-img create VirtualXPVHD -b VirtualXPVHD<span style="color: #990000">.~</span><span style="color: #993399">1</span><span style="color: #990000">~</span> -f qcow2
+mv -vn VirtualXPVHD VirtualXPVHD<span style="color: #990000">.~</span><span style="color: #993399">1</span><span style="color: #990000">~</span> <span style="color: #990000">..</span>
 cd -
-rmdir <span style="color: #009900">$OLDPWD</span></tt></pre></div></div>
+rmdir <span style="color: #009900">$OLDPWD</span>
+</tt></pre></div></div>
 <div class="paragraph"><p># NET command
 net view \\SAMBA
 net user Administrator Administrator
@@ -974,7 +985,7 @@ net</p></div>
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2019-06-16 16:50:16 CEST
+ 2019-11-01 16:27:07 CET
 </div>
 </div>
 </body>

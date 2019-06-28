@@ -1,9 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
     "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
-<meta name="generator" content="AsciiDoc 8.6.9" />
+<meta name="generator" content="AsciiDoc 8.6.10" />
 <title></title>
 <style type="text/css">
 /* Shared CSS for AsciiDoc xhtml11 and html5 backends */
@@ -749,7 +750,7 @@ asciidoc.install();
 <div class="sect2">
 <h3 id="_basic_authentication">Basic Authentication</h3>
 <div class="listingblock">
-<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+<div class="content"><!-- Generator: GNU source-highlight
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
@@ -792,7 +793,7 @@ EOF</tt></pre></div></div>
 - <a href="https://certbot.eff.org/lets-encrypt/debianstretch-other">https://certbot.eff.org/lets-encrypt/debianstretch-other</a></p></div>
 <div class="listingblock">
 <div class="title">apache</div>
-<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+<div class="content"><!-- Generator: GNU source-highlight
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
@@ -843,7 +844,7 @@ systemctl restart apache2
 <div class="sect2">
 <h3 id="_secure_irc_with_asymmentric_encryption">Secure IRC with asymmentric encryption</h3>
 <div class="paragraph"><p>A secure connection in IRC communicates only to the server.
-Many users connect to same servers without encryption.
+Many users connect to same servers without encryption!
 With ngircd its possible to make a personal server.</p></div>
 <div class="ulist"><ul>
 <li>
@@ -854,11 +855,6 @@ With ngircd its possible to make a personal server.</p></div>
 <li>
 <p>
 <a href="https://en.wikipedia.org/wiki/RSA_(cryptosystem">https://en.wikipedia.org/wiki/RSA_(cryptosystem</a>)
-</p>
-</li>
-<li>
-<p>
-<a href="https://freenode.net/kb/answer/certfp">https://freenode.net/kb/answer/certfp</a>
 </p>
 </li>
 <li>
@@ -876,9 +872,14 @@ With ngircd its possible to make a personal server.</p></div>
 <a href="http://www.andrews-corner.org/linux/irssi.html">http://www.andrews-corner.org/linux/irssi.html</a>
 </p>
 </li>
+<li>
+<p>
+<a href="https://en.wikipedia.org/wiki/Wikipedia:IRC/Channel_access_and_configuration_guide#Keeping_Chanserv_in_the_channel">https://en.wikipedia.org/wiki/Wikipedia:IRC/Channel_access_and_configuration_guide#Keeping_Chanserv_in_the_channel</a>
+</p>
+</li>
 </ul></div>
 <div class="listingblock">
-<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+<div class="content"><!-- Generator: GNU source-highlight
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
@@ -897,7 +898,6 @@ openssl req -x<span style="color: #993399">509</span> -key <span style="color: #
 /SERVER REMOVE chat<span style="color: #990000">.</span>freenode<span style="color: #990000">.</span>net <span style="color: #993399">6667</span> freenode
 /NETWORK REMOVE freenode
 /SERVER ADD -ssl -ssl_verify -ssl_cert <span style="color: #990000">~</span>/freenode<span style="color: #990000">.</span>pem -ssl_pkey <span style="color: #990000">~</span>/privkey<span style="color: #990000">.</span>pem -network freenode chat<span style="color: #990000">.</span>freenode<span style="color: #990000">.</span>net <span style="color: #993399">6697</span>
-/SERVER ADD -ssl -ssl_cert <span style="color: #990000">~</span>/freenode<span style="color: #990000">.</span>pem -ssl_pkey <span style="color: #990000">~</span>/privkey<span style="color: #990000">.</span>pem -network freenode chat<span style="color: #990000">.</span>freenode<span style="color: #990000">.</span>net <span style="color: #993399">6697</span>
 /NETWORK add freenode
 
 <span style="font-style: italic"><span style="color: #9A1900"># The first connection requires registration, identification and certificate</span></span>
@@ -927,7 +927,7 @@ openssl req -x<span style="color: #993399">509</span> -new -newkey rsa<span styl
 <div class="sect2">
 <h3 id="_exim">Exim</h3>
 <div class="listingblock">
-<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+<div class="content"><!-- Generator: GNU source-highlight
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
@@ -970,7 +970,7 @@ EOF</tt></pre></div></div>
 </li>
 </ul></div>
 <div class="listingblock">
-<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+<div class="content"><!-- Generator: GNU source-highlight
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
@@ -1016,7 +1016,7 @@ SQL</tt></pre></div></div>
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2019-03-23 19:04:07 CET
+ 2020-08-28 19:01:23 CEST
 </div>
 </div>
 </body>

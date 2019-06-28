@@ -1,9 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
     "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
-<meta name="generator" content="AsciiDoc 8.6.9" />
+<meta name="generator" content="AsciiDoc 8.6.10" />
 <title>A general purpose scripting language</title>
 <style type="text/css">
 /* Shared CSS for AsciiDoc xhtml11 and html5 backends */
@@ -766,7 +767,7 @@ This objects reference can be used as hash key with caution. Once the object ref
 The parents data may be necessary in the method but objects inherit only functions but there are no member variables. Inherited data is only availbale if its the same objects.
 The Object reference including parent data can be used as argument to the constructor. Then the parent constructor can be called with SUPER before the object is blessed. This is similar to a inplace constructor in C++ where the constructor gets a pointer to the memory. C++ calls parents constructor/destructor automatically but Perl calls only the destructor of objects package. Neither constructors nor destructors of a parent package are called in Perl. The parent constructor need to be called manually with SUPER. Below is a sample program. This calls parents constructor first and parent destructor last unlike C++.</p></div>
 <div class="listingblock">
-<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+<div class="content"><!-- Generator: GNU source-highlight
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
@@ -864,7 +865,7 @@ Empty lists for example returned in a SQL selection.</p></div>
 </li>
 </ul></div>
 <div class="listingblock">
-<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+<div class="content"><!-- Generator: GNU source-highlight
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
@@ -910,7 +911,7 @@ The concept of pipes connecting processes is suggested by Doug McIlroy at Bell L
 <h2 id="_examples_for_perl_packages">Examples for Perl packages</h2>
 <div class="sectionbody">
 <div class="listingblock">
-<div class="content"><!-- Generator: GNU source-highlight 3.1.8
+<div class="content"><!-- Generator: GNU source-highlight
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
@@ -966,6 +967,7 @@ systemctl start mywebapp
 
 <span style="font-style: italic"><span style="color: #9A1900"># perl parser</span></span>
 apt install perl-byacc</tt></pre></div></div>
+<div class="paragraph"><p>perl -e <em>print + (split /,/, "1,2,3")[0]</em></p></div>
 </div>
 </div>
 </div>
@@ -973,7 +975,7 @@ apt install perl-byacc</tt></pre></div></div>
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2019-03-23 19:04:07 CET
+ 2020-06-25 23:24:32 CEST
 </div>
 </div>
 </body>
